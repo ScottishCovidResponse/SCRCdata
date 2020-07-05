@@ -1,5 +1,29 @@
 # SCRCdata
+
 Processing scripts for the SCRC data pipeline
+
+## Installation
+
+This package is dependent on the SCRCdataAPI package being installed:
+
+```{r}
+library(devtools)
+install_github("ScottishCovidResponse/SCRCdataAPI")
+```
+
+To install the package itself:
+
+```{r}
+install_github("ScottishCovidResponse/SCRCdata")
+```
+
+and load it into R:
+
+```{r}
+library(SCRCdata)
+```
+
+## Datasets
 
 The following datasets are available in the `scripts` directory.
 
