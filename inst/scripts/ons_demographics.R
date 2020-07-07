@@ -9,9 +9,9 @@ library(SCRCdataAPI)
 download_source_version(dataset = "ons_demographics")
 
 # Process data and generate hdf5 file
-# sourcefile <- c("data-raw/sape-2018-persons.xlsx",
-#                 "data-raw/sape-2018-females.xlsx",
-#                 "data-raw/sape-2018-males.xlsx")
+sourcefile <- c("data-raw/sape-2018-persons.xlsx",
+                "data-raw/sape-2018-females.xlsx",
+                "data-raw/sape-2018-males.xlsx")
 
 h5filename <- "england_population.h5"
 
@@ -33,11 +33,10 @@ age.classes <- list("total", 0:90, seq(0, 90, 5), seq(0, 90, 10),
 
 process_ons_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
-                         output_area_sf,
-                         oa_conversion_table,
-                         grp.names,
-                         full.names,
-                         subgrp.names,
-                         age.classes)
+                         output_area_sf = output_area_sf,
+                         oa_conversion_table = oa_conversion_table,
+                         grp.names = grp.names,
+                         full.names = full.names,
+                         subgrp.names = subgrp.names,
+                         age.classes = age.classes)
 
-openssl::sha256(file(h5filename))

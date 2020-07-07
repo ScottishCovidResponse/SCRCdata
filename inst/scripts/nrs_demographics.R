@@ -29,10 +29,9 @@ age.classes <- list("total", 0:90, seq(0, 90, 5), seq(0, 90, 10),
 
 process_nrs_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
-                         datazone_sf,
-                         grp.names,
-                         full.names,
-                         subgrp.names,
-                         age.classes)
+                         datazone_sf = datazone_sf,
+                         grp.names = grp.names,
+                         full.names = full.names,
+                         subgrp.names = subgrp.names,
+                         age.classes = age.classes)
 
-openssl::sha256(file("demographics.h5"))
