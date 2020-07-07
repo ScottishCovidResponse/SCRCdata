@@ -11,11 +11,14 @@ Authors@R: c(person("Sonia", "Mitchell", email = "sonia.mitchell@glasgow.ac.uk",
 Description: Processing scripts for the SCRC data pipeline
 License: GPL-3
 Imports:
+    aRxiv,
     assertthat,
     dplyr,
     readr,
     readxl,
     reshape2,
+    revtools,
+    rjson,
     SCRCdataAPI,
     sf,
     tibble
