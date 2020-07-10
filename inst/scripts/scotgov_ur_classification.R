@@ -18,6 +18,7 @@
 #' (From: https://statistics.gov.scot/resource?uri=http%3A%2F%2Fstatistics.gov.scot%2Fdata%2Furban-rural-classification)
 #'
 
+library(SCRCdata)
 library(SCRCdataAPI)
 library(SPARQL)
 

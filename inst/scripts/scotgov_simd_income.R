@@ -6,6 +6,7 @@
 #' Only income has been included in this dataset.
 #'
 
+library(SCRCdata)
 library(SCRCdataAPI)
 library(SPARQL)
 
