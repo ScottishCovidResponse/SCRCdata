@@ -14,7 +14,7 @@ medrxiv_refs <- lapply(dat$rels, function(x) {
   authors <- lapply(x$rel_authors, function(y) y$author_name) %>%
     unlist() %>% paste(collapse = " and ")
 
-    data.frame(id = x$rel_doi,
+  data.frame(id = x$rel_doi,
              title = x$rel_title,
              journal = x$rel_site,
              author = authors,
@@ -26,4 +26,5 @@ medrxiv_refs <- lapply(dat$rels, function(x) {
 
 }) %>% do.call(rbind.data.frame, .)
 
-write.csv(medrxiv_refs, file.path("data-raw", "medrxiv_papers.csv"), row.names = FALSE)
+write.csv(medrxiv_refs, file.path("data-raw", "medrxiv_papers.csv"),
+          row.names = FALSE)
