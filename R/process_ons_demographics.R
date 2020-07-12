@@ -40,10 +40,9 @@ process_ons_demographics <- function (sourcefile,
     }
   }
 
-  conversion.table <- read.csv(oa_conversion_table)
+  conversion.table <- SCRCdataAPI::read_table(h5filename = oa_conversion_table, path = "conversiontable/englandwales")
 
   # Process raw data --------------------------------------------------------
-
   original.dat <- lapply(seq_along(sourcefile), function(k) {
 
     dataset <- sourcefile[k] %>%
@@ -55,7 +54,7 @@ process_ons_demographics <- function (sourcefile,
     header_new <- header_new %>%
       names(.) %>% gsub(" ", "",., fixed=TRUE) %>%
       gsub("Age", "AGE",., fixed=TRUE) %>% gsub("AGEd", "AGE",., fixed=TRUE) %>%
-      gsub("2011outputarea", "AREAcode",., fixed=TRUE)
+      gsub("GEOGRAPHY_NAME", "AREAcode",., fixed=TRUE)
 
     original.dat <- sape_tmp
     colnames(original.dat) <- header_new

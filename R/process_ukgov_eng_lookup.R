@@ -38,5 +38,5 @@ process_ukgov_eng_lookup <- function(sourcefile) {
     left_join(.,UA_HB,by = "UAcode")
 
   conversion.table$AREAname <- conversion.table$AREAcode
-  write.csv(file.path("data-raw", "oa_conversion_table.csv"))
+  write.csv(conversion.table,file.path("data-raw", "oa_conversion_table.csv"))
 }
