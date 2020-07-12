@@ -5,7 +5,6 @@
 process_scotgov_management <- function(sourcefile, h5filename) {
 
   scotMan <- read.csv(file = sourcefile) %>%
-    dplyr::select(-X) %>%
     dplyr::mutate(featurecode = gsub(
       "<http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -33,11 +32,12 @@ process_scotgov_management <- function(sourcefile, h5filename) {
   # Numbers of people in hospital and in ICU with confirmed or suspected COVID-19
   hospital.dat <- scotMan %>%
     dplyr::filter(grepl("COVID-19 patients", variable)) %>%
-    dplyr::mutate(areatypename = dplyr::case_when(
-      featurename == "Scotland" ~ "Country",
-      nchar(featurecode) == 6 ~ "Special board",
-      T ~ "NHS board"
-    ))
+    dplyr::mutate(featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/", "", featurecode),
+                  areatypename = dplyr::case_when(
+                    featurename == "Scotland" ~ "Country",
+                    nchar(featurecode) == 6 ~ "Special board",
+                    T ~ "NHS board"
+                  ))
 
   # Country
   hosp.country.dat <- hospital.dat %>%

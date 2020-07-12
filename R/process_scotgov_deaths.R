@@ -5,7 +5,6 @@
 process_scot_gov_deaths <- function(sourcefile, h5filename) {
 
   scotDeaths <- read.csv(file = sourcefile) %>%
-    dplyr::select(-X) %>%
     dplyr::mutate(featurecode = gsub(
       "<http://statistics.gov.scot/id/statistical-geography/", "",
       featurecode),

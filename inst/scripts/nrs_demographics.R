@@ -3,6 +3,7 @@
 #' (From: https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/2011-based-special-area-population-estimates/small-area-population-estimates/time-series)
 #'
 
+library(SCRCdata)
 library(SCRCdataAPI)
 
 # Download source data
