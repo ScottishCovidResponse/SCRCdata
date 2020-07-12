@@ -18,4 +18,6 @@ sourcefile <- c(OA_EW_LA = file.path("data-raw", "england_lookup",
                 UA_HB = file.path("data-raw", "england_lookup",
                                   "UA_to_healthboard_wales.csv"))
 
-process_ukgov_eng_lookup(sourcefile)
+h5filename = c("uk_gov_eng_lookup.h5")
+
+process_ukgov_eng_lookup(sourcefile, h5filename)
