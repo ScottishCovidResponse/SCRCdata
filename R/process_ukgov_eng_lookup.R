@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-process_ukgov_eng_lookup <- function(sourcefile) {
+process_ukgov_eng_lookup <- function(sourcefile,h5filename) {
 
   OA_EW_LA <- readr::read_csv(sourcefile["OA_EW_LA"],
                               col_types = cols(.default = "c"))  %>%
@@ -38,5 +38,12 @@ process_ukgov_eng_lookup <- function(sourcefile) {
     left_join(.,UA_HB,by = "UAcode")
 
   conversion.table$AREAname <- conversion.table$AREAcode
-  write.csv(conversion.table,file.path("data-raw", "oa_conversion_table.csv"))
+  conversion.table = conversion.table %>% tibble::column_to_rownames("AREAcode")
+  conversion.table[is.na(conversion.table)]=0
+  SCRCdataAPI::create_table(h5filename = h5filename,
+                            component = "conversiontable/englandwales",
+                            df = conversion.table,
+                            row_title = "outputareas",
+                            row_names = rownames(conversion.table),
+                            column_units = colnames(conversion.table))
 }
