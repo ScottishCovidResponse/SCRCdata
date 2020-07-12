@@ -55,24 +55,24 @@ WHERE {
 
 sourceDownloadDate <- as.POSIXct("2010-07-09 12:00:00", format = "%Y-%m-%d %H:%M:%S")
 localSourcePath <- file.path("data-raw",
-                             "deaths-involving-coronavirus-covid-19.csv")
+                             "v0.1.0.csv")
 
 sourceStorageRoot <- "boydorr"
 targetSourcePath <- file.path("human", "infection", "SARS-CoV-2", "scotland",
                               "mortality",
-                              "deaths-involving-coronavirus-covid-19.csv")
+                              "v0.1.0.csv")
 
 # Processing script
 
 scriptStorageRoot <- "github"
 scriptGitRepo <- "ScottishCovidResponse/SCRCdata"
-h5filename <- "deaths-involving-coronavirus-covid-19.h5"
+h5filename <- "v0.1.0.h5"
 
 # Data product
 
 productStorageRoot <- "boydorr"
 path <- file.path("human", "infection", "SARS-CoV-2", "scotland",
-                  "mortality", "deaths-involving-coronavirus-covid-19.h5")
+                  "mortality")
 namespace <- "SCRC"
 productVersion <- "0.1.0"
 
@@ -143,7 +143,8 @@ externalObjectId <- upload_source_data(
 # 1. upload processing script metadata to the registry
 # 2. run processing script (not done yet)
 processingScriptId <- upload_processing_script(storage_root = scriptStorageRoot,
-                                               path = scriptGitRepo)
+                                               path = scriptGitRepo,
+                                               key = key)
 
 # Process data and generate hdf5 file
 process_scot_gov_deaths(sourcefile = localSourcePath,

@@ -13,21 +13,24 @@ key <- read.table("token.txt")
 
 # Data product
 
-dataset <- "meanSymptomDelay"
-productStorageRoot <- "boydorr"
-path <- file.path("parameters", "meanSymptomDelay", "meanSymptomDelay.toml")
+dataset <- "symptom-delay"
+productStorageRoot <- "github"
+path <- file.path("master", "SCRC", "human", "infection", "SARS-CoV-2",
+                  "symptom-delay")
 namespace <- "SCRC"
 productVersion <- "0.1.0"
-filename <- "meanSymptomDelay.toml"
+filename <- "0.1.0.toml"
 
 
 # check -------------------------------------------------------------------
 
 # Check whether productStorageRoot exists in the registry
 if(!check_exists("storage_root", list(name = productStorageRoot))) {
-  storage_rootId <- new_storage_root(name = productStorageRoot,
-                                     root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                     key = key)
+  storage_rootId <- new_storage_root(
+    name = productStorageRoot,
+    root = file.path("https://raw.githubusercontent.com",
+                     "ScottishCovidResponse", "DataRepository", ""),
+    key = key)
 }
 
 # Check whether namespace exists in the registry
@@ -38,10 +41,12 @@ if(!check_exists("namespace", list(name = namespace))) {
 
 
 
-create_distribution(filename = "meanSymptomDelay.toml",
-                    descriptor = "meanSymptomDelay",
+create_distribution(filename = filename,
+                    path = file.path("data-raw", path),
+                    descriptor = dataset,
                     distribution = "Gaussian",
-                    parameters = list(mean = -16.08))
+                    parameters = list(mean = -16.08,
+                                      SD = 30))
 
 
 

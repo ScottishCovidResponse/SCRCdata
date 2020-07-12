@@ -47,27 +47,26 @@ WHERE {
   ?type rdfs:label ?measure.
 }"
 
-sourceDownloadDate <- as.POSIXct("2010-07-10 18:38:00", format = "%Y-%m-%d %H:%M:%S")
+sourceDownloadDate <- as.POSIXct("2010-07-11 12:15:00", format = "%Y-%m-%d %H:%M:%S")
 localSourcePath <- file.path("data-raw",
                              "coronavirus-covid-19-management-information.csv")
 
 sourceStorageRoot <- "boydorr"
-targetSourcePath <- file.path("human", "xxx",
-                              "coronavirus-covid-19-management-information",
-                              "coronavirus-covid-19-management-information.csv")
+targetSourcePath <- file.path("human", "infection", "SARS-CoV-2", "scotland",
+                              "cases_and_management",
+                              "v0.1.0.csv")
 
 # Processing script
 
 scriptStorageRoot <- "github"
 scriptGitRepo <- "ScottishCovidResponse/SCRCdata"
-h5filename <- "coronavirus-covid-19-management-information.h5"
+h5filename <- "v0.1.0.h5"
 
 # Data product
 
 productStorageRoot <- "boydorr"
-path <- file.path("human", "xxx",
-                  "coronavirus-covid-19-management-information",
-                  "coronavirus-covid-19-management-information.h5")
+path <- file.path("human", "infection", "SARS-CoV-2", "scotland",
+                   "cases_and_management")
 namespace <- "SCRC"
 productVersion <- "0.1.0"
 
