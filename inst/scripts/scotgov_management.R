@@ -9,23 +9,21 @@
 #'
 
 library(SCRCdataAPI)
-library(SPARQL)
-library(dplyr)
-library(devtools)
 
 
 # initialise --------------------------------------------------------------
 
-
-# Source data
-
+# misc
 key <- read.table("token.txt")
-sourceData <- "scottish coronavirus-covid-19-management-information"
-sourceVersion <- 0
+namespace <- "SCRC"
+doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+version <- 0
+path <- paste("human", "infection", "SARS-CoV-2", "scotland",
+              "cases_and_management", sep = "/")
 
-dataSource <- "Scottish Government Open Data Repository"
-endpoint <- "https://statistics.gov.scot/sparql.csv?query="
-query <- "PREFIX qb: <http://purl.org/linked-data/cube#>
+# original source
+dataset_name <- "Scottish Government Open Data Repository"
+original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
@@ -46,113 +44,107 @@ WHERE {
   ?varname rdfs:label ?variable.
   ?type rdfs:label ?measure.
 }"
+source_downloadDate <- as.POSIXct("2010-07-11 12:15:00",
+                                  format = "%Y-%m-%d %H:%M:%S")
 
-sourceDownloadDate <- as.POSIXct("2010-07-11 12:15:00", format = "%Y-%m-%d %H:%M:%S")
-localSourcePath <- file.path("data-raw",
-                             "coronavirus-covid-19-management-information.csv")
+# source data storage
+source_storageRoot <- "boydorr"
 
-sourceStorageRoot <- "boydorr"
-targetSourcePath <- file.path("human", "infection", "SARS-CoV-2", "scotland",
-                              "cases_and_management",
-                              "v0.1.0.csv")
+# processing script storage
+script_storageRoot <- "github"
+script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 
-# Processing script
-
-scriptStorageRoot <- "github"
-scriptGitRepo <- "ScottishCovidResponse/SCRCdata"
-h5filename <- "v0.1.0.h5"
-
-# Data product
-
-productStorageRoot <- "boydorr"
-path <- file.path("human", "infection", "SARS-CoV-2", "scotland",
-                   "cases_and_management")
-namespace <- "SCRC"
-productVersion <- "0.1.0"
+# data product storage
+product_storageRoot <- "boydorr"
 
 
 
-# check -------------------------------------------------------------------
+# default data that should be in database ---------------------------------
 
-# Check whether dataSource exists in the registry
-if(!check_exists("source", list(name = dataSource))) {
-  sourceId <- new_source(
-    name = "Scottish Government Open Data Repository",
-    abbreviation = "Scottish Government Open Data Repository",
-    website = "https://statistics.gov.scot/",
-    key = key)
-}
+original_storageRootId <- new_storage_root(
+  name = "Scottish Government Open Data Repository",
+  root = "https://statistics.gov.scot/sparql.csv?query=",
+  key = key)
 
-# Check whether sourceStorageRoot exists in the registry
-if(!check_exists("storage_root", list(name = sourceStorageRoot))) {
-  storageRootId <- new_storage_root(name = "boydorr",
-                                    root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                    key = key)
-}
+original_sourceId <- new_source(
+  name = dataset_name,
+  abbreviation = "Scottish Government Open Data Repository",
+  website = "https://statistics.gov.scot/",
+  key = key)
 
-# Check whether scriptStorageRoot exists in the registry
-if(!check_exists("storage_root", list(name = scriptStorageRoot))) {
-  storage_rootId <- new_storage_root(name = "github",
-                                     root = "https://github.com",
-                                     key = key)
-}
+source_storageRootId <- new_storage_root(name = source_storageRoot,
+                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
+                                         key = key)
 
-# Check whether productStorageRoot exists in the registry
-if(!check_exists("storage_root", list(name = productStorageRoot))) {
-  storage_rootId <- new_storage_root(name = productStorageRoot,
-                                     root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                     key = key)
-}
+script_storageRootId <- new_storage_root(name = script_storageRoot,
+                                         root = "https://github.com",
+                                         key = key)
 
-# Check whether namespace exists in the registry
-if(!check_exists("namespace", list(name = namespace))) {
-  namespaceId <- new_namespace(name = namespace,
-                               key = key)
-}
+product_storageRootId <- new_storage_root(name = product_storageRoot,
+                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
+                                          key = key)
+
+namespaceId <- new_namespace(name = namespace,
+                             key = key)
 
 
 
-# source data -------------------------------------------------------------
+# download source data ----------------------------------------------------
 
-# 1. upload original source metadata to registry
-# 2. download source data
-# 3. upload source data to store
-# 4. upload source data metadata to registry
+tmp <- as.Date(source_downloadDate, format = "%Y-%m-%d")
+day_version <- paste(gsub("-", "", tmp), version , sep = ".")
+local_sourcePath <- file.path("data-raw", path)
+source_filename <- paste0(day_version, ".csv")
+
+download_from_database(original_root,
+                       original_path,
+                       filename = source_filename,
+                       path = local_sourcePath)
+
+# upload source metadata to registry --------------------------------------
+
 externalObjectId <- upload_source_data(
-  dataset = sourceData,
-  source = dataSource,
-  source_root = endpoint,
-  source_path = query,
-  local_path = localSourcePath,
-  storage_root = sourceStorageRoot,
-  target_path = targetSourcePath,
-  download_date = sourceDownloadDate,
-  version = sourceVersion,
+  doi_or_unique_name = doi_or_unique_name,
+  original_source_id = original_sourceId,
+  original_root_id = original_storageRootId,
+  original_path = original_path,
+  local_path = file.path(local_sourcePath, source_filename),
+  storage_root_id = source_storageRootId,
+  target_path = paste(path, source_filename, sep = "/"),
+  download_date = source_downloadDate,
+  version = day_version,
   key = key)
 
 
 
-# processing script -------------------------------------------------------
+# upload processing script metadata to the registry -----------------------
 
-# 1. upload processing script metadata to the registry
-# 2. run processing script (not done yet)
-processingScriptId <- upload_processing_script(storage_root = scriptStorageRoot,
-                                               path = scriptGitRepo,
-                                               key = key)
-
-# Process data and generate hdf5 file
-process_scotgov_management(sourcefile = localSourcePath,
-                           h5filename = h5filename)
+# processingScriptId <- upload_processing_script(storage_root = script_storageRootId,
+#                                                path = script_gitRepo,
+#                                                key = key)
 
 
-# data product ------------------------------------------------------------
 
-upload_data_product(storage_root = productStorageRoot,
-                    path = path,
-                    dataset = dataset,
-                    filename = h5filename,
-                    version = productVersion,
-                    key = key)
+# generate data product ---------------------------------------------------
+
+product_filename <- paste0(product_version, ".h5")
+
+process_scotgov_management(
+  sourcefile = file.path(local_sourcePath, source_filename),
+  h5filename = file.path(local_sourcePath, product_filename))
+
+# ** upload this to boydorr server **
 
 
+# upload data product metadata to the registry ----------------------------
+
+upload_data_product(
+  storage_root_id = product_storageRootId,
+  path = path,
+  name = product_name,
+  component_name = NA,
+  filename = product_filename,
+  version = product_version,
+  namespace_id = namespaceId,
+  key = key)
 
