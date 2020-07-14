@@ -47,6 +47,7 @@ create_distribution(filename = filename,
 
 upload_data_product(storage_root_id = storage_rootId,
                     path = path,
+                    name = name,
                     component_name = component_name,
                     filename = filename,
                     version = productVersion,
