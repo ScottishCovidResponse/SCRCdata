@@ -51,12 +51,11 @@ source_downloadDate <- as.POSIXct("2010-07-11 12:15:00",
 source_storageRoot <- "boydorr"
 
 # processing script storage
-script_storageRoot <- "github"
-script_gitRepo <- "ScottishCovidResponse/SCRCdata"
+script_storageRoot <- "SCRCdata"
+script_gitRepo <- "master/inst/scripts/scotgov_management.R"
 
 # data product storage
 product_storageRoot <- "boydorr"
-
 
 
 # default data that should be in database ---------------------------------
@@ -76,9 +75,10 @@ source_storageRootId <- new_storage_root(name = source_storageRoot,
                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
                                          key = key)
 
-script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "https://github.com",
-                                         key = key)
+script_storageRootId <- new_storage_root(
+  name = script_storageRoot,
+  root = "https://raw.githubusercontent.com/ScottishCovidResponse/SCRCdata/",
+  key = key)
 
 product_storageRootId <- new_storage_root(name = product_storageRoot,
                                           root = "ftp://boydorr.gla.ac.uk/scrc/",
@@ -119,9 +119,10 @@ externalObjectId <- upload_source_data(
 
 # upload processing script metadata to the registry -----------------------
 
-# processingScriptId <- upload_processing_script(storage_root = script_storageRootId,
-#                                                path = script_gitRepo,
-#                                                key = key)
+processingScriptId <- upload_processing_script(storage_root_id = script_storageRootId,
+                                               path = script_gitRepo,
+                                               repo = "ScottishCovidResponse/SCRCdata",
+                                               key = key)
 
 
 
