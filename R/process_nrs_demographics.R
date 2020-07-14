@@ -4,7 +4,7 @@
 #'
 process_nrs_demographics <- function(sourcefile, h5filename, datazone_sf,
                                      grp.names, full.names, subgrp.names,
-                                     age.classes) {
+                                     age.classes,conversionh5filename) {
 
   # Get shapefile if not already downloaded by user -------------------------
   if (!file.exists(datazone_sf)) {
@@ -37,14 +37,10 @@ process_nrs_demographics <- function(sourcefile, h5filename, datazone_sf,
   }
 
   # Prepare conversion table
-  conversion.table <- readxl::read_excel(
-    "data-raw/SIMD+2020v2+-+datazone+lookup.xlsx",
-    sheet = 3) %>%
-    dplyr::rename(AREAcode = DZ,
-                  AREAname = DZname,
-                  URcode = URclass) %>%
-    dplyr::select_if(grepl("name$|code$", colnames(.)))
-
+  # Prepare conversion table
+  conversion.table <- SCRCdataAPI::read_table(filename = conversionh5filename, 
+                                              component = "conversiontable/scotland")
+  conversion.table = conversion.table %>% rownames_to_column("AREAcode")
 
 
   # Process raw data --------------------------------------------------------
@@ -115,7 +111,7 @@ process_nrs_demographics <- function(sourcefile, h5filename, datazone_sf,
             grid_id = tmp.dat$data[, 1])
           area.names <- tmp.dat$area.names
 
-        } else if(grp.names[i] %in% c("ur", "iz", "la", "hb", "mmw", "spc")) {
+        } else if(grp.names[i] %in% c("ur","iz","mmw","spc","la", "hb", "ttwa")) {
 
           # Transformed data (non-grid transformed)
           tmp.dat <- SCRCdataAPI::convert2lower(
@@ -156,7 +152,7 @@ process_nrs_demographics <- function(sourcefile, h5filename, datazone_sf,
             dimension_units = list(gsub("grid", "", grp.names[i])))
 
         } else {
-          SCRCdataAPI::create_array(h5filename = h5filename,
+          SCRCdataAPI::create_array(filename = h5filename,
                                     component = location,
                                     array = transarea.dat$grid_pop,
                                     dimension_names = dimension_names)

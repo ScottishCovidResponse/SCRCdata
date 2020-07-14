@@ -8,4 +8,8 @@ library(SCRCdataAPI)
 
 # Download source data
 download_source_version(dataset = "scotgov_dz_lookup")
+sourcefile=list("simd"= "data-raw/scotgov_simd_lookup.xlsx",
+                "dz"="data-raw/scotgov_dz_lookup.csv")
+h5filename="scotgov_lookup.h5"
+process_scotgov_lookup(sourcefile,h5filename)
 
