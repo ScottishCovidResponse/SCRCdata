@@ -2,7 +2,7 @@
 
 export(process_nrs_demographics)
 export(process_ons_demographics)
-export(process_scot_gov_deaths)
+export(process_scotgov_deaths)
 export(process_scotgov_management)
 export(process_scotgov_simd_income)
 export(process_scotgov_ur_classification)
