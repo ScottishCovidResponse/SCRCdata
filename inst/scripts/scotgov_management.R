@@ -11,12 +11,10 @@
 library(SCRCdataAPI)
 library(SCRCdata)
 
+key <- read.table("token.txt")
+
 
 # initialise parameters ---------------------------------------------------
-
-key <- read.table("token.txt")
-namespace <- "SCRC"
-
 
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
@@ -63,6 +61,8 @@ repo_version <- "0.1.0"
 
 # Additional parameters (automatically generated) -------------------------
 
+namespace <- "SCRC"
+
 # when was the source data downloaded?
 source_downloadDate <- todays_date
 
@@ -88,9 +88,8 @@ source_storageRoot <- "boydorr"
 source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
-script_storageRoot <- "boydorr"
-script_filename <- "exec.sh"
-script_path <- file.path(product_name, script_filename)
+script_storageRoot <- "text_file"
+submission_text <- "R -f inst/scripts/scotgov_deaths.R"
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
@@ -120,8 +119,10 @@ source_storageRootId <- new_storage_root(name = source_storageRoot,
 
 # submission script storage root
 script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
+                                         root = "https://data.scrc.uk/api/text_file/",
                                          key = key)
+tmp <- gsub("^.*/([0-9]+)/$", "\\1", script_storageRootId)
+script_path <- paste0(tmp, "/?format=text")
 
 # data product storage root
 product_storageRootId <- new_storage_root(name = product_storageRoot,
@@ -166,7 +167,7 @@ sourceDataURIs <- upload_source_data(
 
 # generate data product ---------------------------------------------------
 
-scriptURIs <- process_scotgov_management(
+process_scotgov_management(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
 
@@ -185,12 +186,13 @@ dataProductURIs <- upload_data_product(
 
 
 
-# upload processing script metadata to the registry -----------------------
+# upload submission script metadata to the registry -----------------------
 
 submissionScriptURIs <- upload_submission_script(
   storage_root_id = script_storageRootId,
   path = script_path,
-  hash = get_github_hash(script_gitRepo),
+  hash = openssl::sha1(submission_text),
+  text = submission_text,
   run_date = script_processingDate,
   key = key)
 
