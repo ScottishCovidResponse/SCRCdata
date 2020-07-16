@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-process_scotgov_management <- function(sourcefile, h5filename) {
+process_scotgov_management <- function(sourcefile, filename) {
 
   scotMan <- read.csv(file = sourcefile) %>%
     dplyr::mutate(featurecode = gsub(
@@ -21,7 +21,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     dplyr::mutate(variable = gsub("Calls - ", "", variable)) %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/calls",
                             array = as.matrix(calls.dat),
                             dimension_names = list(
@@ -48,7 +48,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/hospital",
                             array = as.matrix(patients.in.hospital.dat),
                             dimension_names = list(
@@ -60,7 +60,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/icu",
                             array = as.matrix(patients.in.icu.dat),
                             dimension_names = list(
@@ -76,7 +76,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "special_health_board/hospital",
                             array = as.matrix(special.patients.in.hosp.dat),
                             dimension_names = list(
@@ -88,7 +88,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "special_health_board/icu",
                             array = as.matrix(special.patients.in.icu.dat),
                             dimension_names = list(
@@ -105,7 +105,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "nhs_health_board/hospital/total",
                             array = as.matrix(hosp.nhs.total.dat),
                             dimension_names = list(
@@ -118,7 +118,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "nhs_health_board/hospital/suspected",
                             array = as.matrix(hosp.nhs.suspected.dat),
                             dimension_names = list(
@@ -131,7 +131,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "nhs_health_board/hospital/confirmed",
                             array = as.matrix(hosp.nhs.confirmed.dat),
                             dimension_names = list(
@@ -147,7 +147,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/ambulance_attendances",
                             array = as.matrix(ambulance.dat),
                             dimension_names = list(
@@ -162,7 +162,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(1 ~ date, value.var = "count") %>%
     dplyr::select(-"1")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/delayed_discharges",
                             array = as.matrix(discharges.dat),
                             dimension_names = list(
@@ -190,7 +190,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/testing/daily/people_found_positive",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -204,7 +204,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/testing/cumulative/tests_carried_out",
     array = as.matrix(testing.cumulative),
     dimension_names = list(
@@ -218,7 +218,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/testing/daily/tests_carried_out",
     array = as.matrix(testing.daily),
     dimension_names = list(
@@ -232,7 +232,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/testing/cumulative/people_tested",
     array = as.matrix(testing.country.cumulative),
     dimension_names = list(
@@ -250,7 +250,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "nhs_health_board/testing",
                             array = as.matrix(testing.area.dat),
                             dimension_names = list(
@@ -268,7 +268,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/nhs_workforce_covid19_absences",
     array = as.matrix(nhs.dat),
     dimension_names = list(
@@ -292,7 +292,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/proportion_of_cases",
     array = as.matrix(carehomes.proportion.dat),
     dimension_names = list(
@@ -306,7 +306,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/staff_absence_rate",
     array = as.matrix(carehomes.absence.rate.dat),
     dimension_names = list(
@@ -320,7 +320,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/response_rate",
     array = as.matrix(carehomes.response.rate.dat),
     dimension_names = list(
@@ -338,7 +338,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/cumulative_number_reports",
     array = as.matrix(carehomes.count.cum.dat),
     dimension_names = list(
@@ -352,7 +352,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/cumulative_number_suspected",
     array = as.matrix(carehomes.cum.numdat),
     dimension_names = list(
@@ -366,7 +366,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/new_suspected_cases",
     array = as.matrix(carehomes.count.daily.dat),
     dimension_names = list(
@@ -380,7 +380,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/staff_reported_absent",
     array = as.matrix(carehomes.count.staff.dat),
     dimension_names = list(
@@ -395,7 +395,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/carehome_with_suspected_cases",
     array = as.matrix(carehomes.count.sus.dat),
     dimension_names = list(
@@ -410,7 +410,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/carehomes_submitted_return",
     array = as.matrix(carehomes.count.carehomes.return.dat),
     dimension_names = list(
@@ -424,7 +424,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
-    h5filename = h5filename,
+    filename = filename,
     component = "scotland/carehomes/staff_submitted_return",
     array = as.matrix(carehomes.count.total.staff.dat),
     dimension_names = list(
@@ -440,7 +440,7 @@ process_scotgov_management <- function(sourcefile, h5filename) {
     reshape2::dcast(1 ~ date, value.var = "count") %>%
     dplyr::select(-"1")
 
-  SCRCdataAPI::create_array(h5filename = h5filename,
+  SCRCdataAPI::create_array(filename = filename,
                             component = "scotland/deaths",
                             array = as.matrix(deaths.dat),
                             dimension_names = list(
