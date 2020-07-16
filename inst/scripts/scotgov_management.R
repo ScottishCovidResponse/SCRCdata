@@ -54,7 +54,7 @@ WHERE {
 repo_storageRoot <- "github"
 script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 repo_version <- "0.1.0"
-
+processing_script <- "scotgov_management.R"
 
 
 
@@ -89,7 +89,7 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- "R -f inst/scripts/scotgov_deaths.R"
+submission_text <- paste0("R -f inst/scripts/", processing_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
