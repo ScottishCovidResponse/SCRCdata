@@ -17,14 +17,15 @@ library(SCRCdata)
 key <- read.table("token.txt")
 namespace <- "SCRC"
 
-doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
 
-todays_date <- as.POSIXct("2020-07-15 17:46:00",
+todays_date <- as.POSIXct("2020-07-16 11:26:00",
                          format = "%Y-%m-%d %H:%M:%S")
 version <- 0
+doi_or_unique_name <- paste("scottish coronavirus-covid-19-management-information", todays_date)
+
 
 # where was the source data download from? (original source)
 dataset_name <- "Scottish Government Open Data Repository"
@@ -88,8 +89,8 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "boydorr"
-script_path <- file.path(product_name, source_filename)
 script_filename <- "exec.sh"
+script_path <- file.path(product_name, script_filename)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
@@ -188,8 +189,7 @@ dataProductURIs <- upload_data_product(
 
 submissionScriptURIs <- upload_submission_script(
   storage_root_id = script_storageRootId,
-  path = product_name,
-  filename = script_filename,
+  path = script_path,
   hash = get_github_hash(script_gitRepo),
   run_date = script_processingDate,
   key = key)

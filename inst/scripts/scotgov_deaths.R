@@ -14,14 +14,13 @@ library(SCRCdata)
 key <- read.table("token.txt")
 namespace <- "SCRC"
 
-doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
-
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
                       "mortality", sep = "/")
 
-todays_date <- as.POSIXct("2020-07-15 17:46:00",
+todays_date <- as.POSIXct("2020-07-16 11:30:00",
                           format = "%Y-%m-%d %H:%M:%S")
 version <- 0
+doi_or_unique_name <- paste("scottish scottish deaths-involving-coronavirus-covid-19", todays_date)
 
 # where was the source data download from? (original source)
 dataset_name <- "Scottish Government Open Data Repository"
@@ -170,7 +169,7 @@ sourceDataURIs <- upload_source_data(
 
 # generate data product ---------------------------------------------------
 
-scriptURIs <- process_scotgov_deaths(
+process_scotgov_deaths(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
 
@@ -217,5 +216,3 @@ upload_object_links(run_date = script_processingDate,
                     inputs = list(sourceDataURIs$source_objectComponentId),
                     outputs = dataProductURIs$product_objectComponentId,
                     key = key)
-
-
