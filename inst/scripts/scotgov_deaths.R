@@ -19,10 +19,10 @@ product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
 todays_date <- as.POSIXct("2020-07-16 11:30:00",
                           format = "%Y-%m-%d %H:%M:%S")
 version <- 0
-doi_or_unique_name <- paste("scottish scottish deaths-involving-coronavirus-covid-19", todays_date)
+doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)
-dataset_name <- "Scottish Government Open Data Repository"
+source_name <- "Scottish Government Open Data Repository"
 original_root <- "https://statistics.gov.scot/sparql.csv?query="
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
@@ -105,7 +105,7 @@ product_path <- file.path(product_name, product_filename)
 
 # original source name
 original_sourceId <- new_source(
-  name = dataset_name,
+  name = source_name,
   abbreviation = "Scottish Government Open Data Repository",
   website = "https://statistics.gov.scot/",
   key = key)
