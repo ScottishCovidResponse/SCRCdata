@@ -16,9 +16,8 @@ key <- read.table("token.txt")
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
                       "mortality", sep = "/")
 
-todays_date <- as.POSIXct("2020-07-16 11:30:00",
-                          format = "%Y-%m-%d %H:%M:%S")
-version <- 0
+todays_date <- Sys.time()
+version <- 0.0
 doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)

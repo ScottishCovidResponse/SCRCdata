@@ -19,9 +19,8 @@ key <- read.table("token.txt")
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
 
-todays_date <- as.POSIXct("2020-07-16 11:26:00",
-                         format = "%Y-%m-%d %H:%M:%S")
-version <- 0
+todays_date <- Sys.time()
+version <- 0.0
 doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
 
