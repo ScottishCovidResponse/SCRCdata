@@ -31,7 +31,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_health_board/per_week-covid_related_deaths",
+    component = "nhs_health_board/week-covid_related_deaths",
     array = as.matrix(covid_deaths_per_week_by_nhsboard),
     dimension_names = list(
       `health board` = rownames(covid_deaths_per_week_by_nhsboard),
@@ -53,7 +53,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "council_area/per_week-covid_related_deaths",
+    component = "council_area/week-covid_related_deaths",
     array = as.matrix(covid_deaths_per_week_by_councilarea),
     dimension_names = list(
       `council area` = rownames(
@@ -98,7 +98,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_age/per_week/by_gender-country-covid_related_deaths",
+    component = "age_group/week/gender-country-covid_related_deaths",
     array = array(c(female, male), dim = c(dim(female), 2)),
     dimension_names = list(
       `age group` = rownames(covid_deaths_per_week_by_agegroup_f),
@@ -114,7 +114,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_age/per_week-persons-country-covid_related_deaths",
+    component = "age_group/week-persons-country-covid_related_deaths",
     array = as.matrix(covid_deaths_per_week_by_agegroup_all),
     dimension_names = list(
       `age group` = rownames(covid_deaths_per_week_by_agegroup_all),
@@ -134,7 +134,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_location/per_week-covid_related_deaths",
+    component = "location_type/week-covid_related_deaths",
     array = as.matrix(covid_deaths_per_week_by_location),
     dimension_names = list(
       `location` = rownames(covid_deaths_per_week_by_location),
@@ -175,7 +175,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_health_board/per_week-all_deaths",
+    component = "nhs_health_board/week-all_deaths",
     array = as.matrix(all_deaths_per_week_by_nhsboard),
     dimension_names = list(
       `health board` = rownames(all_deaths_per_week_by_nhsboard),
@@ -197,7 +197,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_council_area/per_week-all_deaths",
+    component = "council_area/week-all_deaths",
     array = as.matrix(all_deaths_per_week_by_councilarea),
     dimension_names = list(
       `council area` = rownames(all_deaths_per_week_by_councilarea),
@@ -241,7 +241,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_age/per_week/by_gender-country-all_deaths",
+    component = "age_group/week/gender-country-all_deaths",
     array = array(c(female, male), dim = c(dim(female), 2)),
     dimension_names = list(
       `age group` = rownames(all_deaths_per_week_by_agegroup_f),
@@ -258,7 +258,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_age/per_week-persons-country-all_deaths",
+    component = "age_group/week-persons-country-all_deaths",
     array = as.matrix(all_deaths_per_week_by_agegroup_all),
     dimension_names = list(
       `age group` = rownames(all_deaths_per_week_by_agegroup_all),
@@ -279,7 +279,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_location/per_week-all_deaths",
+    component = "location_type/week-all_deaths",
     array = as.matrix(all_deaths_per_week_by_location),
     dimension_names = list(
       `location` = rownames(all_deaths_per_week_by_location),
@@ -303,7 +303,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "per_week-persons-scotland-all_deaths-averaged_over_5years",
+    component = "week-persons-scotland-all_deaths-averaged_over_5years",
     array = as.matrix(all_deaths_per_week_averaged_over_5years),
     dimension_names = list(
       `total` = rownames(
@@ -331,7 +331,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_health_board/by_location-covid_related_deaths",
+    component = "nhs_health_board/location_type-covid_related_deaths",
     array = as.matrix(covid_deaths_by_nhsboard_and_location),
     dimension_names = list(
       `health board` = rownames(
@@ -350,7 +350,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_health_board/by_location-all_deaths",
+    component = "nhs_health_board/location_type-all_deaths",
     array = as.matrix(all_deaths_by_nhsboard_and_location),
     dimension_names = list(
       `health board` = rownames(
@@ -368,7 +368,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_council_area/by_location-covid_related_deaths",
+    component = "council_area/location_type-covid_related_deaths",
     array = as.matrix(covid_deaths_by_councilarea_and_location),
     dimension_names = list(
       `council area` = rownames(
@@ -386,7 +386,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "by_council_area/by_location-all_deaths",
+    component = "council_area/location_type-all_deaths",
     array = as.matrix(all_deaths_by_councilarea_and_location),
     dimension_names = list(
       `council area` = rownames(

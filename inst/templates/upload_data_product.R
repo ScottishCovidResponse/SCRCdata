@@ -16,8 +16,9 @@ key <- read.table("token.txt")
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
                       "mortality", sep = "/")
 
-todays_date <- Sys.time()
-version <- 0.0
+todays_date <- as.POSIXct("2020-07-16 11:30:00",
+                          format = "%Y-%m-%d %H:%M:%S")
+version <- 0
 doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)
@@ -57,13 +58,18 @@ WHERE {
 repo_storageRoot <- "github"
 script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 repo_version <- "0.1.0"
-processing_script <- "scotgov_deaths.R"
 
 
 
-
-
-# Additional parameters (automatically generated) -------------------------
+# Additional parameters ---------------------------------------------------
+# These parameters are automatically generated and assume the following:
+# (1) you intend to download your source data now
+# (2) your source data will be automatically downloaded to data-raw/[product_name]
+# (3) your source data filename will be [version_number].csv
+# (4) you intend to process this data and generate a data product now
+# (5) your data product will be automatically saved to data-raw/[product_name]
+# (6) your data product filename will be [version_number].csv
+# (7)
 
 namespace <- "SCRC"
 
@@ -93,54 +99,11 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste0("R -f inst/scripts/", processing_script)
+submission_text <- "R -f inst/scripts/scotgov_deaths.R"
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
 product_path <- file.path(product_name, product_filename)
-
-
-
-# default data that should be in database ---------------------------------
-
-# original source name
-original_sourceId <- new_source(
-  name = source_name,
-  abbreviation = "Scottish Government Open Data Repository",
-  website = "https://statistics.gov.scot/",
-  key = key)
-
-# original source root
-original_storageRootId <- new_storage_root(
-  name = "Scottish Government Open Data Repository",
-  root = original_root,
-  key = key)
-
-# source data storage root
-source_storageRootId <- new_storage_root(name = source_storageRoot,
-                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                         key = key)
-
-# submission script storage root
-script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "https://data.scrc.uk/api/text_file/",
-                                         key = key)
-tmp <- gsub("^.*/([0-9]+)/$", "\\1", script_storageRootId)
-script_path <- paste0(tmp, "/?format=text")
-
-# data product storage root
-product_storageRootId <- new_storage_root(name = product_storageRoot,
-                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                          key = key)
-
-# github repo storage root
-repo_storageRootId <- new_storage_root(name = repo_storageRoot,
-                                       root = "https://github.com",
-                                       key = key)
-
-# namespace
-namespaceId <- new_namespace(name = namespace,
-                             key = key)
 
 
 
@@ -153,27 +116,25 @@ download_from_database(source_root = original_root,
 
 
 
-# upload source metadata to registry --------------------------------------
-
-sourceDataURIs <- upload_source_data(
-  doi_or_unique_name = doi_or_unique_name,
-  original_source_id = original_sourceId,
-  original_root_id = original_storageRootId,
-  original_path = original_path,
-  local_path = file.path(local_path, source_filename),
-  storage_root_id = source_storageRootId,
-  target_path = paste(product_name, source_filename, sep = "/"),
-  download_date = source_downloadDate,
-  version = version,
-  key = key)
-
-
-
 # generate data product ---------------------------------------------------
 
 process_scotgov_deaths(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
+
+
+
+# default data that should be in database ---------------------------------
+
+# data product storage root
+product_storageRootId <- new_storage_root(name = product_storageRoot,
+                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
+                                          key = key)
+
+# namespace
+namespaceId <- new_namespace(name = namespace,
+                             key = key)
+
 
 
 
@@ -189,33 +150,3 @@ dataProductURIs <- upload_data_product(
   key = key)
 
 
-
-# upload submission script metadata to the registry -----------------------
-
-submissionScriptURIs <- upload_submission_script(
-  storage_root_id = script_storageRootId,
-  path = script_path,
-  hash = openssl::sha1(submission_text),
-  text = submission_text,
-  run_date = script_processingDate,
-  key = key)
-
-
-
-# link objects together ---------------------------------------------------
-
-githubRepoURIs <- upload_github_repo(
-  storage_root_id = script_storageRootId,
-  repo = script_gitRepo,
-  hash = get_github_hash(script_gitRepo),
-  version = repo_version,
-  key = key)
-
-upload_object_links(run_date = script_processingDate,
-                    run_identifier = paste("Script run to upload and process",
-                                           doi_or_unique_name),
-                    code_repo_id = githubRepoURIs$repo_objectId,
-                    submission_script_id = submissionScriptURIs$script_objectId,
-                    inputs = list(sourceDataURIs$source_objectComponentId),
-                    outputs = dataProductURIs$product_objectComponentId,
-                    key = key)

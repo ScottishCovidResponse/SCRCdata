@@ -1,69 +1,84 @@
-#' scottish deaths-involving-coronavirus-covid-19
+#' dataset-name
 #'
-#' This dataset presents the weekly, and year to date, provisional number of
-#' deaths associated with coronavirus (COVID-19) alongside the total number
-#' of deaths registered in Scotland, broken down by age, sex. (From: https://statistics.gov.scot/data/deaths-involving-coronavirus-covid-19)
+#' Dataset description and link to source
 #'
 
 library(SCRCdataAPI)
 library(SCRCdata)
 
+
+# Download a key from https://data.scrc.uk and store it somewhere safe!
 key <- read.table("token.txt")
 
 
-# initialise parameters ---------------------------------------------------
-
+# The product_name is used to identify the data product and will be used to
+# generate various file locations:
+# (1) source data is downloaded locally to data-raw/[product_name]
+# (2) source data is stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
+# (3) data product is saved locally (after processing) to data-raw/[product_name]
+# (4) data product is stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
-                      "mortality", sep = "/")
+                      "cases_and_management", sep = "/")
 
+# The following information is used to generate the source data and data
+# product filenames, e.g. 20200716.0.csv and 20200716.0.h5
 todays_date <- Sys.time()
 version <- 0.0
-doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
-# where was the source data download from? (original source)
+# This is the name of your dataset
+doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+
+# Where was the source data download from? (original source)
+# The source_name is the name associated with to the original_root
 source_name <- "Scottish Government Open Data Repository"
 original_root <- "https://statistics.gov.scot/sparql.csv?query="
+# Here, the original_path is a query (which is later converted into a path
+# on line 164), if you have a url, you can use download_from_url() instead
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
 PREFIX dim: <http://purl.org/linked-data/sdmx/2009/dimension#>
 PREFIX sdim: <http://statistics.gov.scot/def/dimension/>
 PREFIX stat: <http://statistics.data.gov.uk/def/statistical-entity#>
-PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
-SELECT ?featurecode ?featurename ?areatypename ?date ?cause ?location ?gender ?age ?type ?count
+SELECT ?featurecode ?featurename ?date ?measure ?variable ?count
 WHERE {
-  ?indicator qb:dataSet data:deaths-involving-coronavirus-covid-19;
-              mp:count ?count;
-              qb:measureType ?measType;
-              sdim:age ?value;
-              sdim:causeofdeath ?causeDeath;
-              sdim:locationofdeath ?locDeath;
-              sdim:sex ?sex;
+  ?indicator qb:dataSet data:coronavirus-covid-19-management-information;
               dim:refArea ?featurecode;
-              dim:refPeriod ?period.
+              dim:refPeriod ?period;
+              sdim:variable ?varname;
+              qb:measureType ?type.
+{?indicator mp:count ?count.} UNION {?indicator mp:ratio ?count.}
 
-              ?measType rdfs:label ?type.
-              ?value rdfs:label ?age.
-              ?causeDeath rdfs:label ?cause.
-              ?locDeath rdfs:label ?location.
-              ?sex rdfs:label ?gender.
-              ?featurecode stat:code ?areatype;
-                rdfs:label ?featurename.
-              ?areatype rdfs:label ?areatypename.
-              ?period rdfs:label ?date.
+  ?featurecode <http://publishmydata.com/def/ontology/foi/displayName> ?featurename.
+  ?period rdfs:label ?date.
+  ?varname rdfs:label ?variable.
+  ?type rdfs:label ?measure.
 }"
 
 # where is the processing script stored?
 repo_storageRoot <- "github"
 script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 repo_version <- "0.1.0"
-processing_script <- "scotgov_deaths.R"
+processing_script <- "scotgov_management.R"
 
+# Now go to line 164 and check whether you want to use download_from_database()
+# or download_from_url()
 
+# Insert your processing script function on line 189
 
-
-
-# Additional parameters (automatically generated) -------------------------
+# Additional parameters ---------------------------------------------------
+# The following parameters are automatically generated and assume the following:
+# (1) you intend to download your source data now
+# (2) you intend to process this data and generate a data product now
+# (3) your source data will be automatically downloaded to data-raw/[product_name]
+# (4) your source data filename will be [version_number].csv
+# (5) your data product will be automatically saved to data-raw/[product_name]
+# (6) your data product filename will be [version_number].csv
+# (7) you will upload your source data to the Boydorr server
+# (8) you will upload your data product to the Boydorr server
 
 namespace <- "SCRC"
 
@@ -98,7 +113,6 @@ submission_text <- paste0("R -f inst/scripts/", processing_script)
 # where is the data product stored?
 product_storageRoot <- "boydorr"
 product_path <- file.path(product_name, product_filename)
-
 
 
 # default data that should be in database ---------------------------------
@@ -171,7 +185,7 @@ sourceDataURIs <- upload_source_data(
 
 # generate data product ---------------------------------------------------
 
-process_scotgov_deaths(
+process_scotgov_management(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
 

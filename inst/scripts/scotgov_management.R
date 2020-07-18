@@ -11,23 +11,21 @@
 library(SCRCdataAPI)
 library(SCRCdata)
 
+key <- read.table("token.txt")
+
 
 # initialise parameters ---------------------------------------------------
-
-key <- read.table("token.txt")
-namespace <- "SCRC"
-
-doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
 product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
 
-todays_date <- as.POSIXct("2020-07-15 17:46:00",
-                         format = "%Y-%m-%d %H:%M:%S")
-version <- 0
+todays_date <- Sys.time()
+version <- 0.0
+doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+
 
 # where was the source data download from? (original source)
-dataset_name <- "Scottish Government Open Data Repository"
+source_name <- "Scottish Government Open Data Repository"
 original_root <- "https://statistics.gov.scot/sparql.csv?query="
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
@@ -55,12 +53,14 @@ WHERE {
 repo_storageRoot <- "github"
 script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 repo_version <- "0.1.0"
-
+processing_script <- "scotgov_management.R"
 
 
 
 
 # Additional parameters (automatically generated) -------------------------
+
+namespace <- "SCRC"
 
 # when was the source data downloaded?
 source_downloadDate <- todays_date
@@ -87,9 +87,8 @@ source_storageRoot <- "boydorr"
 source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
-script_storageRoot <- "boydorr"
-script_path <- file.path(product_name, source_filename)
-script_filename <- "exec.sh"
+script_storageRoot <- "text_file"
+submission_text <- paste0("R -f inst/scripts/", processing_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
@@ -101,7 +100,7 @@ product_path <- file.path(product_name, product_filename)
 
 # original source name
 original_sourceId <- new_source(
-  name = dataset_name,
+  name = source_name,
   abbreviation = "Scottish Government Open Data Repository",
   website = "https://statistics.gov.scot/",
   key = key)
@@ -119,8 +118,10 @@ source_storageRootId <- new_storage_root(name = source_storageRoot,
 
 # submission script storage root
 script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
+                                         root = "https://data.scrc.uk/api/text_file/",
                                          key = key)
+tmp <- gsub("^.*/([0-9]+)/$", "\\1", script_storageRootId)
+script_path <- paste0(tmp, "/?format=text")
 
 # data product storage root
 product_storageRootId <- new_storage_root(name = product_storageRoot,
@@ -165,7 +166,7 @@ sourceDataURIs <- upload_source_data(
 
 # generate data product ---------------------------------------------------
 
-scriptURIs <- process_scotgov_management(
+process_scotgov_management(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
 
@@ -184,13 +185,13 @@ dataProductURIs <- upload_data_product(
 
 
 
-# upload processing script metadata to the registry -----------------------
+# upload submission script metadata to the registry -----------------------
 
 submissionScriptURIs <- upload_submission_script(
   storage_root_id = script_storageRootId,
-  path = product_name,
-  filename = script_filename,
-  hash = get_github_hash(script_gitRepo),
+  path = script_path,
+  hash = openssl::sha1(submission_text),
+  text = submission_text,
   run_date = script_processingDate,
   key = key)
 
