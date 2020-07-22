@@ -113,7 +113,7 @@ submission_text <- paste0("R -f inst/scripts/", processing_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
-product_path <- file.path(product_name, product_filename)
+product_path <- product_name
 
 
 # default data that should be in database ---------------------------------
