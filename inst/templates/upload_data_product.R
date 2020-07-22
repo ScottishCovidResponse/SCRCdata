@@ -44,7 +44,7 @@ product_filename <- paste0(version_number, ".h5")
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
-product_path <- file.path(product_name, product_filename)
+product_path <- product_name
 
 
 # default data that should be in database ---------------------------------
