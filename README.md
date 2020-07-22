@@ -2,6 +2,12 @@
 
 Processing scripts for the SCRC data pipeline
 
+* [Installation](#installation)
+* [Templates](#templates)
+* [Datasets](#datasets)
+
+
+
 ## Installation
 
 This package is dependent on the SCRCdataAPI package being installed:
@@ -23,9 +29,26 @@ and load it into R:
 library(SCRCdata)
 ```
 
+
+## Templates
+
+The following templates are available in the `inst/templates` directory. These templates are used to upload metadata to the data repository. Depending on what you have, you need to use a different template.
+
+| Template                  | What do you have?                                                                            | 
+| ---                       | ---                                                                                          |
+| upload_parameter          | A toml file (\*1), but no original source and no processing file                             |
+| upload_data_product       | An h5 file (\*2), but no original source (\*3), no raw data (\*4), and no processing file    |
+| upload_dataset            | An original source, a raw data file, a processing script, and a data product                 |
+
+\*1 point-estimate or distribution  
+\*2 array or table  
+\*3 e.g. website  
+\*4 e.g. csv file  
+
+
 ## Datasets
 
-The following datasets are available in the `scripts` directory.
+The following datasets are available in the `inst/scripts` directory.
 
 | Dataset                   | Description                                    |
 | ---                       | ---                                            |
