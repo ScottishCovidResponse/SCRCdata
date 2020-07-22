@@ -5,7 +5,7 @@ This is a git repository to store data processing scripts for the SCRC data pipe
 **Please read the [Wiki pages](https://github.com/ScottishCovidResponse/SCRCdata/wiki)
  (scroll back up, fifth tab from the left) for more information, including:**
 
-* Installation instructions
+* [Installation instructions](https://github.com/ScottishCovidResponse/SCRCdata/wiki/*-How-to-install-SCRCdata-*)
 * [Available datasets](https://github.com/ScottishCovidResponse/SCRCdata/wiki/*-Available-datasets-*)
 * [Submission scipt templates](https://github.com/ScottishCovidResponse/SCRCdata/wiki/Submission-script-templates)
 * [Example workflow (how to upload metadata to the data registry)](https://github.com/ScottishCovidResponse/SCRCdata/wiki/Workflow)
