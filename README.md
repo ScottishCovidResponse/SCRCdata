@@ -7,20 +7,3 @@ This is a git repository to store data processing scripts for the SCRC data pipe
 **For more examples and useful information, please look at the Wiki (scroll back up, fifth tab from the left).**
 
 
-## Installation
-
-This package is dependent on the SCRCdataAPI package being installed:
-
-```{r}
-library(devtools)
-install_github("ScottishCovidResponse/SCRCdataAPI")
-```
-
-To install the package itself and load it into R:
-
-```{r}
-install_github("ScottishCovidResponse/SCRCdata")
-library(SCRCdata)
-```
-
-
