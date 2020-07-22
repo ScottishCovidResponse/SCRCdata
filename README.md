@@ -51,7 +51,7 @@ The following templates are available in the `inst/templates` directory. These t
 The following datasets are available in the `inst/scripts` directory.
 
 | Dataset                   | Description                                    | Uploaded |
-| ---                       | ---                                            |          |
+| ---                       | ---                                            | ---      |
 | nrs_demographics          | Small area population estimates (2018) by age, sex, data zone (2011), and council area (2018) |  |
 | ors_demographics          |                                                |          |
 | scotgov_deaths            | Number of deaths (weekly) associated with Covid-19 and the total number of deaths registered in Scotland, broken down by age and sex | ✔︎ |
