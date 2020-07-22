@@ -27,7 +27,7 @@ library(SCRCdata)
 
 ## Templates
 
-The following templates are available in the `inst/templates` directory. These templates are used to upload metadata to the data repository. Depending on what you have, you need to use a different template.
+The following templates are available in the `inst/templates` directory. These templates are used to upload metadata to the data registry. Depending on what you have, you need to use a different template.
 
 | Template                  | What do you have?                                                                            | 
 | ---                       | ---                                                                                          |
