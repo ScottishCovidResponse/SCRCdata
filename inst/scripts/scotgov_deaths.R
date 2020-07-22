@@ -17,7 +17,7 @@ product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
                       "mortality", sep = "/")
 
 todays_date <- Sys.time()
-version <- 0.0
+version <- "0.0"
 doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)
@@ -125,8 +125,6 @@ source_storageRootId <- new_storage_root(name = source_storageRoot,
 script_storageRootId <- new_storage_root(name = script_storageRoot,
                                          root = "https://data.scrc.uk/api/text_file/",
                                          key = key)
-tmp <- gsub("^.*/([0-9]+)/$", "\\1", script_storageRootId)
-script_path <- paste0(tmp, "/?format=text")
 
 # data product storage root
 product_storageRootId <- new_storage_root(name = product_storageRoot,
@@ -194,7 +192,6 @@ dataProductURIs <- upload_data_product(
 
 submissionScriptURIs <- upload_submission_script(
   storage_root_id = script_storageRootId,
-  path = script_path,
   hash = openssl::sha1(submission_text),
   text = submission_text,
   run_date = script_processingDate,
@@ -205,7 +202,7 @@ submissionScriptURIs <- upload_submission_script(
 # link objects together ---------------------------------------------------
 
 githubRepoURIs <- upload_github_repo(
-  storage_root_id = script_storageRootId,
+  storage_root_id = repo_storageRootId,
   repo = script_gitRepo,
   hash = get_github_hash(script_gitRepo),
   version = repo_version,
