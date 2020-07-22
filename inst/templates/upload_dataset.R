@@ -64,10 +64,10 @@ script_gitRepo <- "ScottishCovidResponse/SCRCdata"
 repo_version <- "0.1.0"
 processing_script <- "scotgov_management.R"
 
-# Now go to line 164 and check whether you want to use download_from_database()
+# Now go to line 162 and check whether you want to use download_from_database()
 # or download_from_url()
 
-# Insert your processing script function on line 189
+# Insert your processing script function on line 187
 
 # Additional parameters ---------------------------------------------------
 # The following parameters are automatically generated and assume the following:
@@ -157,6 +157,7 @@ namespaceId <- new_namespace(name = namespace,
 
 
 # download source data ----------------------------------------------------
+# you can replace this function with download_from_url() or something else
 
 download_from_database(source_root = original_root,
                        source_path = original_path,
