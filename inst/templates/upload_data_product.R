@@ -21,21 +21,22 @@ product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
 # The following information is used to generate the source data and data
 # product filenames, e.g. 20200716.0.0.csv and 20200716.0.0.h5
 todays_date <- Sys.time()
-version <- "0.0"
+version <- 0
 
 # This is the name of your dataset
 doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
 
 # Additional parameters ---------------------------------------------------
 # The following parameters are automatically generated and assume the following:
-# (1) your data product filename will be [version_number].h5
-# (2) you will upload your data product to the Boydorr server
+# (1) your version_number will be 1.[date].[version].h5
+# (2) your data product filename will be [version_number].h5
+# (3) you will upload your data product to the Boydorr server
 
 namespace <- "SCRC"
 
 # create version number (this is used to generate the *.csv and *.h5 filenames)
 tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste(gsub("-", "", tmp), version , sep = ".")
+version_number <- paste("1", gsub("-", "", tmp), version , sep = ".")
 
 # where is the data product saved? (locally, before being stored)
 processed_path <- file.path("data-raw", product_name)

@@ -20,7 +20,7 @@ product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
 
 todays_date <- Sys.time()
-version <- "0.0"
+version <- 0
 doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
 
@@ -70,7 +70,7 @@ script_processingDate <- todays_date
 
 # create version number (this is used to generate the *.csv and *.h5 filenames)
 tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste(gsub("-", "", tmp), version , sep = ".")
+version_number <- paste("1", gsub("-", "", tmp), version , sep = ".")
 
 # where is the source data downloaded to? (locally, before being stored)
 local_path <- file.path("data-raw", product_name)

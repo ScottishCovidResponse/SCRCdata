@@ -25,7 +25,7 @@ product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
 # The following information is used to generate the source data and data
 # product filenames, e.g. 20200716.0.0.csv and 20200716.0.0.h5
 todays_date <- Sys.time()
-version <- "0.0"
+version <- 0
 
 # This is the name of your dataset
 doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
@@ -74,11 +74,12 @@ processing_script <- "scotgov_management.R"
 # (1) you intend to download your source data now
 # (2) you intend to process this data and generate a data product now
 # (3) your source data will be automatically downloaded to data-raw/[product_name]
-# (4) your source data filename will be [version_number].csv
-# (5) your data product will be automatically saved to data-raw/[product_name]
-# (6) your data product filename will be [version_number].h5
-# (7) you will upload your source data to the Boydorr server
-# (8) you will upload your data product to the Boydorr server
+# (4) your version_number will be 1.[date].[version].h5
+# (5) your source data filename will be [version_number].csv
+# (6) your data product will be automatically saved to data-raw/[product_name]
+# (7) your data product filename will be [version_number].h5
+# (8) you will upload your source data to the Boydorr server
+# (9) you will upload your data product to the Boydorr server
 
 namespace <- "SCRC"
 
@@ -90,7 +91,7 @@ script_processingDate <- todays_date
 
 # create version number (this is used to generate the *.csv and *.h5 filenames)
 tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste(gsub("-", "", tmp), version , sep = ".")
+version_number <- paste("1", gsub("-", "", tmp), version , sep = ".")
 
 # where is the source data downloaded to? (locally, before being stored)
 local_path <- file.path("data-raw", product_name)
