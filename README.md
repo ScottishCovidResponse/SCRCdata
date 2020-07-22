@@ -6,6 +6,7 @@ This is a git repository to store data processing scripts for the SCRC data pipe
 * [Templates](#templates)
 * [Datasets](#datasets)
 
+For more examples and useful information, please look at the Wiki (scroll back up, fourth tab from the left).
 
 
 ## Installation
