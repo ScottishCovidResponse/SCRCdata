@@ -1,6 +1,6 @@
 # SCRCdata
 
-Processing scripts for the SCRC data pipeline
+This is a git repository to store data processing functions (/R) and metadata submission scripts (inst/scripts) for the SCRC data pipeline.
 
 * [Installation](#installation)
 * [Templates](#templates)
