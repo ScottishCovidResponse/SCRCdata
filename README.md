@@ -1,6 +1,6 @@
 # SCRCdata
 
-This is a git repository to store data processing functions (/R) and metadata submission scripts (inst/scripts) for the SCRC data pipeline.
+This is a git repository to store data processing scripts for the SCRC data pipeline. Processing functions used to convert raw data (e.g. csv files) into data products (e.g. h5 files) are stored in the `R` directory. Scripts used submit metadata associated with each dataset (original source, raw data location, processing script location, and data product location) to the data respository are stored in `inst/scripts`. Templates that can used to generate more of these scripts are stored in `inst/templates`.
 
 * [Installation](#installation)
 * [Templates](#templates)
@@ -17,15 +17,10 @@ library(devtools)
 install_github("ScottishCovidResponse/SCRCdataAPI")
 ```
 
-To install the package itself:
+To install the package itself and load it into R:
 
 ```{r}
 install_github("ScottishCovidResponse/SCRCdata")
-```
-
-and load it into R:
-
-```{r}
 library(SCRCdata)
 ```
 
