@@ -12,17 +12,19 @@ library(SCRCdataAPI)
 library(SCRCdata)
 
 key <- read.table("token.txt")
-
+todays_date <- Sys.time()
 
 # initialise parameters ---------------------------------------------------
 
-product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
+product_name <- paste("records", "SARS-CoV-2", "scotland",
               "cases_and_management", sep = "/")
 
-todays_date <- Sys.time()
-version <- 0
-doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+# create version number (this is used to generate the *.csv and *.h5 filenames)
+tmp <- as.Date(todays_date, format = "%Y-%m-%d")
+version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 
+# dataset name
+doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
 # where was the source data download from? (original source)
 source_name <- "Scottish Government Open Data Repository"
@@ -67,10 +69,6 @@ source_downloadDate <- todays_date
 
 # when was the data product generated?
 script_processingDate <- todays_date
-
-# create version number (this is used to generate the *.csv and *.h5 filenames)
-tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste("1", gsub("-", "", tmp), version , sep = ".")
 
 # where is the source data downloaded to? (locally, before being stored)
 local_path <- file.path("data-raw", product_name)
@@ -157,7 +155,7 @@ sourceDataURIs <- upload_source_data(
   storage_root_id = source_storageRootId,
   target_path = paste(product_name, source_filename, sep = "/"),
   download_date = source_downloadDate,
-  version = version,
+  version = version_number,
   key = key)
 
 

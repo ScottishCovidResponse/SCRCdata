@@ -9,6 +9,7 @@ library(SCRCdata)
 
 # Download a key from https://data.scrc.uk and store it somewhere safe!
 key <- read.table("token.txt")
+todays_date <- Sys.time()
 
 
 # The product_name is used to identify the data product and will be used to
@@ -19,13 +20,15 @@ key <- read.table("token.txt")
 # (3) data product is saved locally (after processing) to data-raw/[product_name]
 # (4) data product is stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
+product_name <- paste("records", "SARS-CoV-2", "scotland",
                       "cases_and_management", sep = "/")
 
 # The following information is used to generate the source data and data
-# product filenames, e.g. 20200716.0.0.csv and 20200716.0.0.h5
-todays_date <- Sys.time()
-version <- 0
+# product filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that
+# is downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded
+# once
+tmp <- as.Date(todays_date, format = "%Y-%m-%d")
+version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 
 # This is the name of your dataset
 doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
@@ -88,10 +91,6 @@ source_downloadDate <- todays_date
 
 # when was the data product generated?
 script_processingDate <- todays_date
-
-# create version number (this is used to generate the *.csv and *.h5 filenames)
-tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste("1", gsub("-", "", tmp), version , sep = ".")
 
 # where is the source data downloaded to? (locally, before being stored)
 local_path <- file.path("data-raw", product_name)
@@ -178,7 +177,7 @@ sourceDataURIs <- upload_source_data(
   storage_root_id = source_storageRootId,
   target_path = paste(product_name, source_filename, sep = "/"),
   download_date = source_downloadDate,
-  version = version,
+  version = version_number,
   key = key)
 
 
