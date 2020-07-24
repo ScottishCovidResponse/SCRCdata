@@ -38,7 +38,7 @@ filename <- paste0(productVersion, ".toml")
 
 create_distribution(filename = filename,
                     path = file.path("data-raw", path),
-                    descriptor = component_name,
+                    name = component_name,
                     distribution = distribution,
                     parameters = parameters)
 
@@ -46,13 +46,12 @@ create_distribution(filename = filename,
 # data product ------------------------------------------------------------
 
 upload_data_product(storage_root_id = storage_rootId,
-                    path = path,
                     name = name,
                     component_name = component_name,
-                    filename = filename,
+                    processed_path = file.path("data-raw", path, filename),
+                    product_path = file.path(path, filename),
                     version = productVersion,
                     namespace_id = namespaceId,
                     key = key)
-
 
 
