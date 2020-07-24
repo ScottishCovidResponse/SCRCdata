@@ -7,11 +7,12 @@
 process_nrs_demographics(
   sourcefile,
   h5filename,
-  datazone_sf,
   grp.names,
   full.names,
   subgrp.names,
-  age.classes
+  age.classes,
+  conversionh5filename,
+  genderbreakdown
 )
 }
 \description{

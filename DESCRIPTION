@@ -7,6 +7,8 @@ Authors@R: c(person("Sonia", "Mitchell", email = "sonia.mitchell@glasgow.ac.uk",
              person("Ciaran", "McMonagle", email = "c.mcmonagle.1@research.gla.ac.uk",
                   role = "ctb", comment = c(ORCID = "0000-0002-1325-2413")),
              person("Nardus", "Mollentze", email = "",
+                  role = "ctb", comment = c(ORCID = "")),
+             person("Ryan", "Field", email = "",
                   role = "ctb", comment = c(ORCID = "")))
 Description: Processing scripts for the SCRC data pipeline
 License: GPL-3
@@ -22,6 +24,10 @@ Imports:
     SCRCdataAPI,
     sf,
     tibble
+Suggests:
+    usethis
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
+Depends: 
+    R (>= 2.10)
