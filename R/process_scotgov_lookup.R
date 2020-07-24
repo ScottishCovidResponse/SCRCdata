@@ -1,4 +1,4 @@
-#' process_ukgov_eng_lookup
+#' process_scotgov_lookup
 #'
 #' @export
 #'
