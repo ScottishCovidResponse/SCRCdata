@@ -1,6 +1,6 @@
 #' parameter-name
 #'
-#' Add a point-estimate to the data registry
+#' Add a distribution to the data registry
 #'
 
 library(SCRCdataAPI)
@@ -21,8 +21,9 @@ namespace <- "SCRC"
 product_name <- "human/infection/SARS-CoV-2/parameter-name"
 # The component_name is taken as the last part of the product_name
 component_name <- gsub("^.*/([^/]*)$", "\\1", product_name)
-# The value of the point-estimate
-component_value <- 999.99
+# The distribution and its parameters
+distribution <- "Gaussian"
+parameters <- list(mean = -16.08, SD = 30)
 # The version number of the data product
 productVersion <- "0.1.0"
 
@@ -56,9 +57,11 @@ namespaceId <- new_namespace(name = namespace,
 path <- paste("master", namespace, product_name, sep = "/")
 filename <- paste0(productVersion, ".toml")
 
-create_estimate(filename = filename,
-                path = file.path("data-raw", path),
-                parameters = as.list(setNames(component_value, component_name)))
+create_distribution(filename = filename,
+                    path = file.path("data-raw", path),
+                    name = component_name,
+                    distribution = distribution,
+                    parameters = parameters)
 
 
 # upload data product metadata to database --------------------------------
