@@ -14,7 +14,7 @@ namespace <- "SCRC"
 name <- "human/infection/SARS-CoV-2/symptom-delay"
 component_name <- gsub("^.*/([^/]*)$", "\\1", name)
 productVersion <- "0.1.0"
-disctribution <- "Gaussian"
+distribution <- "Gaussian"
 parameters <- list(mean = -16.08,
                    SD = 30)
 productStorageRoot <- "DataRepository"
