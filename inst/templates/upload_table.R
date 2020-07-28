@@ -1,41 +1,46 @@
-#' dataset-name
+#' table-name
 #'
-#' Dataset description and link to source
+#' Add a table / array (as an h5 data product) to the data registry
 #'
 
 library(SCRCdataAPI)
 library(SCRCdata)
 
 
-# Download a key from https://data.scrc.uk and store it somewhere safe!
+# Go to data.scrc.uk, click on Links, then Generate API Token, and save your
+# token in your working directory as token.txt. If the following returns an
+# error, then save a carriage return after the token.
 key <- read.table("token.txt")
-todays_date <- Sys.time()
+namespace <- "SCRC"
 
+# Example dataset (must be a matrix)
+data <- matrix(1:4, 2, 2)
+rownames(data) <- c("Glasgow", "Edinburgh")
+colnames(data) <- c("Week1", "Week2")
 
 # The product_name is used to identify the data product and will be used to
 # generate various file locations:
 # (1) data product is stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- paste("human", "infection", "SARS-CoV-2", "scotland",
-                      "mortality", sep = "/")
+product_name <- paste("human", "infection", "scotland", sep = "/")
 
 # The following information is used to generate the source data and data
 # product filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that
 # is downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded
 # once
+todays_date <- Sys.time()
 tmp <- as.Date(todays_date, format = "%Y-%m-%d")
 version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 
 # This is the name of your dataset
-doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
+doi_or_unique_name <- "test table"
+
 
 # Additional parameters ---------------------------------------------------
 # The following parameters are automatically generated and assume the following:
 # (1) your version_number will be 1.[date].[version].h5
 # (2) your data product filename will be [version_number].h5
 # (3) you will upload your data product to the Boydorr server
-
-namespace <- "SCRC"
 
 # where is the data product saved? (locally, before being stored)
 processed_path <- file.path("data-raw", product_name)
@@ -45,6 +50,14 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
+# Generate the h5 file in processed_path (note that if a file already
+# exists you'll get an error)
+create_array(filename = product_filename,
+             path = processed_path,
+             component = product_name,
+             array = data,
+             dimension_names = list(location = rownames(data),
+                                    week = colnames(data)))
 
 # default data that should be in database ---------------------------------
 
