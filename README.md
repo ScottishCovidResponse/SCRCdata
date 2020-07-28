@@ -17,3 +17,4 @@ This is a git repository to store data processing scripts for the SCRC data pipe
 NEW!
 
 * [HDF5 components](https://github.com/ScottishCovidResponse/SCRCdata/wiki/HDF5-components)
+* [toml components](https://github.com/ScottishCovidResponse/SCRCdata/wiki/TOML-components)
