@@ -50,11 +50,11 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
-# Generate the h5 file in processed_path (note that if a file already
-# exists you'll get an error)
+# Use create_table() or create_array() here to generate the h5 file in
+# processed_path (note that if a file already exists you'll get an error)
 create_array(filename = product_filename,
              path = processed_path,
-             component = "array",
+             component = "array", # Assuming a single component in the h5 file
              array = data,
              dimension_names = list(location = rownames(data),
                                     week = colnames(data)))
