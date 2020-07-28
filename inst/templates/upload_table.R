@@ -54,7 +54,7 @@ product_path <- product_name
 # exists you'll get an error)
 create_array(filename = product_filename,
              path = processed_path,
-             component = product_name,
+             component = "array",
              array = data,
              dimension_names = list(location = rownames(data),
                                     week = colnames(data)))
