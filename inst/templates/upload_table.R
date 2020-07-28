@@ -43,7 +43,6 @@ doi_or_unique_name <- "test table"
 # (3) you will upload your data product to the Boydorr server
 
 # where is the data product saved? (locally, before being stored)
-processed_path <- file.path("data-raw", product_name)
 product_filename <- paste0(version_number, ".h5")
 
 # where is the data product stored?
@@ -52,12 +51,19 @@ product_path <- product_name
 
 # Use create_table() or create_array() here to generate the h5 file in
 # processed_path (note that if a file already exists you'll get an error)
+components <- "array" # Assuming a single component in the h5 file
+
 create_array(filename = product_filename,
-             path = processed_path,
-             component = "array", # Assuming a single component in the h5 file
+             path = product_name,
+             component = components,
              array = data,
              dimension_names = list(location = rownames(data),
                                     week = colnames(data)))
+
+# create_table(filename = product_filename,
+#              path = product_name,
+#              component = components,
+#              df = data)
 
 # default data that should be in database ---------------------------------
 
@@ -78,8 +84,8 @@ namespaceId <- new_namespace(name = namespace,
 dataProductURIs <- upload_data_product(
   storage_root_id = product_storageRootId,
   name = product_name,
-  processed_path = file.path(processed_path, product_filename),
-  product_path = paste(product_path, product_filename, sep = "/"),
+  processed_path = file.path(product_name, product_filename),
+  product_path = paste(product_name, product_filename, sep = "/"),
   version = version_number,
   namespace_id = namespaceId,
   key = key)
