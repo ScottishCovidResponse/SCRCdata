@@ -9,7 +9,6 @@ process_nrs_demographics(
   h5filename,
   grp.names,
   full.names,
-  subgrp.names,
   age.classes,
   conversionh5filename,
   genderbreakdown

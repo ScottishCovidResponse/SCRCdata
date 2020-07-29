@@ -2,10 +2,10 @@
 % Please edit documentation in R/process_scotgov_lookup.R
 \name{process_scotgov_lookup}
 \alias{process_scotgov_lookup}
-\title{process_ukgov_eng_lookup}
+\title{process_scotgov_lookup}
 \usage{
 process_scotgov_lookup(sourcefile, h5filename, grid_names, datazone_sf)
 }
 \description{
-process_ukgov_eng_lookup
+process_scotgov_lookup
 }
