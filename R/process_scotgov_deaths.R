@@ -8,7 +8,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
     dplyr::mutate(featurecode = gsub(
       "<http://statistics.gov.scot/id/statistical-geography/", "",
       featurecode),
-      featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/", "", featurecode))
+      featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/",
+                         "", featurecode))
 
   covid_deaths <- scotDeaths %>%
     dplyr::filter(cause == "COVID-19 related") %>%
@@ -91,7 +92,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   male <- as.matrix(covid_deaths_per_week_by_agegroup_m)
 
   assertthat::assert_that(all(dim(female) == dim(male)))
-  assertthat::assert_that(all(rownames(covid_deaths_per_week_by_agegroup_f) == rownames(covid_deaths_per_week_by_agegroup_m)))
+  assertthat::assert_that(all(rownames(covid_deaths_per_week_by_agegroup_f) ==
+                                rownames(covid_deaths_per_week_by_agegroup_m)))
   assertthat::assert_that(all(colnames(
     covid_deaths_per_week_by_agegroup_f) == colnames(
       covid_deaths_per_week_by_agegroup_m)))
@@ -234,7 +236,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   male <- as.matrix(all_deaths_per_week_by_agegroup_m)
 
   assertthat::assert_that(all(dim(female) == dim(male)))
-  assertthat::assert_that(all(rownames(all_deaths_per_week_by_agegroup_f) == rownames(all_deaths_per_week_by_agegroup_m)))
+  assertthat::assert_that(all(rownames(all_deaths_per_week_by_agegroup_f) ==
+                                rownames(all_deaths_per_week_by_agegroup_m)))
   assertthat::assert_that(all(colnames(
     all_deaths_per_week_by_agegroup_f) == colnames(
       all_deaths_per_week_by_agegroup_m)))

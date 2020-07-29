@@ -32,12 +32,14 @@ process_scotgov_management <- function(sourcefile, filename) {
   # Numbers of people in hospital and in ICU with confirmed or suspected COVID-19
   hospital.dat <- scotMan %>%
     dplyr::filter(grepl("COVID-19 patients", variable)) %>%
-    dplyr::mutate(featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/", "", featurecode),
-                  areatypename = dplyr::case_when(
-                    featurename == "Scotland" ~ "Country",
-                    nchar(featurecode) == 6 ~ "Special board",
-                    T ~ "NHS board"
-                  ))
+    dplyr::mutate(
+      featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/",
+                         "", featurecode),
+      areatypename = dplyr::case_when(
+        featurename == "Scotland" ~ "Country",
+        nchar(featurecode) == 6 ~ "Special board",
+        T ~ "NHS board"
+      ))
 
   # Country
   hosp.country.dat <- hospital.dat %>%
@@ -48,24 +50,26 @@ process_scotgov_management <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "confirmed_suspected_total/date-country-hospital",
-                            array = as.matrix(patients.in.hospital.dat),
-                            dimension_names = list(
-                              status = rownames(patients.in.hospital.dat),
-                              date = colnames(patients.in.hospital.dat)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    component = "confirmed_suspected_total/date-country-hospital",
+    array = as.matrix(patients.in.hospital.dat),
+    dimension_names = list(
+      status = rownames(patients.in.hospital.dat),
+      date = colnames(patients.in.hospital.dat)))
 
   patients.in.icu.dat <- hosp.country.dat %>%
     dplyr::filter(grepl("ICU", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "confirmed_suspected_total/date-country-icu",
-                            array = as.matrix(patients.in.icu.dat),
-                            dimension_names = list(
-                              status = rownames(patients.in.icu.dat),
-                              date = colnames(patients.in.icu.dat)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    component = "confirmed_suspected_total/date-country-icu",
+    array = as.matrix(patients.in.icu.dat),
+    dimension_names = list(
+      status = rownames(patients.in.icu.dat),
+      date = colnames(patients.in.icu.dat)))
 
   # Special health board
   hosp.special.dat <- hospital.dat %>%
@@ -76,12 +80,13 @@ process_scotgov_management <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "confirmed_suspected/date-country-hospital-special_health_board",
-                            array = as.matrix(special.patients.in.hosp.dat),
-                            dimension_names = list(
-                              status = rownames(special.patients.in.hosp.dat),
-                              date = colnames(special.patients.in.hosp.dat)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    component = "confirmed_suspected/date-country-hospital-special_health_board",
+    array = as.matrix(special.patients.in.hosp.dat),
+    dimension_names = list(
+      status = rownames(special.patients.in.hosp.dat),
+      date = colnames(special.patients.in.hosp.dat)))
 
   special.patients.in.icu.dat <- hosp.special.dat %>%
     dplyr::filter(grepl("ICU", variable)) %>%
@@ -452,14 +457,3 @@ process_scotgov_management <- function(sourcefile, filename) {
                               date = colnames(deaths.dat)))
 
 }
-
-
-
-
-
-
-
-
-
-
-
