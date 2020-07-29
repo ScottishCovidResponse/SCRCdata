@@ -67,7 +67,7 @@ create_distribution(filename = filename,
 # upload data product metadata to database --------------------------------
 
 upload_data_product(storage_root_id = storage_rootId,
-                    name = name,
+                    name = product_name,
                     component_name = component_name,
                     processed_path = file.path("data-raw", path, filename),
                     product_path = file.path(path, filename),
