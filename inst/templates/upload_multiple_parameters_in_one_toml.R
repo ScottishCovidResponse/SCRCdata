@@ -26,7 +26,7 @@ path <- "data-raw/example"
 dat <- configr::read.config(file.path(path, filename))
 
 component_names <- names(dat)
-product_name <- paste0("human/test/test/cases_and_management")
+product_name <- paste0("human/infection/SARS-CoV-2")
 
 # The version number of the data product
 productVersion <- "0.1.0"
