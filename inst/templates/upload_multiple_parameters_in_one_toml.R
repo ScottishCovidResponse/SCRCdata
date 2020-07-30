@@ -5,39 +5,34 @@
 
 library(SCRCdataAPI)
 
-
-
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
 key <- read.table("token.txt")
 namespace <- "SCRC"
 
-# The product_name is used to identify the data product and will be used to
-# generate various file locations:
-# (1) data product is saved locally (after processing) to data-raw/[product_name]
-# (2) data product is stored on the Boydorr server at
-# ../../srv/ftp/scrc/[product_name]
-
-
-
+# Now I'm assuming you've already made a multi-parameter toml. Let's read it
+# into the global envirnment so we can extract component_names from it
 filename <- "anothertest.toml"
 path <- "data-raw/example"
 dat <- configr::read.config(file.path(path, filename))
-
 component_names <- names(dat)
+
+# The product_name is used to identify the data product and will be used to
+# generate the file location in the ScottishCovidResponse/DataRepository
+# GitHub repository:
 product_name <- paste0("human/infection/SARS-CoV-2")
+
+# Remember to push the toml file to
+# ScottishCovidResponse/DataRepository/[namespace]/[product_name]
+# (e.g. SCRC/human/infection/SARS-CoV-2) after completing this process
 
 # The version number of the data product
 productVersion <- "0.1.0"
 
-
-
-
-# ******************************************************
-# Now run the code below and push your toml file to the
-# ScottishCovidResponse/DataRepository GitHub repository
-# ******************************************************
+# *******************************************************************
+# Now run the code below (you probably don't need to change anything)
+# *******************************************************************
 
 
 
