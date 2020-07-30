@@ -25,7 +25,8 @@ product_name <- paste0("human/infection/SARS-CoV-2")
 
 # Remember to push the toml file to
 # ScottishCovidResponse/DataRepository/[namespace]/[product_name]
-# (e.g. SCRC/human/infection/SARS-CoV-2) after completing this process
+# (e.g. ScottishCovidResponse/DataRepository/SCRC/human/infection/SARS-CoV-2)
+# after completing this process
 
 # The version number of the data product
 productVersion <- "0.1.0"
