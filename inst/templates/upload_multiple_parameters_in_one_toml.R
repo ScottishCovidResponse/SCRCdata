@@ -37,7 +37,6 @@ productVersion <- "0.1.0"
 
 
 
-
 # default data that should be in database ---------------------------------
 
 # Assuming the toml will be stored in the ScottishCovidResponse/DataRepository
@@ -55,12 +54,13 @@ namespaceId <- new_namespace(name = namespace,
 
 # upload data product metadata to database --------------------------------
 
+product_path <- paste("master", namespace, product_name, sep = "/")
 
 upload_data_product(storage_root_id = storage_rootId,
                     name = product_name,
                     component_name = component_names,
                     processed_path = file.path(path, filename), # local
-                    product_path = file.path(path, filename), # ftp
+                    product_path = file.path(product_path, filename), # ftp
                     version = productVersion,
                     namespace_id = namespaceId,
                     key = key)
