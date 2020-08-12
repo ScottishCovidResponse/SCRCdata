@@ -1,6 +1,6 @@
-#' table-name
+#' array-name
 #'
-#' Add a table (as an h5 data product) to the data registry
+#' Add an array (as an h5 data product) to the data registry
 #'
 
 library(SCRCdataAPI)
@@ -49,14 +49,16 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
-# Use create_table() to generate the h5 file in processed_path
+# Use create_array() here to generate the h5 file in processed_path
 # (note that if a file already exists you'll get an error)
-components <- "table" # Assuming a single component in the h5 file
+components <- "array" # Assuming a single component in the h5 file
 
-create_table(filename = product_filename,
+create_array(filename = product_filename,
              path = product_name,
              component = components,
-             df = data)
+             array = data,
+             dimension_names = list(location = rownames(data),
+                                    week = colnames(data)))
 
 
 # default data that should be in database ---------------------------------
