@@ -8,7 +8,7 @@ library(devtools)
 
 # initialise --------------------------------------------------------------
 
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 
 namespace <- "SCRC"
 name <- "human/infection/SARS-CoV-2/infectious-duration"

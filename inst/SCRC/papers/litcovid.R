@@ -5,7 +5,7 @@ library(dplyr)
 
 
 version <- "1.0.0"
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 
 
 

@@ -10,7 +10,7 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 namespace <- "SCRC"
 
 # Example dataset (must be a matrix)
