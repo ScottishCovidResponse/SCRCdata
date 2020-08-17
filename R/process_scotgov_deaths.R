@@ -101,11 +101,12 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     component = "age_group/week/gender-country-covid_related_deaths",
-    array = array(c(female, male), dim = c(dim(female), 2)),
+    array = array(c(female, male),
+                  dim = c(dim(female), 2)),
     dimension_names = list(
       `age group` = rownames(covid_deaths_per_week_by_agegroup_f),
-      `week commencing` = colnames(
-        covid_deaths_per_week_by_agegroup_f)))
+      `week commencing` = colnames(covid_deaths_per_week_by_agegroup_f),
+      gender = c("female", "male")))
 
   # dataset 5 - covid_deaths_per_week_by_agegroup_all -----------------------
 
@@ -245,11 +246,12 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     component = "age_group/week/gender-country-all_deaths",
-    array = array(c(female, male), dim = c(dim(female), 2)),
+    array = array(c(female, male),
+                  dim = c(dim(female), 2)),
     dimension_names = list(
       `age group` = rownames(all_deaths_per_week_by_agegroup_f),
-      `week commencing` = colnames(
-        all_deaths_per_week_by_agegroup_f)))
+      `week commencing` = colnames(all_deaths_per_week_by_agegroup_f),
+      gender = c("female", "male")))
 
 
   # dataset 11 - all_deaths_per_week_by_agegroup_all ------------------------
