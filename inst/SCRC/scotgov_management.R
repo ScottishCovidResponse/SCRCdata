@@ -202,7 +202,7 @@ githubRepoURIs <- upload_github_repo(
   key = key)
 
 upload_object_links(run_date = script_processingDate,
-                    run_identifier = paste("Script run to upload and process",
+                    description = paste("Script run to upload and process",
                                            doi_or_unique_name),
                     code_repo_id = githubRepoURIs$repo_objectId,
                     submission_script_id = submissionScriptURIs$script_objectId,
