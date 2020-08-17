@@ -21,7 +21,7 @@ tmp <- as.Date(todays_date, format = "%Y-%m-%d")
 version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 
 # dataset name
-doi_or_unique_name <- "scottish scottish deaths-involving-coronavirus-covid-19"
+doi_or_unique_name <- "scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)
 source_name <- "Scottish Government Open Data Repository"
