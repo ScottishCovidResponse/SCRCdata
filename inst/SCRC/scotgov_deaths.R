@@ -57,12 +57,10 @@ WHERE {
 }"
 
 # where is the processing script stored?
-repo_storageRoot <- "github"
-script_gitRepo <- "ScottishCovidResponse/SCRCdata"
-repo_version <- get_loaded_package_version("SCRCdata")
-processing_script <- "scotgov_deaths.R"
 
-
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script = "scotgov_deaths.R",
+                                package = "SCRCdata")
 
 
 
@@ -132,7 +130,7 @@ product_storageRootId <- new_storage_root(name = product_storageRoot,
                                           key = key)
 
 # github repo storage root
-repo_storageRootId <- new_storage_root(name = repo_storageRoot,
+repo_storageRootId <- new_storage_root(name = github_info$repo_storageRoot,
                                        root = "https://github.com",
                                        key = key)
 
@@ -203,14 +201,14 @@ submissionScriptURIs <- upload_submission_script(
 
 githubRepoURIs <- upload_github_repo(
   storage_root_id = repo_storageRootId,
-  repo = script_gitRepo,
-  hash = get_github_hash(script_gitRepo),
-  version = repo_version,
+  repo = github_info$script_gitRepo,
+  hash = github_info$github_hash,
+  version = github_info$repo_version,
   key = key)
 
 upload_object_links(run_date = script_processingDate,
                     description = paste("Script run to upload and process",
-                                           doi_or_unique_name),
+                                        doi_or_unique_name),
                     code_repo_id = githubRepoURIs$repo_objectId,
                     submission_script_id = submissionScriptURIs$script_objectId,
                     inputs = list(sourceDataURIs$source_objectComponentId),
