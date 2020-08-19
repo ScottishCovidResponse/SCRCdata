@@ -86,7 +86,8 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste0("R -f inst/scripts/", processing_script)
+submission_text <- paste0("R -f inst/", namespace, "/",
+                          github_info$processing_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
