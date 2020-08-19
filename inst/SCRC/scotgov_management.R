@@ -54,7 +54,7 @@ WHERE {
 # where is the processing script stored?
 repo_storageRoot <- "github"
 script_gitRepo <- "ScottishCovidResponse/SCRCdata"
-repo_version <- get_remote_package_version(repo = script_gitRepo)
+repo_version <- get_loaded_package_version("SCRCdata")
 processing_script <- "scotgov_management.R"
 
 
