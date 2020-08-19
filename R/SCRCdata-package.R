@@ -8,7 +8,6 @@
 #'
 #' @importFrom assertthat assert_that
 #' @import dplyr
-#' @import readr
 #' @import readxl
 #' @import reshape2
 #' @import SCRCdataAPI

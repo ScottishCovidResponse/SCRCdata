@@ -16,7 +16,6 @@ Imports:
     aRxiv,
     assertthat,
     dplyr,
-    readr,
     readxl,
     reshape2,
     revtools,
