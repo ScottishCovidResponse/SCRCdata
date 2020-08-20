@@ -65,13 +65,8 @@ WHERE {
 
 # where is the processing script stored?
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
-                                script = "scotgov_management.R",
+                                script = "inst/SCRC/scotgov_management.R",
                                 package = "SCRCdata")
-
-repo_storageRoot <- "github"
-script_gitRepo <- "ScottishCovidResponse/SCRCdata"
-repo_version <- get_loaded_package_version("SCRCdata")
-processing_script <- "scotgov_management.R"
 
 # Now go to line 162 and check whether you want to use download_from_database()
 # or download_from_url()
@@ -106,20 +101,18 @@ source_filename <- paste0(version_number, ".csv")
 processed_path <- file.path("data-raw", product_name)
 product_filename <- paste0(version_number, ".h5")
 
-
-
 # where is the source data stored?
 source_storageRoot <- "boydorr"
 source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste("R -f", github_info$processing_script)
-
+submission_text <- paste("R -f", github_info$submission_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
 product_path <- product_name
+
 
 
 # default data that should be in database ---------------------------------

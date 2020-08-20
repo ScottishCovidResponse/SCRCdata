@@ -51,9 +51,9 @@ WHERE {
   ?type rdfs:label ?measure.
 }"
 
-# where is the processing script stored?
+# where is the submission script stored?
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
-                                script = "scotgov_management.R",
+                                script = "inst/SCRC/scotgov_management.R",
                                 package = "SCRCdata")
 
 
@@ -85,7 +85,7 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste("R -f", github_info$processing_script)
+submission_text <- paste("R -f", github_info$submission_script)
 
 
 # where is the data product stored?
