@@ -13,11 +13,6 @@ library(SCRCdata)
 key <- readLines("token.txt")
 namespace <- "SCRC"
 
-# Example dataset (must be a matrix)
-data <- matrix(1:4, 2, 2)
-rownames(data) <- c("Glasgow", "Edinburgh")
-colnames(data) <- c("Week1", "Week2")
-
 # The product_name is used to identify the data product and will be used to
 # generate various file locations:
 # (1) data product is stored on the Boydorr server at
@@ -49,14 +44,25 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
-# Use create_table() to generate the h5 file in processed_path
-# (note that if a file already exists you'll get an error)
-components <- "table" # Assuming a single component in the h5 file
 
+# The following example assumes a single component (data.frame) in the
+# h5 file. If multiple tables are extracted from the same dataset, you can use
+# these tables to create a multi-component h5 file.
+data <- data.frame(Week1 = 1:2, Week2 = 3:2)
+rownames(data) <- c("Glasgow", "Edinburgh")
+
+# Use create_table() to generate the h5 file in processed_path (note that if a
+# file already exists you'll get an error). If you have multiple components in
+# your h5 file, you will need to call create_table() multiple times with the
+# same filename. If your h5 file contains a single component, name it "table",
+# otherwise each component should have a distinct name,
+# https://github.com/ScottishCovidResponse/SCRCdata/wiki/HDF5-components
+components <- "table"
 create_table(filename = product_filename,
              path = product_name,
              component = components,
              df = data)
+
 
 
 # default data that should be in database ---------------------------------

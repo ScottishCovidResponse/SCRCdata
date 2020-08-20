@@ -13,11 +13,6 @@ library(SCRCdata)
 key <- readLines("token.txt")
 namespace <- "SCRC"
 
-# Example dataset (must be a matrix)
-data <- matrix(1:4, 2, 2)
-rownames(data) <- c("Glasgow", "Edinburgh")
-colnames(data) <- c("Week1", "Week2")
-
 # The product_name is used to identify the data product and will be used to
 # generate various file locations:
 # (1) data product is stored on the Boydorr server at
@@ -49,9 +44,21 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
-# Use create_array() here to generate the h5 file in processed_path
-# (note that if a file already exists you'll get an error)
-components <- "array" # Assuming a single component in the h5 file
+# The following example assumes a single component (2-dimensional array) in the
+# h5 file. You can of course create an N-dimensional array. In addition to this,
+# if multiple arrays are extracted from the same dataset, you can use these
+# arrays to create a multi-component h5 file.
+data <- matrix(1:4, 2, 2)
+rownames(data) <- c("Glasgow", "Edinburgh")
+colnames(data) <- c("Week1", "Week2")
+
+# Use create_table() to generate the h5 file in processed_path (note that if a
+# file already exists you'll get an error). If you have multiple components in
+# your h5 file, you will need to call create_table() multiple times with the
+# same filename. If your h5 file contains a single component, name it "array",
+# otherwise each component should have a distinct name,
+# https://github.com/ScottishCovidResponse/SCRCdata/wiki/HDF5-components
+components <- "array"
 
 create_array(filename = product_filename,
              path = product_name,
