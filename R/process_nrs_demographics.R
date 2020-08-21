@@ -7,7 +7,8 @@ process_nrs_demographics <- function(sourcefile, h5filename,
                                      age.classes,conversionh5filename,genderbreakdown) {
   
   # Prepare conversion table
-  conversion.table <- SCRCdataAPI::read_table(filename = conversionh5filename, 
+  conversion.table <- SCRCdataAPI::read_table(filename = conversionh5version_number, 
+                                              path = conversionh5filepath,
                                               component = "conversiontable/scotland")
   
   

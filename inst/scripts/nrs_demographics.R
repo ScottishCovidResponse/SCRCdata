@@ -29,7 +29,8 @@ full.names <- c("datazone","urban rural classification", "intermediate zone", "m
                  "grid area",
                 "grid area")
 age.classes <- list(0:90)
-conversionh5filename = "scotgov_lookup.h5"
+conversionh5filepath = paste("data-raw", "geography", "lookup_table", "gridcell_admin_area", "scotland",sep = "/")
+conversionh5version_number = "1.0.0.h5"
 
 process_nrs_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
