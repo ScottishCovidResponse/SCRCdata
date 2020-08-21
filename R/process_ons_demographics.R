@@ -5,43 +5,17 @@
 process_ons_demographics <- function (sourcefile,
                                       h5filename,
                                       output_area_sf,
-                                      oa_conversion_table,
+                                      conversionh5version_number,
+                                      conversionh5filepath,
                                       grp.names,
                                       full.names,
                                       subgrp.names,
                                       age.classes) {
 
-  # Get shapefile if not already downloaded by user -------------------------
-  if (!file.exists(output_area_sf)) {
-    SCRCdataAPI::download_source_version(dataset = "ukgov_eng_oa_shapefile")
-  }
 
-  # Prepare dz2grid ---------------------------------------------------------
-
-  # Read in datazone shapefile and check for non-intersecting geometries
-  output_areas <- sf::st_read(output_area_sf, quiet = TRUE) %>%
-    sf::st_make_valid()
-
-  # Prepare grid sizes
-  if (any(grepl("^grid", grp.names))) {
-    gridsizes <- grp.names[grepl("^grid", grp.names)] %>%
-      sapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
-      as.numeric()
-
-    oa_subdivisions <- list()
-    grid_matrix <- list()
-    for (g in seq_along(gridsizes)) {
-      tmp <- SCRCdataAPI::grid_intersection(output_areas, gridsizes[g])
-      tag <- paste0("grid", gridsizes[g], "km")
-      oa_subdivisions[[g]] <- tmp$subdivisions
-      names(oa_subdivisions)[g] <- tag
-      grid_matrix[[g]] <- tmp$grid_matrix
-      names(grid_matrix)[g] <- tag
-    }
-  }
-
-  conversion.table <- SCRCdataAPI::read_table(h5filename = oa_conversion_table, path = "conversiontable/englandwales")
-
+  conversion.table <- SCRCdataAPI::read_table(filename = paste0(conversionh5version_number,".h5"), 
+                                              path = conversionh5filepath,
+                                              component = "conversiontable/englandwales")
   # Process raw data --------------------------------------------------------
   original.dat <- lapply(seq_along(sourcefile), function(k) {
 
@@ -60,23 +34,10 @@ process_ons_demographics <- function (sourcefile,
     colnames(original.dat) <- header_new
 
     # Generate data and attach to hdf5 file -----------------------------------
-
-    for (j in seq_along(subgrp.names)) {
-
-      # Aggregate age classes
-      if (subgrp.names[j] == "1year") {
-        transage.dat <- original.dat
-
-      } else if (subgrp.names[j] == "total") {
-        transage.dat <- SCRCdataAPI::bin_ages(original.dat, age.classes[[j]])
-
-      } else {
-        transage.dat <- SCRCdataAPI::bin_ages(original.dat, age.classes[[j]])
-
-      }
-
+    transage.dat <- original.dat
+    
       for (i in seq_along(grp.names)) {
-        cat(paste0("\rProcessing ", j, "/", length(subgrp.names),
+        cat(paste0("\rProcessing ",
                    ": ", i, "/", length(grp.names), "..."))
         if (grp.names[i] %in% "OA"){
           tmp.dat <- list(data = transage.dat,
@@ -105,8 +66,9 @@ process_ons_demographics <- function (sourcefile,
           # Transformed data (grid transformed)
           transarea.dat <- SCRCdataAPI::convert2grid(
             dat = transage.dat,
-            shapefile = output_areas,
-            subdivisions = oa_subdivisions[[grp.names[i]]])
+            conversion.table = conversion.table,
+            grid_size = grp.names[i])
+
         }
         else {
           stop("OMG! - grpnames")
