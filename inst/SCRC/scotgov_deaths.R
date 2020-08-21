@@ -8,7 +8,7 @@
 library(SCRCdataAPI)
 library(SCRCdata)
 
-key <- readLines("token.txt")
+key <- readLines("token/token.txt")
 todays_date <- Sys.time()
 
 # initialise parameters ---------------------------------------------------
