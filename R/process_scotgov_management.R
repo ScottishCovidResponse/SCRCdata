@@ -13,10 +13,48 @@ process_scotgov_management <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
+  variables <- scotMan %>% select(variable) %>% unique()
+
+  assertthat::assert_that(
+    all(unique(scotMan$variable) %in%
+      c("Testing - Cumulative people tested for COVID-19 - Negative",
+        "Testing - Cumulative people tested for COVID-19 - Positive",
+        "Testing - Cumulative people tested for COVID-19 - Total",
+        "Testing - Daily people found positive",
+        "Delayed discharges",
+        "Number of COVID-19 confirmed deaths registered to date",
+        "Calls - NHS24 111",
+        "Calls - Coronavirus helpline",
+        "COVID-19 patients in ICU - Total",
+        "Ambulance attendances - COVID-19 suspected",
+        "Ambulance attendances - Total",
+        "COVID-19 patients in hospital - Total",
+        "Ambulance attendances - COVID-19 suspected patients taken to hospital",
+        "COVID-19 patients in hospital - Suspected",
+        "COVID-19 patients in hospital - Confirmed",
+        "COVID-19 patients in ICU - Suspected",
+        "COVID-19 patients in ICU - Confirmed",
+        "NHS workforce COVID-19 absences - Nursing and midwifery staff",
+        "Testing - Total daily tests",
+        "Testing - Total number of COVID-19 tests carried out by NHS Labs - Daily",
+        "Testing - Total number of COVID-19 tests carried out by NHS Labs - Cumulative",
+        "Testing - Positive cases in last 7 days",
+        "Testing - People tested in last 7 days",
+        "NHS workforce COVID-19 absences - All staff",
+        "NHS workforce COVID-19 absences - Other staff",
+        "NHS workforce COVID-19 absences - Medical and dental staff",
+        "Testing - Total number of COVID-19 tests carried out by Regional Testing Centres - Daily",
+        "Testing - Total number of COVID-19 tests carried out by Regional Testing Centres - Cumulative",
+        "Testing - Tests in last 7 days",
+        "Adult care homes - Number of staff reported as absent",
+        "Adult care homes - Response rate",
+        "Adult care homes - Total number of staff in adult care homes which submitted a return",
+        "Adult care homes - Adult care homes which submitted a return",
+        "Adult care homes - Staff absence rate")))
+
   # 1 -----------------------------------------------------------------------
   # Numbers of calls to NHS 111 and the coronavirus helpline
   calls.dat <- scotMan %>% dplyr::filter(grepl("Calls", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     dplyr::mutate(variable = gsub("Calls - ", "", variable)) %>%
     tibble::column_to_rownames("variable")
@@ -27,6 +65,8 @@ process_scotgov_management <- function(sourcefile, filename) {
                             dimension_names = list(
                               helpline = rownames(calls.dat),
                               date = colnames(calls.dat)))
+
+  variables <- filter(variables, !grepl("Calls", variable))
 
   # 2 -----------------------------------------------------------------------
   # Numbers of people in hospital and in ICU with confirmed or suspected COVID-19
@@ -40,6 +80,8 @@ process_scotgov_management <- function(sourcefile, filename) {
         nchar(featurecode) == 6 ~ "Special board",
         T ~ "NHS board"
       ))
+
+  # unique(hospital.dat$variable)
 
   # Country
   hosp.country.dat <- hospital.dat %>%
@@ -107,7 +149,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   hosp.nhs.total.dat <- hosp.nhs.dat %>%
     dplyr::filter(grepl("Total", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
@@ -120,7 +161,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   hosp.nhs.suspected.dat <- hosp.nhs.dat %>%
     dplyr::filter(grepl("Suspected", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
@@ -134,7 +174,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   hosp.nhs.confirmed.dat <- hosp.nhs.dat %>%
     dplyr::filter(grepl("Confirmed", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
@@ -146,12 +185,13 @@ process_scotgov_management <- function(sourcefile, filename) {
       `health board` = rownames(hosp.nhs.confirmed.dat),
       date = colnames(hosp.nhs.confirmed.dat)))
 
+  variables <- filter(variables, !grepl("COVID-19 patients", variable))
+
   # 3 -----------------------------------------------------------------------
   # Numbers of ambulance attendances (total and COVID-19 suspected) and number of
   # people taken to hospital with suspected COVID-19
   ambulance.dat <- scotMan %>%
     dplyr::filter(grepl("Ambulance attendances", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -162,11 +202,12 @@ process_scotgov_management <- function(sourcefile, filename) {
                               status = rownames(ambulance.dat),
                               date = colnames(ambulance.dat)))
 
+  variables <- filter(variables, !grepl("Ambulance attendances", variable))
+
   # 4 -----------------------------------------------------------------------
   # Number of people delayed in hospital
   discharges.dat <- scotMan %>%
     dplyr::filter(grepl("Delayed discharges", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(1 ~ date, value.var = "count") %>%
     dplyr::select(-"1")
 
@@ -176,6 +217,8 @@ process_scotgov_management <- function(sourcefile, filename) {
                             dimension_names = list(
                               delayed = rownames(discharges.dat),
                               date = colnames(discharges.dat)))
+
+  variables <- filter(variables, !grepl("Delayed discharges", variable))
 
   # 5 -----------------------------------------------------------------------
   # Numbers of people tested to date, numbers with positive and negative results,
@@ -187,13 +230,14 @@ process_scotgov_management <- function(sourcefile, filename) {
       T ~ "NHS board"
     ))
 
+  # unique(testing.dat$variable)
+
   # Country
   testing.country.dat <- testing.dat %>%
     dplyr::filter(areatypename == "Country")
 
   testing.daily.positive <- testing.country.dat %>%
     dplyr::filter(grepl("Daily people found positive", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -207,7 +251,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   testing.cumulative <- testing.country.dat %>%
     dplyr::filter(grepl("- Cumulative$", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -221,7 +264,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   testing.daily <- testing.country.dat %>%
     dplyr::filter(grepl("- Daily$", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -235,7 +277,6 @@ process_scotgov_management <- function(sourcefile, filename) {
 
   testing.country.cumulative <- testing.country.dat %>%
     dplyr::filter(grepl("Cumulative people tested", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -247,14 +288,12 @@ process_scotgov_management <- function(sourcefile, filename) {
       delayed = rownames(testing.country.cumulative),
       date = colnames(testing.country.cumulative)))
 
-
   # Special health board
   assertthat::assert_that(!"Special board" %in% testing.dat$areatypename)
 
   # NHS health board
   testing.area.dat <- testing.dat %>%
     dplyr::filter(areatypename == "NHS board") %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
@@ -266,11 +305,12 @@ process_scotgov_management <- function(sourcefile, filename) {
       delayed = rownames(testing.area.dat),
       date = colnames(testing.area.dat)))
 
+  variables <- filter(variables, !grepl("Testing", variable))
+
   # 6 -----------------------------------------------------------------------
   # Numbers of NHS workforce reporting as absent due to a range of reasons
   # related to Covid-19
   nhs.dat <- scotMan %>% dplyr::filter(grepl("NHS workforce", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     dplyr::mutate(variable = gsub("NHS workforce COVID-19 absences - ", "",
                                   variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
@@ -284,107 +324,43 @@ process_scotgov_management <- function(sourcefile, filename) {
       delayed = rownames(nhs.dat),
       date = colnames(nhs.dat)))
 
+  variables <- filter(variables, !grepl("NHS workforce", variable))
+
   # 7 -----------------------------------------------------------------------
   # Number of care homes where suspected COVID-19 has been reported to date
   carehomes.dat <- scotMan %>%
     dplyr::filter(grepl("Adult care homes", variable))
 
-  # Adult care homes count data
-  carehomes.ratio.dat <- carehomes.dat %>%
-    dplyr::filter(measure == "Ratio")
+  unique(carehomes.dat$variable)[-c(1,3,4)]
 
-  # Adult care homes ratio data
-  carehomes.proportion.dat <- carehomes.ratio.dat %>%
-    dplyr::filter(grepl("Proportion that", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    component = "date-country-carehomes-proportion_that_have_reported_a_suspected_case",
-    array = as.matrix(carehomes.proportion.dat),
-    dimension_names = list(
-      delayed = rownames(carehomes.proportion.dat),
-      date = colnames(carehomes.proportion.dat)))
-
-  carehomes.absence.rate.dat <- carehomes.ratio.dat %>%
-    dplyr::filter(grepl("Staff absence rate", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    component = "date-country-carehomes-staff_absence_rate",
-    array = as.matrix(carehomes.absence.rate.dat),
-    dimension_names = list(
-      delayed = rownames(carehomes.absence.rate.dat),
-      date = colnames(carehomes.absence.rate.dat)))
-
-  carehomes.response.rate.dat <- carehomes.ratio.dat %>%
+  carehomes.ratio.response.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Response rate", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "date-country-carehomes-response_rate",
-    array = as.matrix(carehomes.response.rate.dat),
+    component = "date-carehomes-response_rate",
+    array = as.matrix(carehomes.ratio.response.dat),
     dimension_names = list(
-      delayed = rownames(carehomes.response.rate.dat),
-      date = colnames(carehomes.response.rate.dat)))
+      delayed = rownames(carehomes.ratio.response.dat),
+      date = colnames(carehomes.ratio.response.dat)))
 
-  # Adult care homes count data
-  carehomes.count.dat <- carehomes.dat %>%
-    dplyr::filter(measure == "Count")
-
-  carehomes.count.cum.dat <- carehomes.count.dat %>%
-    dplyr::filter(grepl("Cumulative number that", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
+  carehomes.ratio.staff.absence.dat <- carehomes.dat %>%
+    dplyr::filter(grepl("Staff absence rate", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
-    component = "suspected_vs_reported/date-country-carehomes-cumulative",
-    array = as.matrix(carehomes.count.cum.dat),
+    component = "date-carehomes-staff_absence_rate",
+    array = as.matrix(carehomes.ratio.staff.absence.dat),
     dimension_names = list(
-      delayed = rownames(carehomes.count.cum.dat),
-      date = colnames(carehomes.count.cum.dat)))
+      delayed = rownames(carehomes.ratio.staff.absence.dat),
+      date = colnames(carehomes.ratio.staff.absence.dat)))
 
-  carehomes.cum.numdat <- carehomes.count.dat %>%
-    dplyr::filter(grepl("Cumulative number of", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    component = "date-country-carehomes-cumulative_number_of_suspected_cases",
-    array = as.matrix(carehomes.cum.numdat),
-    dimension_names = list(
-      delayed = rownames(carehomes.cum.numdat),
-      date = colnames(carehomes.cum.numdat)))
-
-  carehomes.count.daily.dat <- carehomes.count.dat %>%
-    dplyr::filter(grepl("Daily number", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    component = "date-country-carehomes-new_suspected_cases",
-    array = as.matrix(carehomes.count.daily.dat),
-    dimension_names = list(
-      delayed = rownames(carehomes.count.daily.dat),
-      date = colnames(carehomes.count.daily.dat)))
-
-  carehomes.count.staff.dat <- carehomes.count.dat %>%
+  carehomes.count.staff.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Number of staff reported as absent", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -396,25 +372,9 @@ process_scotgov_management <- function(sourcefile, filename) {
       delayed = rownames(carehomes.count.staff.dat),
       date = colnames(carehomes.count.staff.dat)))
 
-  carehomes.count.sus.dat <- carehomes.count.dat %>%
-    dplyr::filter(grepl("Number with current suspected COVID-19 cases",
-                        variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    component = "number_vs_revised_number/date-country-carehomes-carehomes_with_suspected_cases",
-    array = as.matrix(carehomes.count.sus.dat),
-    dimension_names = list(
-      delayed = rownames(carehomes.count.sus.dat),
-      date = colnames(carehomes.count.sus.dat)))
-
-  carehomes.count.carehomes.return.dat <- carehomes.count.dat %>%
+  carehomes.count.carehomes.return.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Adult care homes which submitted a return",
                         variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -426,9 +386,8 @@ process_scotgov_management <- function(sourcefile, filename) {
       delayed = rownames(carehomes.count.carehomes.return.dat),
       date = colnames(carehomes.count.carehomes.return.dat)))
 
-  carehomes.count.total.staff.dat <- carehomes.count.dat %>%
+  carehomes.count.total.staff.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Total number of staff", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
@@ -445,7 +404,6 @@ process_scotgov_management <- function(sourcefile, filename) {
   # Number of COVID-19 confirmed deaths registered to date
   deaths.dat <- scotMan %>%
     dplyr::filter(grepl("deaths registered", variable)) %>%
-    # dplyr::select_if(~ length(unique(.)) != 1) %>%
     reshape2::dcast(1 ~ date, value.var = "count") %>%
     dplyr::select(-"1")
 

@@ -1,30 +1,27 @@
-#' coronavirus-covid-19-management-information
+#' scottish deaths-involving-coronavirus-covid-19
 #'
-#' This dataset presents Management Information, which is collected and
-#' distributed each day in order to support understanding of the progress
-#' of the outbreak in Scotland. (From: https://statistics.gov.scot/data/coronavirus-covid-19-management-information)
-#'
-#' Definitions found here:
-#' https://www.gov.scot/publications/coronavirus-covid-19-data-definitions-and-sources/
+#' This dataset presents the weekly, and year to date, provisional number of
+#' deaths associated with coronavirus (COVID-19) alongside the total number
+#' of deaths registered in Scotland, broken down by age, sex. (From: https://statistics.gov.scot/data/deaths-involving-coronavirus-covid-19)
 #'
 
 library(SCRCdataAPI)
 library(SCRCdata)
 
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 todays_date <- Sys.time()
 
 # initialise parameters ---------------------------------------------------
 
 product_name <- paste("records", "SARS-CoV-2", "scotland",
-              "cases_and_management", sep = "/")
+                      "human-mortality", sep = "/")
 
 # create version number (this is used to generate the *.csv and *.h5 filenames)
 tmp <- as.Date(todays_date, format = "%Y-%m-%d")
 version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 
 # dataset name
-doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+doi_or_unique_name <- "scottish deaths-involving-coronavirus-covid-19"
 
 # where was the source data download from? (original source)
 source_name <- "Scottish Government Open Data Repository"
@@ -32,31 +29,37 @@ original_root <- "https://statistics.gov.scot/sparql.csv?query="
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
 PREFIX dim: <http://purl.org/linked-data/sdmx/2009/dimension#>
 PREFIX sdim: <http://statistics.gov.scot/def/dimension/>
 PREFIX stat: <http://statistics.data.gov.uk/def/statistical-entity#>
-SELECT ?featurecode ?featurename ?date ?measure ?variable ?count
+PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
+SELECT ?featurecode ?featurename ?areatypename ?date ?cause ?location ?gender ?age ?type ?count
 WHERE {
-  ?indicator qb:dataSet data:coronavirus-covid-19-management-information;
+  ?indicator qb:dataSet data:deaths-involving-coronavirus-covid-19;
+              mp:count ?count;
+              qb:measureType ?measType;
+              sdim:age ?value;
+              sdim:causeofdeath ?causeDeath;
+              sdim:locationofdeath ?locDeath;
+              sdim:sex ?sex;
               dim:refArea ?featurecode;
-              dim:refPeriod ?period;
-              sdim:variable ?varname;
-              qb:measureType ?type.
-{?indicator mp:count ?count.} UNION {?indicator mp:ratio ?count.}
+              dim:refPeriod ?period.
 
-  ?featurecode <http://publishmydata.com/def/ontology/foi/displayName> ?featurename.
-  ?period rdfs:label ?date.
-  ?varname rdfs:label ?variable.
-  ?type rdfs:label ?measure.
+              ?measType rdfs:label ?type.
+              ?value rdfs:label ?age.
+              ?causeDeath rdfs:label ?cause.
+              ?locDeath rdfs:label ?location.
+              ?sex rdfs:label ?gender.
+              ?featurecode stat:code ?areatype;
+                rdfs:label ?featurename.
+              ?areatype rdfs:label ?areatypename.
+              ?period rdfs:label ?date.
 }"
 
-# where is the processing script stored?
-repo_storageRoot <- "github"
-script_gitRepo <- "ScottishCovidResponse/SCRCdata"
-repo_version <- "0.1.0"
-processing_script <- "scotgov_management.R"
-
+# where is the submission script stored?
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script = "inst/SCRC/scotgov_deaths.R",
+                                package = "SCRCdata")
 
 
 
@@ -86,7 +89,7 @@ source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste0("R -f inst/scripts/", processing_script)
+submission_text <- paste("R -f", github_info$submission_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
@@ -125,7 +128,7 @@ product_storageRootId <- new_storage_root(name = product_storageRoot,
                                           key = key)
 
 # github repo storage root
-repo_storageRootId <- new_storage_root(name = repo_storageRoot,
+repo_storageRootId <- new_storage_root(name = github_info$repo_storageRoot,
                                        root = "https://github.com",
                                        key = key)
 
@@ -162,7 +165,7 @@ sourceDataURIs <- upload_source_data(
 
 # generate data product ---------------------------------------------------
 
-process_scotgov_management(
+process_scotgov_deaths(
   sourcefile = file.path(local_path, source_filename),
   filename = file.path(local_path, product_filename))
 
@@ -196,14 +199,14 @@ submissionScriptURIs <- upload_submission_script(
 
 githubRepoURIs <- upload_github_repo(
   storage_root_id = repo_storageRootId,
-  repo = script_gitRepo,
-  hash = get_github_hash(script_gitRepo),
-  version = repo_version,
+  repo = github_info$script_gitRepo,
+  hash = github_info$github_hash,
+  version = github_info$repo_version,
   key = key)
 
 upload_object_links(run_date = script_processingDate,
-                    run_identifier = paste("Script run to upload and process",
-                                           doi_or_unique_name),
+                    description = paste("Script run to upload and process",
+                                        doi_or_unique_name),
                     code_repo_id = githubRepoURIs$repo_objectId,
                     submission_script_id = submissionScriptURIs$script_objectId,
                     inputs = list(sourceDataURIs$source_objectComponentId),

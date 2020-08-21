@@ -1,6 +1,6 @@
-#' table-name
+#' array-name
 #'
-#' Add a table (as an h5 data product) to the data registry
+#' Add an array (as an h5 data product) to the data registry
 #'
 
 library(SCRCdataAPI)
@@ -44,25 +44,28 @@ product_filename <- paste0(version_number, ".h5")
 product_storageRoot <- "boydorr"
 product_path <- product_name
 
-
-# The following example assumes a single component (data.frame) in the
-# h5 file. If multiple tables are extracted from the same dataset, you can use
-# these tables to create a multi-component h5 file.
-data <- data.frame(Week1 = 1:2, Week2 = 3:2)
+# The following example assumes a single component (2-dimensional array) in the
+# h5 file. You can of course create an N-dimensional array. In addition to this,
+# if multiple arrays are extracted from the same dataset, you can use these
+# arrays to create a multi-component h5 file.
+data <- matrix(1:4, 2, 2)
 rownames(data) <- c("Glasgow", "Edinburgh")
+colnames(data) <- c("Week1", "Week2")
 
 # Use create_table() to generate the h5 file in processed_path (note that if a
 # file already exists you'll get an error). If you have multiple components in
 # your h5 file, you will need to call create_table() multiple times with the
-# same filename. If your h5 file contains a single component, name it "table",
+# same filename. If your h5 file contains a single component, name it "array",
 # otherwise each component should have a distinct name,
 # https://github.com/ScottishCovidResponse/SCRCdata/wiki/HDF5-components
-components <- "table"
-create_table(filename = product_filename,
+components <- "array"
+
+create_array(filename = product_filename,
              path = product_name,
              component = components,
-             df = data)
-
+             array = data,
+             dimension_names = list(location = rownames(data),
+                                    week = colnames(data)))
 
 
 # default data that should be in database ---------------------------------

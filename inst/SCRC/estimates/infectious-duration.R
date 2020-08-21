@@ -1,4 +1,4 @@
-#' latent-period
+#' infectious-duration
 #'
 
 library(SCRCdataAPI)
@@ -8,13 +8,13 @@ library(devtools)
 
 # initialise --------------------------------------------------------------
 
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 
 namespace <- "SCRC"
-name <- "human/infection/SARS-CoV-2/latent-period"
+name <- "human/infection/SARS-CoV-2/infectious-duration"
 component_name <- gsub("^.*/([^/]*)$", "\\1", name)
 productVersion <- "0.1.0"
-component_value <- 123.12
+component_value <- 321.6
 productStorageRoot <- "DataRepository"
 
 

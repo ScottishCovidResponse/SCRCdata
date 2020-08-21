@@ -1,0 +1,1 @@
+#' Richard Reeve: If it's a real table in the supplementary materials of a paper, then you still duplicate the paper's entry, but you link to the real csv file or whatever, and then create a dummy component.

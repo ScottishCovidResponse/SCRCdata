@@ -10,7 +10,7 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 todays_date <- Sys.time()
 
 
@@ -64,10 +64,9 @@ WHERE {
 }"
 
 # where is the processing script stored?
-repo_storageRoot <- "github"
-script_gitRepo <- "ScottishCovidResponse/SCRCdata"
-repo_version <- "0.1.0"
-processing_script <- "scotgov_management.R"
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script = "inst/SCRC/scotgov_management.R",
+                                package = "SCRCdata")
 
 # Now go to line 162 and check whether you want to use download_from_database()
 # or download_from_url()
@@ -102,19 +101,18 @@ source_filename <- paste0(version_number, ".csv")
 processed_path <- file.path("data-raw", product_name)
 product_filename <- paste0(version_number, ".h5")
 
-
-
 # where is the source data stored?
 source_storageRoot <- "boydorr"
 source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
-submission_text <- paste0("R -f inst/scripts/", processing_script)
+submission_text <- paste("R -f", github_info$submission_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
 product_path <- product_name
+
 
 
 # default data that should be in database ---------------------------------
@@ -148,7 +146,7 @@ product_storageRootId <- new_storage_root(name = product_storageRoot,
                                           key = key)
 
 # github repo storage root
-repo_storageRootId <- new_storage_root(name = repo_storageRoot,
+repo_storageRootId <- new_storage_root(name = github_info$repo_storageRoot,
                                        root = "https://github.com",
                                        key = key)
 
@@ -220,14 +218,14 @@ submissionScriptURIs <- upload_submission_script(
 
 githubRepoURIs <- upload_github_repo(
   storage_root_id = repo_storageRootId,
-  repo = script_gitRepo,
-  hash = get_github_hash(script_gitRepo),
-  version = repo_version,
+  repo = github_info$script_gitRepo,
+  hash = github_info$github_hash,
+  version = github_info$repo_version,
   key = key)
 
 upload_object_links(run_date = script_processingDate,
-                    run_identifier = paste("Script run to upload and process",
-                                           doi_or_unique_name),
+                    description = paste("Script run to upload and process",
+                                        doi_or_unique_name),
                     code_repo_id = githubRepoURIs$repo_objectId,
                     submission_script_id = submissionScriptURIs$script_objectId,
                     inputs = list(sourceDataURIs$source_objectComponentId),

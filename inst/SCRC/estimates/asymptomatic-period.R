@@ -1,4 +1,4 @@
-#' symptom-delay
+#' asymptomatic-period
 #'
 
 library(SCRCdataAPI)
@@ -8,15 +8,13 @@ library(devtools)
 
 # initialise --------------------------------------------------------------
 
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 
 namespace <- "SCRC"
-name <- "human/infection/SARS-CoV-2/symptom-delay"
+name <- "human/infection/SARS-CoV-2/test"
 component_name <- gsub("^.*/([^/]*)$", "\\1", name)
 productVersion <- "0.1.0"
-distribution <- "Gaussian"
-parameters <- list(mean = -16.08,
-                   SD = 30)
+component_value <- 192.0
 productStorageRoot <- "DataRepository"
 
 
@@ -36,11 +34,9 @@ namespaceId <- new_namespace(name = namespace,
 path <- paste("master", namespace, name, sep = "/")
 filename <- paste0(productVersion, ".toml")
 
-create_distribution(filename = filename,
-                    path = file.path("data-raw", path),
-                    name = component_name,
-                    distribution = distribution,
-                    parameters = parameters)
+create_estimate(filename = filename,
+                path = file.path("data-raw", path),
+                parameters = as.list(setNames(component_value, component_name)))
 
 
 # data product ------------------------------------------------------------

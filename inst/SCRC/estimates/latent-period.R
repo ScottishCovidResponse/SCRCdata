@@ -1,4 +1,4 @@
-#' asymptomatic-period
+#' latent-period
 #'
 
 library(SCRCdataAPI)
@@ -8,13 +8,13 @@ library(devtools)
 
 # initialise --------------------------------------------------------------
 
-key <- read.table("token.txt")
+key <- readLines("token.txt")
 
 namespace <- "SCRC"
-name <- "human/infection/SARS-CoV-2/test"
+name <- "human/infection/SARS-CoV-2/latent-period"
 component_name <- gsub("^.*/([^/]*)$", "\\1", name)
 productVersion <- "0.1.0"
-component_value <- 192.0
+component_value <- 123.12
 productStorageRoot <- "DataRepository"
 
 
