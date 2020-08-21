@@ -20,5 +20,8 @@
 library(SCRCdataAPI)
 
 # Download source data
-download_source_version(dataset = "ukgov_scot_dz_shapefile")
-
+download_from_url(
+  url = "http://sedsh127.sedsh.gov.uk",
+  path = file.path("Atom_data", "ScotGov", "ZippedShapefiles",
+                   "SG_DataZoneBdry_2011.zip"),
+  local = file.path("data-raw", "datazone_shapefile"))

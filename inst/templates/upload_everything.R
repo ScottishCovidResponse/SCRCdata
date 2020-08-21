@@ -40,7 +40,7 @@ doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 source_name <- "Scottish Government Open Data Repository"
 original_root <- "https://statistics.gov.scot/sparql.csv?query="
 # Here, the original_path is a query (which is later converted into a path
-# on line 164), if you have a url, you can use download_from_url() instead
+# on line 162), if you have a url the path is the bit after the root
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>

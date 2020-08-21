@@ -13,7 +13,7 @@ key <- readLines("token/token.txt")
 path <- "https://www.ncbi.nlm.nih.gov/research/coronavirus-api/export/ris?"
 download.file(path, "data-raw/litcovid.ris")
 
-dat <- revtools::read_bibliography("litcovid.ris") %>%
+dat <- revtools::read_bibliography("data-raw/litcovid.ris") %>%
   dplyr::rename(abbreviation = journal)
 
 
@@ -109,7 +109,18 @@ if(any(nchar(merge_dat$title) > 1024)) {
 }
 
 
+# Remove entries with author field == ", and ,"
+if(any(merge_dat$author == ", and ,")) {
+  ind <- which(merge_dat$author == ", and ,")
+  merge_dat <- merge_dat[-ind,]
+}
 
+# Remove entries with no year
+if(is.na(merge_dat$year)) {
+  ind <- which(is.na(merge_dat$year))
+  merge_dat <- merge_dat[-ind,]
+}
+assertthat::assert_that(!all(is.na(merge_dat$year)))
 
 
 # These papers are already in the data registry
