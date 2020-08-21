@@ -17,7 +17,12 @@ sourcefile <- c(OA_EW_LA = file.path("data-raw", "england_lookup",
                                   "ward_to_UA_wales.csv"),
                 UA_HB = file.path("data-raw", "england_lookup",
                                   "UA_to_healthboard_wales.csv"))
+output_area_sf <- file.path("data-raw", "outputarea_shapefile",
+                            "Output_Areas__December_2011__Boundaries_EW_BFC.shp")
+grp.names=c("grid1km","grid10km")
 
-h5filename = c("uk_gov_eng_lookup.h5")
+h5filename =conversionh5filepath = paste("data-raw", "geography", "lookup_table", "gridcell_admin_area", "england", "1.0.0.h5",sep = "/")
 
-process_ukgov_eng_lookup(sourcefile, h5filename)
+
+process_ukgov_eng_lookup(sourcefile, h5filename, output_area_sf, grp.names)
+

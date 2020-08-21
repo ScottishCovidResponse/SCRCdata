@@ -15,7 +15,8 @@ h5filename <- "england_population.h5"
 output_area_sf <- file.path("data-raw", "outputarea_shapefile",
                             "Output_Areas__December_2011__Boundaries_EW_BFC.shp")
 
-oa_conversion_table <- file.path("data-raw", "oa_conversion_table.csv")
+conversionh5filepath <- file.path("data-raw", "geography", "lookup_table", "gridcell_admin_area", "england")
+conversionh5version_number = "1.0.0"
 grp.names <- c("OA", "EW", "LA", "LSOA", "MSOA", "CCG", "STP", "UA","LHB",
                "grid1km", "grid10km")
 
@@ -35,9 +36,9 @@ age.classes <- list("total", 0:90, seq(0, 90, 5), seq(0, 90, 10),
 process_ons_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
                          output_area_sf = output_area_sf,
-                         oa_conversion_table = oa_conversion_table,
+                         conversionh5version_number = conversionh5version_number,
+                         conversionh5filepath = conversionh5filepath,
                          grp.names = grp.names,
                          full.names = full.names,
                          subgrp.names = subgrp.names,
                          age.classes = age.classes)
-
