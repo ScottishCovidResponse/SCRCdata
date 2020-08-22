@@ -13,9 +13,10 @@ process_ons_demographics <- function (sourcefile,
                                       age.classes) {
 
 
-  conversion.table <- SCRCdataAPI::read_table(filename = paste0(conversionh5version_number,".h5"), 
-                                              path = conversionh5filepath,
-                                              component = "conversiontable/englandwales")
+  conversion.table <- SCRCdataAPI::read_table(
+    filename = paste0(conversionh5version_number,".h5"),
+    path = conversionh5filepath,
+    component = "conversiontable/englandwales")
   # Process raw data --------------------------------------------------------
   original.dat <- lapply(seq_along(sourcefile), function(k) {
 
@@ -35,66 +36,65 @@ process_ons_demographics <- function (sourcefile,
 
     # Generate data and attach to hdf5 file -----------------------------------
     transage.dat <- original.dat
-    
-      for (i in seq_along(grp.names)) {
-        cat(paste0("\rProcessing ",
-                   ": ", i, "/", length(grp.names), "..."))
-        if (grp.names[i] %in% "OA"){
-          tmp.dat <- list(data = transage.dat,
-                          area.names = conversion.table %>%
-                            dplyr::rename(OAcode = AREAcode,
-                                          OAname = AREAname) %>%
-                            dplyr::select(OAcode, OAname))
-          transarea.dat <- list(
-            grid_pop = as.matrix(tmp.dat$data[, -1, drop = FALSE]),
-            grid_id = tmp.dat$data[, 1])
-          area.names <- tmp.dat$area.names
-        } else if (grp.names[i] %in%
-                   c("EW", "LA", "LSOA", "MSOA", "CCG", "STP", "UA","LHB")) {
 
-          # Transformed data (non-grid transformed)
-          tmp.dat <- SCRCdataAPI::convert2lower(
-            dat = transage.dat,
-            convert_to = grp.names[i],
-            conversion_table = conversion.table)
-          transarea.dat <- list(grid_pop = as.matrix(tmp.dat$data[,  -1]),
-                                grid_id = tmp.dat$data[, 1])
-          area.names <- tmp.dat$area.names
+    for (i in seq_along(grp.names)) {
+      cat(paste0("\rProcessing ",
+                 ": ", i, "/", length(grp.names), "..."))
+      if (grp.names[i] %in% "OA"){
+        tmp.dat <- list(data = transage.dat,
+                        area.names = conversion.table %>%
+                          dplyr::rename(OAcode = AREAcode,
+                                        OAname = AREAname) %>%
+                          dplyr::select(OAcode, OAname))
+        transarea.dat <- list(
+          grid_pop = as.matrix(tmp.dat$data[, -1, drop = FALSE]),
+          grid_id = tmp.dat$data[, 1])
+        area.names <- tmp.dat$area.names
+      } else if (grp.names[i] %in%
+                 c("EW", "LA", "LSOA", "MSOA", "CCG", "STP", "UA","LHB")) {
 
-        } else if (grepl("grid", grp.names[i])) {
+        # Transformed data (non-grid transformed)
+        tmp.dat <- SCRCdataAPI::convert2lower(
+          dat = transage.dat,
+          convert_to = grp.names[i],
+          conversion_table = conversion.table)
+        transarea.dat <- list(grid_pop = as.matrix(tmp.dat$data[,  -1]),
+                              grid_id = tmp.dat$data[, 1])
+        area.names <- tmp.dat$area.names
 
-          # Transformed data (grid transformed)
-          transarea.dat <- SCRCdataAPI::convert2grid(
-            dat = transage.dat,
-            conversion.table = conversion.table,
-            grid_size = grp.names[i])
+      } else if (grepl("grid", grp.names[i])) {
 
-        }
-        else {
-          stop("OMG! - grpnames")
-        }
+        # Transformed data (grid transformed)
+        transarea.dat <- SCRCdataAPI::convert2grid(
+          dat = transage.dat,
+          conversion.table = conversion.table,
+          grid_size = grp.names[i])
 
-        location <- file.path(grp.names[i], subgrp.names[j], dataset)
-        tmp <- unlist(transarea.dat$grid_id)
-        names(tmp) <- NULL
-        dimension_names <- list(tmp,
-                                colnames(transarea.dat$grid_pop))
-        names(dimension_names) <- c(full.names[i], "age groups")
+      }
+      else {
+        stop("OMG! - grpnames")
+      }
 
-        if (grepl("grid", grp.names[i])) {
-          SCRCdataAPI::create_array(
-            h5filename = h5filename,
-            component = location,
-            array = transarea.dat$grid_pop,
-            dimension_names = dimension_names,
-            dimension_values = list(grid_matrix[[grp.names[i]]]),
-            dimension_units = list(gsub("grid", "", grp.names[i])))
-        }else {
-          SCRCdataAPI::create_array(h5filename = h5filename,
-                                    component = location,
-                                    array = transarea.dat$grid_pop,
-                                    dimension_names = dimension_names)
-        }
+      location <- file.path(grp.names[i], subgrp.names[j], dataset)
+      tmp <- unlist(transarea.dat$grid_id)
+      names(tmp) <- NULL
+      dimension_names <- list(tmp,
+                              colnames(transarea.dat$grid_pop))
+      names(dimension_names) <- c(full.names[i], "age groups")
+
+      if (grepl("grid", grp.names[i])) {
+        SCRCdataAPI::create_array(
+          h5filename = h5filename,
+          component = location,
+          array = transarea.dat$grid_pop,
+          dimension_names = dimension_names,
+          dimension_values = list(grid_matrix[[grp.names[i]]]),
+          dimension_units = list(gsub("grid", "", grp.names[i])))
+      }else {
+        SCRCdataAPI::create_array(h5filename = h5filename,
+                                  component = location,
+                                  array = transarea.dat$grid_pop,
+                                  dimension_names = dimension_names)
       }
     }
   })
