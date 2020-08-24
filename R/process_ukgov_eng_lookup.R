@@ -12,30 +12,30 @@
 #'
 process_ukgov_eng_lookup <- function(sourcefile,h5filename, output_area_sf, grid_names) {
 
-  OA_EW_LA <- readr::read_csv(sourcefile["OA_EW_LA"],
+  OA_EW_LA <- read.csv(sourcefile["OA_EW_LA"],
                               col_types = cols(.default = "c"))  %>%
     dplyr::rename(AREAcode = OA11CD, EWcode = WD19CD, EWname = WD19NM,
                   LAcode = LAD19CD, LAname = LAD19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
 
-  OA_LSOA_MSOA_LA <- readr::read_csv(sourcefile["OA_LSOA_MSOA_LA"],
+  OA_LSOA_MSOA_LA <- read.csv(sourcefile["OA_LSOA_MSOA_LA"],
                                      col_types = cols(.default = "c"))  %>%
     dplyr::rename(AREAcode = OA11CD, LSOAcode = LSOA11CD, LSOAname = LSOA11NM,
                   MSOAcode = MSOA11CD, MSOAname = MSOA11NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
 
-  LSOA_CCG <- readr::read_csv(sourcefile["LSOA_CCG"],
+  LSOA_CCG <- read.csv(sourcefile["LSOA_CCG"],
                               col_types = cols(.default = "c"))  %>%
     dplyr::rename(LSOAcode = LSOA11CD, CCGcode = CCG19CD, CCGname = CCG19NM,
                   STPcode = STP19CD, STP19name = STP19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
 
-  EW_UA <- readr::read_csv(sourcefile["EW_UA"],
+  EW_UA <- read.csv(sourcefile["EW_UA"],
                            col_types = cols(.default = "c"))  %>%
     dplyr::rename(EWcode = WD19CD, UAcode = UA19CD, UAname = UA19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
 
-  UA_HB <- readr::read_csv(sourcefile["UA_HB"],
+  UA_HB <- read.csv(sourcefile["UA_HB"],
                            col_types = cols(.default = "c"))  %>%
     dplyr::rename(UAcode = UA19CD, LHBcode = LHB19CD, LHBname = LHB19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
@@ -55,9 +55,9 @@ process_ukgov_eng_lookup <- function(sourcefile,h5filename, output_area_sf, grid
 
   # Get shapefile if not already downloaded by user -------------------------
   if (!file.exists(output_area_sf)) {
-    SCRCdataAPI::download_from_url(url="https://opendata.arcgis.com/datasets/",
-                                   path = "09b58d063d4e421a9cad16ba5419a6bd_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D",
-                                   local=file.path(str_split(output_area_sf, "/")[[1]][1]),
+    SCRCdataAPI::download_from_url(source_root="https://opendata.arcgis.com/datasets/",
+                                   source_path = "09b58d063d4e421a9cad16ba5419a6bd_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D",
+                                   path=file.path(str_split(output_area_sf, "/")[[1]][1]),
                                    filename = str_split(output_area_sf, "/")[[1]][3])
   }
   # Prepare dz2grid ---------------------------------------------------------
