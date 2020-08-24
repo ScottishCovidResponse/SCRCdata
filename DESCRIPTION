@@ -1,6 +1,6 @@
 Package: SCRCdata
 Type: Package
-Title: Processing scripts for the SCRC data pipeline
+Title: Processing Scripts for the SCRC Data Pipeline
 Version: 0.1.6
 Authors@R: c(person("Sonia", "Mitchell", email = "sonia.mitchell@glasgow.ac.uk",
                   role = c("cre", "aut"), comment = c(ORCID = "0000-0003-1536-2066")),
