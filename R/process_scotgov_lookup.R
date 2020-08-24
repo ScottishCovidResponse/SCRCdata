@@ -1,5 +1,13 @@
 #' process_scotgov_lookup
-#'
+#' 
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param h5filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#' @param grid_names a \code{string} specifying the sizes of the grid squares 
+#'used in the conversion table in the format gridxkm
+#' @param datazone_sf a \code{string} specifying the local path and filename
+#' associated with the Scottish government datazone shapefile
 #' @export
 #'
 process_scotgov_lookup <- function(sourcefile,h5filename,grid_names,datazone_sf) {
@@ -11,7 +19,7 @@ process_scotgov_lookup <- function(sourcefile,h5filename,grid_names,datazone_sf)
                   AREAname = DZname,
                   URcode = URclass) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
-    dzlookup <- readr::read_csv(
+    dzlookup <- read.csv(
     sourcefile[["dz"]]) %>%
     dplyr::rename(AREAcode = DataZone,
                   IZcode=InterZone,
@@ -31,8 +39,13 @@ process_scotgov_lookup <- function(sourcefile,h5filename,grid_names,datazone_sf)
      
     # Get shapefile if not already downloaded by user -------------------------
     if (!file.exists(datazone_sf)) {
-      SCRCdataAPI::download_source_version(dataset = "ukgov_scot_dz_shapefile")
-    }
+      SCRCdataAPI::download_from_url(
+        source_root = "http://sedsh127.sedsh.gov.uk",
+        source_path = file.path("Atom_data", "ScotGov", "ZippedShapefiles",
+                         "SG_DataZoneBdry_2011.zip"),
+        path = file.path("data-raw", "datazone_shapefile"),
+        filename = "SG_DataZone_Bdry_2011.shp")    
+      }
     
     
     # Read in datazone shapefile and check for non-intersecting geometries

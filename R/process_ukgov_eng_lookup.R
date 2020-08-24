@@ -1,8 +1,16 @@
 #' process_ukgov_eng_lookup
-#'
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param h5filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#' @param grid_names a \code{string} specifying the sizes of the grid squares 
+#'used in the conversion table in the format gridxkm
+#' @param output_area_sf a \code{string} specifying the local path and filename
+#' associated with the UK government output area shapefile
+
 #' @export
 #'
-process_ukgov_eng_lookup <- function(sourcefile,h5filename, output_area_sf, grp.names) {
+process_ukgov_eng_lookup <- function(sourcefile,h5filename, output_area_sf, grid_names) {
 
   OA_EW_LA <- readr::read_csv(sourcefile["OA_EW_LA"],
                               col_types = cols(.default = "c"))  %>%
@@ -59,8 +67,8 @@ process_ukgov_eng_lookup <- function(sourcefile,h5filename, output_area_sf, grp.
     sf::st_make_valid() %>% rename(AREAcode=OA11CD)
   
   # Prepare grid sizes
-  if (any(grepl("^grid", grp.names))) {
-    gridsizes <- grp.names[grepl("^grid", grp.names)] %>%
+  if (any(grepl("^grid", grid_names))) {
+    gridsizes <- grid_names[grepl("^grid", grid_names)] %>%
       sapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
       as.numeric()
     

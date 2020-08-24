@@ -1,10 +1,32 @@
 #' process_nrs_demographics
+#' 
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param h5filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#' @param grp.names a \code{string} specifying the shortened names of the 
+#' administrative geographies - which should match those in the conversion table
+#'  - and the sizes of the grid squares used in the conversion table in the 
+#'  format gridxkm
+#' @param full.names a \code{string} specifying the full names of the 
+#'  administrative geographies to which the data is converted to.
+#' @param age.classes a \code{string} specifying the lower bounds of the age 
+#'  classes to which the data should be assigned.
+#' @param conversionh5filename a \code{string} specifying the local path and 
+#'  filename associated with the conversion table
+#' @param  genderbreakdown a \code{string} specifying the names which should 
+#'  be assigned to gender categories in the output file and the gender files 
+#'  from the input which should be used in each categotry
 #'
 #' @export
 #'
-process_nrs_demographics <- function(sourcefile, h5filename,
-                                     grp.names, full.names,
-                                     age.classes,conversionh5filename,genderbreakdown) {
+process_nrs_demographics <- function(sourcefile, 
+                                     h5filename,
+                                     grp.names, 
+                                     full.names,
+                                     age.classes,
+                                     conversionh5filename,
+                                     genderbreakdown) {
   
   # Prepare conversion table
   conversion.table <- SCRCdataAPI::read_table(filename = conversionh5version_number, 

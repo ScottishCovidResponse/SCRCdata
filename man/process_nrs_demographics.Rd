@@ -14,6 +14,31 @@ process_nrs_demographics(
   genderbreakdown
 )
 }
+\arguments{
+\item{sourcefile}{a \code{string} specifying the local path and filename
+associated with the source data (the input of this function)}
+
+\item{h5filename}{a \code{string} specifying the local path and filename
+associated with the processed data (the output of this function)}
+
+\item{grp.names}{a \code{string} specifying the shortened names of the 
+administrative geographies - which should match those in the conversion table
+ - and the sizes of the grid squares used in the conversion table in the 
+ format gridxkm}
+
+\item{full.names}{a \code{string} specifying the full names of the 
+administrative geographies to which the data is converted to.}
+
+\item{age.classes}{a \code{string} specifying the lower bounds of the age 
+classes to which the data should be assigned.}
+
+\item{conversionh5filename}{a \code{string} specifying the local path and 
+filename associated with the conversion table}
+
+\item{genderbreakdown}{a \code{string} specifying the names which should 
+be assigned to gender categories in the output file and the gender files 
+from the input which should be used in each categotry}
+}
 \description{
 process_nrs_demographics
 }
