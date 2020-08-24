@@ -59,11 +59,9 @@ original_sourceId <- new_source(
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
 original_root <- "https://www.nrscotland.gov.uk"
-original_path <- file.path("files", "statistics", "population-estimates",
-                           "sape-time-series", "persons",
-                           "sape-2018-persons.xlsx")
-
-
+original_path <- paste0("files", "statistics", "population-estimates",
+                        "sape-time-series", "persons",
+                        "sape-2018-persons.xlsx", sep = "/")
 
 
 # Where is the submission script stored? ----------------------------------
