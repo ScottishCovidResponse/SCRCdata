@@ -10,7 +10,7 @@ Authors@R: c(person("Sonia", "Mitchell", email = "sonia.mitchell@glasgow.ac.uk",
                   role = "ctb", comment = c(ORCID = "")),
              person("Ryan", "Field", email = "",
                   role = "ctb", comment = c(ORCID = "")))
-Description: Processing scripts for the SCRC data pipeline
+Description: Processing scripts for the SCRC data pipeline.
 License: GPL-3
 Imports:
     aRxiv,
