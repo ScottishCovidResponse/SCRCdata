@@ -93,9 +93,13 @@ process_scotgov_management(
 
 # register metadata with the data registry --------------------------------
 
-register_everything(product_name,
-                    version_number,
-                    doi_or_unique_name,
+register_everything(product_name = product_name,
+                    version_number = version_number,
+                    doi_or_unique_name = doi_or_unique_name,
                     namespace = namespace,
                     submission_script = submission_script,
-                    key)
+                    original_source_name = original_source_name,
+                    original_sourceId = original_sourceId,
+                    original_root = original_root,
+                    original_path = original_path,
+                    key = key)
