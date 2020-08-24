@@ -103,7 +103,6 @@ product_filename <- paste0(version_number, ".h5")
 
 # where is the source data stored?
 source_storageRoot <- "boydorr"
-source_path <- file.path(product_name, source_filename)
 
 # where is the submission script stored?
 script_storageRoot <- "text_file"
@@ -111,7 +110,6 @@ submission_text <- paste("R -f", github_info$submission_script)
 
 # where is the data product stored?
 product_storageRoot <- "boydorr"
-product_path <- product_name
 
 
 
@@ -196,7 +194,7 @@ dataProductURIs <- upload_data_product(
   storage_root_id = product_storageRootId,
   name = product_name,
   processed_path = file.path(processed_path, product_filename),
-  product_path = paste(product_path, product_filename, sep = "/"),
+  product_path = paste(product_name, product_filename, sep = "/"),
   version = version_number,
   namespace_id = namespaceId,
   key = key)
