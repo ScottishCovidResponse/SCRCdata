@@ -167,7 +167,7 @@ sourceDataURIs <- upload_source_data(
 
 process_scotgov_deaths(
   sourcefile = file.path(local_path, source_filename),
-  filename = file.path(local_path, product_filename))
+  filename = file.path(processed_path, product_filename))
 
 
 
