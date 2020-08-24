@@ -3,14 +3,18 @@
 \docType{data}
 \name{journal_names}
 \alias{journal_names}
-\title{Conversion tables for journal names and abbreviations}
+\title{Conversion table for journal names and abbreviations}
 \format{
-An object of class \code{data.frame} with 229148 rows and 2 columns.
+A data frame with 2 columns
+\describe{
+  \item{journal}{full journal name}
+  \item{abbreviation}{journal name abbreviation}
+}
 }
 \usage{
 journal_names
 }
 \description{
-Conversion tables for journal names and abbreviations
+A dataset containing a conversion table for journal names and abbreviations
 }
 \keyword{datasets}
