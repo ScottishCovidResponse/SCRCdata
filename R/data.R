@@ -10,4 +10,7 @@
 #'
 #' @docType data
 #'
+#' @examples
+#' data("journal_names", package = "SCRCdata")
+#'
 "journal_names"

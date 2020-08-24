@@ -17,4 +17,8 @@ journal_names
 \description{
 A dataset containing a conversion table for journal names and abbreviations
 }
+\examples{
+data("journal_names", package = "SCRCdata")
+
+}
 \keyword{datasets}
