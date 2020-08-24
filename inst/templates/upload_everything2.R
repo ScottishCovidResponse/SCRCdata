@@ -29,6 +29,8 @@ doi_or_unique_name <- "Scottish small area population estimates"
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
 version_number <- "0.1.0"
+source_filename <- paste0(version_number, ".csv")
+product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
 # generate various file locations:
@@ -38,9 +40,7 @@ version_number <- "0.1.0"
 # (3) data product is processed, then saved locally to data-raw/[product_name]
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- paste("human", "demographics", "population",
-                      "scotland", sep = "/")
-
+product_name <- "human/demographics/population/scotland"
 namespace <- "SCRC"
 
 
@@ -59,11 +59,9 @@ original_sourceId <- new_source(
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
 original_root <- "https://www.nrscotland.gov.uk"
-original_path <- file.path("files//statistics", "population-estimates",
-                           "sape-time-series", "persons",
-                           "sape-2018-persons.xlsx")
-
-
+original_path <- paste0("files", "statistics", "population-estimates",
+                        "sape-time-series", "persons",
+                        "sape-2018-persons.xlsx", sep = "/")
 
 
 # Where is the submission script stored? ----------------------------------
@@ -82,22 +80,26 @@ submission_script <- "nrs_demographics.R"
 
 download_from_url(source_root = original_root,
                   source_path = original_path,
-                  path = local_path,
+                  path = file.path("data-raw", product_name),
                   filename = source_filename)
 
 
 # convert source data into a data product ---------------------------------
 
 process_scotgov_management(
-  sourcefile = file.path(local_path, source_filename),
-  filename = file.path(local_path, product_filename))
+  sourcefile = file.path("data-raw", product_name, source_filename),
+  filename = file.path("data-raw", product_name, product_filename))
 
 
 # register metadata with the data registry --------------------------------
 
-register_everything(product_name,
-                    version_number,
-                    doi_or_unique_name,
+register_everything(product_name = product_name,
+                    version_number = version_number,
+                    doi_or_unique_name = doi_or_unique_name,
                     namespace = namespace,
                     submission_script = submission_script,
-                    key)
+                    original_source_name = original_source_name,
+                    original_sourceId = original_sourceId,
+                    original_root = original_root,
+                    original_path = original_path,
+                    key = key)
