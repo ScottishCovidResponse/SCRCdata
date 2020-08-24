@@ -63,7 +63,7 @@ WHERE {
   ?type rdfs:label ?measure.
 }"
 
-# where is the processing script stored?
+# where is the submission script stored?
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
                                 script = "inst/SCRC/scotgov_management.R",
                                 package = "SCRCdata")
