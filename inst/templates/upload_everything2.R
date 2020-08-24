@@ -38,9 +38,7 @@ version_number <- "0.1.0"
 # (3) data product is processed, then saved locally to data-raw/[product_name]
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- paste("human", "demographics", "population",
-                      "scotland", sep = "/")
-
+product_name <- "human/demographics/population/scotland"
 namespace <- "SCRC"
 
 
@@ -82,15 +80,15 @@ submission_script <- "nrs_demographics.R"
 
 download_from_url(source_root = original_root,
                   source_path = original_path,
-                  path = local_path,
+                  path = file.path("data-raw", product_name),
                   filename = source_filename)
 
 
 # convert source data into a data product ---------------------------------
 
 process_scotgov_management(
-  sourcefile = file.path(local_path, source_filename),
-  filename = file.path(local_path, product_filename))
+  sourcefile = file.path("data-raw", product_name, source_filename),
+  filename = file.path("data-raw", product_name, product_filename))
 
 
 # register metadata with the data registry --------------------------------
