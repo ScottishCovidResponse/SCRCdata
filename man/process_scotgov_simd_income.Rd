@@ -4,7 +4,14 @@
 \alias{process_scotgov_simd_income}
 \title{process_scotgov_simd_income}
 \usage{
-process_scotgov_simd_income(sourcefile, h5filename)
+process_scotgov_simd_income(sourcefile, filename)
+}
+\arguments{
+\item{sourcefile}{a \code{string} specifying the local path and filename
+associated with the source data (the input of this function)}
+
+\item{filename}{a \code{string} specifying the local path and filename
+associated with the processed data (the output of this function)}
 }
 \description{
 process_scotgov_simd_income

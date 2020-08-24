@@ -1,8 +1,13 @@
 #' process_scotgov_simd_income
 #'
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#'
 #' @export
 #'
-process_scotgov_simd_income <- function(sourcefile, h5filename) {
+process_scotgov_simd_income <- function(sourcefile, filename) {
 
   scotSIMDinc <- lapply(seq_along(sourcefile), function(i) {
     read.csv(file = sourcefile[i]) %>%
@@ -18,7 +23,7 @@ process_scotgov_simd_income <- function(sourcefile, h5filename) {
 
   colnames(scotSIMDinc) <- tolower(colnames(scotSIMDinc))
 
-  SCRCdataAPI::create_table(h5filename = h5filename,
+  SCRCdataAPI::create_table(h5filename = filename,
                             component = "simd/income",
                             df = scotSIMDinc,
                             row_title = "datazones",

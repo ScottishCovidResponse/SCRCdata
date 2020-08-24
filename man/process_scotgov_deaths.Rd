@@ -6,6 +6,13 @@
 \usage{
 process_scotgov_deaths(sourcefile, filename)
 }
+\arguments{
+\item{sourcefile}{a \code{string} specifying the local path and filename
+associated with the source data (the input of this function)}
+
+\item{filename}{a \code{string} specifying the local path and filename
+associated with the processed data (the output of this function)}
+}
 \description{
 process_scotgov_deaths
 }

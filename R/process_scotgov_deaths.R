@@ -1,5 +1,10 @@
 #' process_scotgov_deaths
 #'
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#'
 #' @export
 #'
 process_scotgov_deaths <- function(sourcefile, filename) {
@@ -30,6 +35,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
     reshape2::dcast(featurecode ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurecode")
 
+  # Since the directory structure already exists (being where the csv was
+  # downloaded to, we can include the path in the filename argument)
   SCRCdataAPI::create_array(
     filename = filename,
     component = "nhs_health_board/week-covid_related_deaths",

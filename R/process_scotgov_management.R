@@ -1,5 +1,10 @@
 #' process_scotgov_management
 #'
+#' @param sourcefile a \code{string} specifying the local path and filename
+#' associated with the source data (the input of this function)
+#' @param filename a \code{string} specifying the local path and filename
+#' associated with the processed data (the output of this function)
+#'
 #' @export
 #'
 process_scotgov_management <- function(sourcefile, filename) {

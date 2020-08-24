@@ -4,7 +4,14 @@
 \alias{process_scotgov_ur_classification}
 \title{process_scotgov_ur_classification}
 \usage{
-process_scotgov_ur_classification(sourcefile, h5filename)
+process_scotgov_ur_classification(sourcefile, filename)
+}
+\arguments{
+\item{sourcefile}{a \code{string} specifying the local path and filename
+associated with the source data (the input of this function)}
+
+\item{filename}{a \code{string} specifying the local path and filename
+associated with the processed data (the output of this function)}
 }
 \description{
 process_scotgov_ur_classification
