@@ -29,6 +29,8 @@ doi_or_unique_name <- "Scottish small area population estimates"
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
 version_number <- "0.1.0"
+source_filename <- paste0(version_number, ".csv")
+product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
 # generate various file locations:
