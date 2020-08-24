@@ -20,6 +20,7 @@ Imports:
     reshape2,
     revtools,
     rjson,
+    SCRCdataAPI,
     sf,
     tibble
 Suggests:
