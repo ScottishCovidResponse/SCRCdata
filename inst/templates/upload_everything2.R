@@ -60,7 +60,7 @@ original_sourceId <- new_source(
 # Note that file.path(original_root, original_path) is the download link.
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
-original_root <- "https://www.nrscotland.gov.uk"
+original_root <- "https://www.nrscotland.gov.uk/"
 original_path <- "files/statistics/population-estimates/sape-time-series/persons/sape-2018-persons.xlsx"
 
 
