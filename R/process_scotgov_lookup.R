@@ -2,15 +2,18 @@
 #'
 #' @param sourcefile a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param h5filename a \code{string} specifying the local path and filename
+#' @param h5filename a \code{string} specifying the filename
 #' associated with the processed data (the output of this function)
 #' @param grid_names a \code{string} specifying the sizes of the grid squares
 #'used in the conversion table in the format gridxkm
+#' @param path a \code{string} specifying the local path associated 
+#' with the processed data
 #'
 #' @export
 #'
 process_scotgov_lookup <- function(sourcefile,
                                    h5filename,
+                                   path,
                                    grid_names) {
 
   simdlookup<- readxl::read_excel(
@@ -57,11 +60,9 @@ process_scotgov_lookup <- function(sourcefile,
     names(dz_subdivisions)[g] <- tag
     grid_matrix[[g]] <- tmp$grid_matrix
     names(grid_matrix)[g] <- tag
+    dz_subdivisions[[g]]$Datazone_component_id<-
+      c(1:length(dz_subdivisions[[g]]$grid_id))
   }
-  dz_subdivisions$grid1km$Datazone_component_id <-
-    c(1:length(dz_subdivisions$grid1km$grid_id))
-  dz_subdivisions$grid10km$Datazone_component_id <-
-    c(1:length(dz_subdivisions$grid10km$grid_id))
 
   # Make dataframes of the area of each datazone component in each grid cell
   # at both 1km and 10km
@@ -123,8 +124,8 @@ process_scotgov_lookup <- function(sourcefile,
 
   grids.array <- as.data.frame(grids.array)
 
-  grid_lookup <- pivot_longer(grids.array, "1-1":"47-70",
-                              names_to = "grid10km_id", values_to = "grid1km_id")
+  grid_lookup <- reshape2::melt(grids.array, id.vars = NULL, variable.name = "grid10km_id", 
+                                value.name = "grid1km_id")
   grid_lookup$grid10km_id <- factor(grid_lookup$grid10km_id,
                                     levels = gridslist$grid10k$grid_id)
   grid_lookup <- grid_lookup[order(grid_lookup$grid10km_id), ]
@@ -161,8 +162,9 @@ process_scotgov_lookup <- function(sourcefile,
   conversion.table <- conversion.table %>%
     tibble::column_to_rownames("Datazone_component_id")
   conversion.table[is.na(conversion.table)] <- 0
-
+  
   SCRCdataAPI::create_table(filename = h5filename,
+                            path = path,
                             component = "conversiontable/scotland",
                             df = conversion.table,
                             row_names = rownames(conversion.table),
