@@ -6,14 +6,12 @@
 #' associated with the processed data (the output of this function)
 #' @param grid_names a \code{string} specifying the sizes of the grid squares
 #'used in the conversion table in the format gridxkm
-#' @param datazone_sf a \code{string} specifying the local path and filename
-#' associated with the Scottish government datazone shapefile
+#'
 #' @export
 #'
 process_scotgov_lookup <- function(sourcefile,
                                    h5filename,
-                                   grid_names,
-                                   datazone_sf) {
+                                   grid_names) {
 
   simdlookup<- readxl::read_excel(
     sourcefile[["simd"]],
@@ -37,26 +35,15 @@ process_scotgov_lookup <- function(sourcefile,
     dplyr::select_if(!grepl(paste(colnames(simdlookup)[-1],collapse="|"),
                             colnames(.)))
 
-  dzlookup$TTWAname = dzlookup$TTWAcode
-  dzlookup$CTRYname = "Scotland"
+  dzlookup$TTWAname <- dzlookup$TTWAcode
+  dzlookup$CTRYname <- "Scotland"
 
-  conversion.table = left_join(simdlookup, dzlookup, by = "AREAcode")
+  conversion.table <- left_join(simdlookup, dzlookup, by = "AREAcode")
 
-  # Get shapefile if not already downloaded by user -------------------------
-  if (!file.exists(datazone_sf)) {
-    SCRCdataAPI::download_from_url(
-      source_root = "http://sedsh127.sedsh.gov.uk",
-      source_path = "Atom_data/ScotGov/ZippedShapefiles/SG_DataZoneBdry_2011.zip",
-      path = file.path("data-raw", "datazone_shapefile"),
-      filename = "SG_DataZone_Bdry_2011.shp")
-  }
+  # scot_datazone_sf is installed as part of the SCRCdata package
+  datazones <- SCRCdata::scot_datazone_sf
 
-  # Read in datazone shapefile and check for non-intersecting geometries
-  datazones <- sf::st_read(datazone_sf, quiet = TRUE) %>%
-    sf::st_make_valid() %>%
-    dplyr::rename(AREAcode = DataZone)
-
-  #Create grid cell intersections
+  # Create grid cell intersections
   gridsizes <- grid_names[grepl("^grid", grid_names)] %>%
     sapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
     as.numeric()
@@ -140,7 +127,7 @@ process_scotgov_lookup <- function(sourcefile,
                               names_to = "grid10km_id", values_to = "grid1km_id")
   grid_lookup$grid10km_id <- factor(grid_lookup$grid10km_id,
                                     levels = gridslist$grid10k$grid_id)
-  grid_lookup=grid_lookup[order(grid_lookup$grid10km_id), ]
+  grid_lookup <- grid_lookup[order(grid_lookup$grid10km_id), ]
   grid_lookup$grid10km_id <- as.character(grid_lookup$grid10km_id)
 
   # Which grid cells have datazones in them?

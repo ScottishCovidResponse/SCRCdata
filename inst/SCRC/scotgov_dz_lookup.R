@@ -20,7 +20,5 @@ process_scotgov_lookup(
   sourcefile = list(simd = "data-raw/scotgov_simd_lookup.xlsx",
                     dz = "data-raw/scotgov_dz_lookup.csv"),
   h5filename = "scotgov_lookup.h5",
-  grid_names = c("grid1km","grid10km"),
-  datazone_sf = file.path("data-raw", "datazone_shapefile",
-                          "SG_DataZone_Bdry_2011.shp"))
+  grid_names = c("grid1km","grid10km"))
 
