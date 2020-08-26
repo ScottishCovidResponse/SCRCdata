@@ -140,6 +140,7 @@ sourceDataURIs <- upload_source_data(
 # generate data product ---------------------------------------------------
 
 # Process data and generate hdf5 file
+h5filename = paste0(paste("data-raw", product_name,version_number,sep = "/"), ".h5")
 sourcefile <- c("data-raw/sape-2018-persons.xlsx",
                 "data-raw/sape-2018-females.xlsx",
                 "data-raw/sape-2018-males.xlsx")
@@ -164,18 +165,18 @@ age.classes <- list(0:90)
 
 conversionh5filepath = paste("data-raw", "geography", "lookup_table", "gridcell_admin_area", "scotland",sep = "/")
 conversionh5version_number = "1.0.0.h5"
-conversionh5component =  paste("conversiontable","scotland","table", sep = "/")
 if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath, conversionh5version_number,sep = "/"),
                             component = conversionh5component)==FALSE){
   stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
 }
 
-process_nrs_demographics(sourcefile = source_filename,
+process_nrs_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
                          grp.names = grp.names,
                          full.names = full.names,
                          age.classes = age.classes,
-                         conversionh5filename = conversionh5filename,
+                         conversionh5filepath = conversionh5filepath,
+                         conversionh5version_number = conversionh5version_number,
                          genderbreakdown = genderbreakdown)
 
 # upload data product metadata to the registry ----------------------------

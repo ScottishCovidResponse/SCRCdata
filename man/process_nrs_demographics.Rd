@@ -10,7 +10,8 @@ process_nrs_demographics(
   grp.names,
   full.names,
   age.classes,
-  conversionh5filename,
+  conversionh5filepath,
+  conversionh5version_number,
   genderbreakdown
 )
 }
@@ -32,8 +33,11 @@ administrative geographies to which the data is converted to.}
 \item{age.classes}{a \code{string} specifying the lower bounds of the age 
 classes to which the data should be assigned.}
 
-\item{conversionh5filename}{a \code{string} specifying the local path and 
-filename associated with the conversion table}
+\item{conversionh5filepath}{a \code{string} specifying the local path
+associated with the conversion table}
+
+\item{conversionh5version_number}{a \code{string} specifying the version 
+number (which is also the filename) of the conversion table}
 
 \item{genderbreakdown}{a \code{string} specifying the names which should 
 be assigned to gender categories in the output file and the gender files 

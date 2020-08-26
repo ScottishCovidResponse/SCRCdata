@@ -12,11 +12,13 @@
 #'  administrative geographies to which the data is converted to.
 #' @param age.classes a \code{string} specifying the lower bounds of the age 
 #'  classes to which the data should be assigned.
-#' @param conversionh5filename a \code{string} specifying the local path and 
-#'  filename associated with the conversion table
+#' @param conversionh5filepath a \code{string} specifying the local path  
+#'   associated with the conversion table
 #' @param  genderbreakdown a \code{string} specifying the names which should 
 #'  be assigned to gender categories in the output file and the gender files 
 #'  from the input which should be used in each categotry
+#' @param conversionh5version_number a \code{string} specifying the version 
+#' number (which is also the filename) of the conversion table
 #'
 #' @export
 #'
@@ -25,7 +27,8 @@ process_nrs_demographics <- function(sourcefile,
                                      grp.names, 
                                      full.names,
                                      age.classes,
-                                     conversionh5filename,
+                                     conversionh5filepath,
+                                     conversionh5version_number,
                                      genderbreakdown) {
   
   # Prepare conversion table
