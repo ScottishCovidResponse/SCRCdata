@@ -43,4 +43,8 @@ sourcefile <- c(OA_EW_LA = file.path("data-raw", "england_lookup",
 
 h5filename <- c("uk_gov_eng_lookup.h5")
 
-process_ukgov_eng_lookup(sourcefile, h5filename)
+process_ukgov_eng_lookup(sourcefile = sourcefile,
+                         h5filename = "1.0.1.h5", 
+                         output_area_sf = "data-raw/outputarea_shapefile/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
+                         grid_names =  c("grid1km","grid10km"),
+                         path = file.path("data-raw","geography","lookup_table","gridcell_admin_area","england"))
