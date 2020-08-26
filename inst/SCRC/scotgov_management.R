@@ -8,26 +8,72 @@
 #' https://www.gov.scot/publications/coronavirus-covid-19-data-definitions-and-sources/
 #'
 
+
+
+#' dataset-name
+#'
+#' The following script assumes:
+#' (1) your source data will be downloaded to data-raw/[product_name]
+#' (2) your source data will be saved as [version_number].csv
+#' (3) your data product will be saved to data-raw/[product_name]
+#' (4) your data product will be saved as [version_number].h5
+#' (5) you will upload your source data to the Boydorr FTP server
+#' (6) you will upload your data product to the Boydorr FTP server
+#' (7) you will store your submission script in ScottishCovidResponse/SCRCdata
+#'
+
 library(SCRCdataAPI)
 library(SCRCdata)
 
+
+# Go to data.scrc.uk, click on Links, then Generate API Token, and save your
+# token in your working directory as token.txt. If the following returns an
+# error, then save a carriage return after the token.
 key <- readLines("token/token.txt")
-todays_date <- Sys.time()
 
-# initialise parameters ---------------------------------------------------
 
-product_name <- paste("records", "SARS-CoV-2", "scotland",
-              "cases_and_management", sep = "/")
+# Define data set ---------------------------------------------------------
 
-# create version number (this is used to generate the *.csv and *.h5 filenames)
-tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
-
-# dataset name
+# doi_or_unique_name is a free text field specifying the name of your dataset
 doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
 
-# where was the source data download from? (original source)
-source_name <- "Scottish Government Open Data Repository"
+# version_number is used to generate the source data and data product
+# filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
+# downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
+todays_date <- Sys.time()
+tmp <- as.Date(todays_date, format = "%Y-%m-%d")
+version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
+source_filename <- paste0(version_number, ".csv")
+product_filename <- paste0(version_number, ".h5")
+
+# product_name is used to identify the data product as well as being used to
+# generate various file locations:
+# (1) source data is downloaded, then saved locally to data-raw/[product_name]
+# (2) source data should be stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
+# (3) data product is processed, then saved locally to data-raw/[product_name]
+# (4) data product should be stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
+product_name <- "records/SARS-CoV-2/scotland/cases_and_management"
+# Construct the path to a file in a platform independent way
+product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
+namespace <- "SCRC"
+
+
+# Where was the data download from? (original source) ---------------------
+
+original_source_name <- "Scottish Government Open Data Repository"
+
+# Add the website to the data registry (e.g. home page of the database)
+original_sourceId <- new_source(
+  name = original_source_name,
+  abbreviation = "Scottish Government Open Data Repository",
+  website = "https://statistics.gov.scot/",
+  key = key)
+
+# Note that file.path(original_root, original_path) is the download link.
+# Examples of downloading data from a database rather than a link, can be
+# found in the scotgov_deaths or scotgov_management scripts
 original_root <- "https://statistics.gov.scot/sparql.csv?query="
 original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX data: <http://statistics.gov.scot/data/>
@@ -51,88 +97,17 @@ WHERE {
   ?type rdfs:label ?measure.
 }"
 
-# where is the submission script stored?
-github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
-                                script = "inst/SCRC/scotgov_management.R",
-                                package = "SCRCdata")
 
+# Where is the submission script stored? ----------------------------------
 
+# This template is an example of a submission script.
+# The submission script should download the source data, generate a data
+# product, and upload all associated metadata to the data registry.
+# This script assumes you will store your submission script in the
+# ScottishCovidResponse/SCRCdata repository within the inst/[namespace]/
+# directory
 
-
-# Additional parameters (automatically generated) -------------------------
-
-namespace <- "SCRC"
-
-# when was the source data downloaded?
-source_downloadDate <- todays_date
-
-# when was the data product generated?
-script_processingDate <- todays_date
-
-# where is the source data downloaded to? (locally, before being stored)
-local_path <- file.path("data-raw", product_name)
-source_filename <- paste0(version_number, ".csv")
-
-# where is the data product saved? (locally, before being stored)
-processed_path <- file.path("data-raw", product_name)
-product_filename <- paste0(version_number, ".h5")
-
-
-
-# where is the source data stored?
-source_storageRoot <- "boydorr"
-source_path <- file.path(product_name, source_filename)
-
-# where is the submission script stored?
-script_storageRoot <- "text_file"
-submission_text <- paste("R -f", github_info$submission_script)
-
-
-# where is the data product stored?
-product_storageRoot <- "boydorr"
-product_path <- product_name
-
-
-
-# default data that should be in database ---------------------------------
-
-# original source name
-original_sourceId <- new_source(
-  name = source_name,
-  abbreviation = "Scottish Government Open Data Repository",
-  website = "https://statistics.gov.scot/",
-  key = key)
-
-# original source root
-original_storageRootId <- new_storage_root(
-  name = "Scottish Government Open Data Repository",
-  root = original_root,
-  key = key)
-
-# source data storage root
-source_storageRootId <- new_storage_root(name = source_storageRoot,
-                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                         key = key)
-
-# submission script storage root
-script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "https://data.scrc.uk/api/text_file/",
-                                         key = key)
-
-# data product storage root
-product_storageRootId <- new_storage_root(name = product_storageRoot,
-                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                          key = key)
-
-# github repo storage root
-repo_storageRootId <- new_storage_root(name = github_info$repo_storageRoot,
-                                       root = "https://github.com",
-                                       key = key)
-
-# namespace
-namespaceId <- new_namespace(name = namespace,
-                             key = key)
-
+submission_script <- "scotgov_management.R"
 
 
 # download source data ----------------------------------------------------
@@ -140,72 +115,23 @@ namespaceId <- new_namespace(name = namespace,
 download_from_database(source_root = original_root,
                        source_path = original_path,
                        filename = source_filename,
-                       path = local_path)
+                       path = file.path("data-raw", product_path))
 
-
-
-# upload source metadata to registry --------------------------------------
-
-sourceDataURIs <- upload_source_data(
-  doi_or_unique_name = doi_or_unique_name,
-  original_source_id = original_sourceId,
-  original_root_id = original_storageRootId,
-  original_path = original_path,
-  local_path = file.path(local_path, source_filename),
-  storage_root_id = source_storageRootId,
-  target_path = paste(product_name, source_filename, sep = "/"),
-  download_date = source_downloadDate,
-  version = version_number,
-  key = key)
-
-
-
-# generate data product ---------------------------------------------------
+# convert source data into a data product ---------------------------------
 
 process_scotgov_management(
-  sourcefile = file.path(local_path, source_filename),
-  filename = file.path(local_path, product_filename))
+  sourcefile = file.path("data-raw", product_path, source_filename),
+  filename = file.path("data-raw", product_path, product_filename))
 
+# register metadata with the data registry --------------------------------
 
-
-# upload data product metadata to the registry ----------------------------
-
-dataProductURIs <- upload_data_product(
-  storage_root_id = product_storageRootId,
-  name = product_name,
-  processed_path = file.path(processed_path, product_filename),
-  product_path = paste(product_path, product_filename, sep = "/"),
-  version = version_number,
-  namespace_id = namespaceId,
-  key = key)
-
-
-
-# upload submission script metadata to the registry -----------------------
-
-submissionScriptURIs <- upload_submission_script(
-  storage_root_id = script_storageRootId,
-  hash = openssl::sha1(submission_text),
-  text = submission_text,
-  run_date = script_processingDate,
-  key = key)
-
-
-
-# link objects together ---------------------------------------------------
-
-githubRepoURIs <- upload_github_repo(
-  storage_root_id = repo_storageRootId,
-  repo = github_info$script_gitRepo,
-  hash = github_info$github_hash,
-  version = github_info$repo_version,
-  key = key)
-
-upload_object_links(run_date = script_processingDate,
-                    description = paste("Script run to upload and process",
-                                           doi_or_unique_name),
-                    code_repo_id = githubRepoURIs$repo_objectId,
-                    submission_script_id = submissionScriptURIs$script_objectId,
-                    inputs = list(sourceDataURIs$source_objectComponentId),
-                    outputs = dataProductURIs$product_objectComponentId,
+register_everything(product_name = product_name,
+                    version_number = version_number,
+                    doi_or_unique_name = doi_or_unique_name,
+                    namespace = namespace,
+                    submission_script = submission_script,
+                    original_source_name = original_source_name,
+                    original_sourceId = original_sourceId,
+                    original_root = original_root,
+                    original_path = original_path,
                     key = key)

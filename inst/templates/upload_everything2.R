@@ -41,6 +41,8 @@ product_filename <- paste0(version_number, ".h5")
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
 product_name <- "human/demographics/population/scotland"
+# Construct the path to a file in a platform independent way
+product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
 
 
@@ -58,10 +60,8 @@ original_sourceId <- new_source(
 # Note that file.path(original_root, original_path) is the download link.
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
-original_root <- "https://www.nrscotland.gov.uk"
-original_path <- paste0("files", "statistics", "population-estimates",
-                        "sape-time-series", "persons",
-                        "sape-2018-persons.xlsx", sep = "/")
+original_root <- "https://www.nrscotland.gov.uk/"
+original_path <- "files/statistics/population-estimates/sape-time-series/persons/sape-2018-persons.xlsx"
 
 
 # Where is the submission script stored? ----------------------------------
@@ -80,15 +80,15 @@ submission_script <- "nrs_demographics.R"
 
 download_from_url(source_root = original_root,
                   source_path = original_path,
-                  path = file.path("data-raw", product_name),
+                  path = file.path("data-raw", product_path),
                   filename = source_filename)
 
 
 # convert source data into a data product ---------------------------------
 
 process_scotgov_management(
-  sourcefile = file.path("data-raw", product_name, source_filename),
-  filename = file.path("data-raw", product_name, product_filename))
+  sourcefile = file.path("data-raw", product_path, source_filename),
+  filename = file.path("data-raw", product_path, product_filename))
 
 
 # register metadata with the data registry --------------------------------
