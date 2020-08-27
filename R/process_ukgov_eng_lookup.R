@@ -30,7 +30,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
   
   LSOA_CCG <- read.csv(sourcefile["LSOA_CCG"])  %>%
     dplyr::rename(LSOAcode = LSOA11CD, CCGcode = CCG19CD, CCGname = CCG19NM,
-                  STPcode = STP19CD, STP19name = STP19NM) %>%
+                  STPcode = STP19CD, STPname = STP19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
   EW_UA <- read.csv(sourcefile["EW_UA"])  %>%
