@@ -106,15 +106,15 @@ process_scotgov_lookup(
 
 # register metadata with the data registry --------------------------------
 
-register_everything_multiple_sources(product_name = product_name,
-                                     version_number = version_number,
-                                     doi_or_unique_name = doi_or_unique_name,
-                                     namespace = namespace,
-                                     submission_script = submission_script,
-                                     original_source_name = original_source_name,
-                                     original_sourceId = original_sourceId,
-                                     original_root = original_root,
-                                     original_path = original_path,
-                                     accessibility = 0,
-                                     key = key)
+register_everything(product_name = product_name,
+                    version_number = version_number,
+                    doi_or_unique_name = doi_or_unique_name,
+                    namespace = namespace,
+                    submission_script = submission_script,
+                    original_source_name = original_source_name,
+                    original_sourceId = original_sourceId,
+                    original_root = original_root,
+                    original_path = original_path,
+                    accessibility = 0,
+                    key = key)
 
