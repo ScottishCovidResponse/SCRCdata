@@ -42,10 +42,10 @@ process_ons_demographics <- function (sourcefile,
       gsub("data-raw/england_", "", .) %>%
       gsub(".csv", "", .)
     
-    sape_tmp <- read.csv(sourcefile[k], col_names = TRUE)
-    header_new <- read.csv(sourcefile[k], col_names = TRUE)[1,]
+    sape_tmp <- read.csv(sourcefile[k])
+    header_new <- read.csv(sourcefile[k])[1,]
     header_new <- header_new %>%
-      names(.) %>% gsub(" ", "",., fixed=TRUE) %>%
+      names(.) %>% gsub(".", " ",., fixed=TRUE) %>%
       gsub("Age", "AGE",., fixed=TRUE) %>% gsub("AGEd", "AGE",., fixed=TRUE) %>%
       gsub("GEOGRAPHY_NAME", "AREAcode",., fixed=TRUE)
     
@@ -93,7 +93,7 @@ process_ons_demographics <- function (sourcefile,
         stop("OMG! - grpnames")
       }
       
-      location <- file.path(grp.names[i], subgrp.names[j], dataset)
+      location <- file.path(grp.names[i], subgrp.names, dataset)
       tmp <- unlist(transarea.dat$grid_id)
       names(tmp) <- NULL
       dimension_names <- list(tmp,
@@ -102,14 +102,14 @@ process_ons_demographics <- function (sourcefile,
       
       if (grepl("grid", grp.names[i])) {
         SCRCdataAPI::create_array(
-          h5filename = h5filename,
+          filename = h5filename,
           component = location,
           array = transarea.dat$grid_pop,
           dimension_names = dimension_names,
           dimension_values = list(grid_matrix[[grp.names[i]]]),
           dimension_units = list(gsub("grid", "", grp.names[i])))
       }else {
-        SCRCdataAPI::create_array(h5filename = h5filename,
+        SCRCdataAPI::create_array(filename = h5filename,
                                   component = location,
                                   array = transarea.dat$grid_pop,
                                   dimension_names = dimension_names)

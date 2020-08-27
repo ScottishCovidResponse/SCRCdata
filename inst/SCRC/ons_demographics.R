@@ -47,7 +47,7 @@ output_area_sf <- file.path("data-raw", "outputarea_shapefile",
                             "Output_Areas__December_2011__Boundaries_EW_BFC.shp")
 
 conversionh5filepath <- file.path("data-raw", "geography", "lookup_table", "gridcell_admin_area", "england")
-conversionh5version_number = "1.0.0"
+conversionh5version_number = "1.0.2"
 grp.names <- c("OA", "EW", "LA", "LSOA", "MSOA", "CCG", "STP", "UA","LHB",
                "grid1km", "grid10km")
 
@@ -59,16 +59,14 @@ full.names <- c("output area", "electoral ward",
                 "unitary authority", "local health board",
                 "grid area", "grid area")
 
-subgrp.names <- c("total", "1year", "5year", "10year",
-                  "sg_deaths_scheme")
-age.classes <- list("total", 0:90, seq(0, 90, 5), seq(0, 90, 10),
-                    c(0, 1, 15, 45, 65, 75, 85))
+subgrp.names <- c("1year")
+age.classes <- list(0:90)
 
 process_ons_demographics(sourcefile = sourcefile,
                          h5filename = h5filename,
-                         output_area_sf = output_area_sf,
                          conversionh5version_number = conversionh5version_number,
                          conversionh5filepath = conversionh5filepath,
                          grp.names = grp.names,
+                         subgrp.names = subgrp.names,
                          full.names = full.names,
                          age.classes = age.classes)

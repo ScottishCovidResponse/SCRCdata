@@ -4,7 +4,13 @@
 \alias{process_ukgov_eng_lookup}
 \title{process_ukgov_eng_lookup}
 \usage{
-process_ukgov_eng_lookup(sourcefile, h5filename, output_area_sf, grid_names)
+process_ukgov_eng_lookup(
+  sourcefile,
+  h5filename,
+  output_area_sf,
+  grid_names,
+  path
+)
 }
 \arguments{
 \item{sourcefile}{a \code{string} specifying the local path and filename
@@ -18,6 +24,9 @@ associated with the UK government output area shapefile}
 
 \item{grid_names}{a \code{string} specifying the sizes of the grid squares 
 used in the conversion table in the format gridxkm}
+
+\item{path}{a \code{string} specifying the local path associated 
+with the processed data}
 }
 \description{
 process_ukgov_eng_lookup
