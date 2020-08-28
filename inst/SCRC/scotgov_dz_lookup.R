@@ -100,7 +100,8 @@ names(sourcefiles) <- c("simd", "dz")
 
 process_scotgov_lookup(
   sourcefile = sourcefiles,
-  h5filename = file.path("data-raw", product_name, product_filename),
+  h5filename = product_filename,
+  path = file.path("data-raw", product_name),
   grid_names = c("grid1km","grid10km"))
 
 
