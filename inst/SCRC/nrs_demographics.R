@@ -3,220 +3,147 @@
 #' (From: https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/2011-based-special-area-population-estimates/small-area-population-estimates/time-series)
 #'
 
-library(SCRCdata)
-library(SCRCdataAPI)
+#' Data Zone Lookup Table
+#'
+#' Geography lookup tables used for aggregation, from 2011 data zones to higher
+#' level geographies. (From: https://statistics.gov.scot/resource?uri=http%3A%2F%2Fstatistics.gov.scot%2Fdata%2Fdata-zone-lookup)
+#'
 
-key <- readLines("token.txt")
-todays_date <- Sys.time()
+key <- readLines("token/token.txt")
 
-# initialise parameters ---------------------------------------------------
 
-product_name <- paste("human", "demographics", "population", "scotland", sep = "/")
+# Define data set ---------------------------------------------------------
 
-# create version number (this is used to generate the *.csv and *.h5 filenames)
-
-version_number <- paste("1", "0", "0" , sep = ".")
-
-# dataset name
-
+# doi_or_unique_name is a free text field specifying the name of your dataset
 doi_or_unique_name <- "demographic-population-Scotland"
 
-# where was the source data download from? (original source)
-source_name = " National Records of Scotland"
-original_root = "https://www.nrscotland.gov.uk"
-original_path = list(file.path("files//statistics", "population-estimates",
-                             "sape-time-series", "males", "sape-2018-males.xlsx"),
-                   file.path("files//statistics", "population-estimates",
-                             "sape-time-series/females/sape-2018-females.xlsx"),
-                   file.path("files//statistics", "population-estimates",
-                             "sape-time-series", "persons", "sape-2018-persons.xlsx"))
-source_path = "data-raw"
-source_filename = list("data-raw/sape-2018-persons.xlsx",
-                "data-raw/sape-2018-females.xlsx",
-                "data-raw/sape-2018-males.xlsx")
-
-
-# where is the submission script stored?
-github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
-                                script = "inst/SCRC/nrs_demographics.R",
-                                package = "SCRCdata")
-
-# Additional parameters (automatically generated) -------------------------
-
-namespace <- "SCRC"
-
-# when was the source data downloaded?
-source_downloadDate <- todays_date
-
-# when was the data product generated?
-script_processingDate <- todays_date
-
-# where is the source data downloaded to? (locally, before being stored)
-local_path <- file.path("data-raw", product_name)
-source_filename <- paste0(version_number, ".csv")
-
-# where is the data product saved? (locally, before being stored)
-processed_path <- file.path("data-raw", product_name)
+# version_number is used to generate the source data and data product
+# filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
+# downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
+version_number <- "1.0.1"
+source_filename <- paste0(version_number, ".xlsx")
 product_filename <- paste0(version_number, ".h5")
 
+# product_name is used to identify the data product as well as being used to
+# generate various file locations:
+# (1) source data is downloaded, then saved locally to data-raw/[product_name]
+# (2) source data should be stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
+# (3) data product is processed, then saved locally to data-raw/[product_name]
+# (4) data product should be stored on the Boydorr server at
+# ../../srv/ftp/scrc/[product_name]
+product_name <-"human/demographics/population/scotland"
+
+# Construct the path to a file in a platform independent way
+product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
+namespace <- "SCRC"
 
 
-# where is the source data stored?
-source_storageRoot <- "boydorr"
-source_path <- file.path(product_name, source_filename)
+# Where was the data download from? (original source) ---------------------
 
-# where is the submission script stored?
-script_storageRoot <- "text_file"
-submission_text <- paste("R -f", github_info$submission_script)
+original_source_name1 <- "National Records of Scotland"
 
+original_source_name <- list(males = original_source_name1,
+                             females = original_source_name1,
+                             persons = original_source_name1)
 
-# where is the data product stored?
-product_storageRoot <- "boydorr"
-product_path <- product_name
+# Add the website to the data registry (e.g. home page of the database)
 
-# default data that should be in database ---------------------------------
-
-# original source name
-original_sourceId <- new_source(
-  name = source_name,
-  abbreviation = "Scottish Government Open Data Repository",
-  website = "https://statistics.gov.scot/",
+# - Dataset 1
+original_sourceId1 <- new_source(
+  name = original_source_name1,
+  abbreviation = "NRS",
+  website = "https://www.nrscotland.gov.uk/",
   key = key)
 
-# original source root
-original_storageRootId <- new_storage_root(
-  name = "Scottish Government Open Data Repository",
-  root = original_root,
-  key = key)
+original_sourceId <- list(males = original_sourceId1,
+                          females = original_sourceId1,
+                          persons = original_sourceId1)
 
-# source data storage root
-source_storageRootId <- new_storage_root(name = source_storageRoot,
-                                         root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                         key = key)
+# Note that file.path(original_root, original_path) is the download link and
+# original_root MUST have a trailing slash. Here, two datasets are being
+# downloaded, so original_root and original_path are lists of length two,
+# with the name of each element identifying each dataset.
+# Examples of downloading data from a database rather than a link, can be
+# found in the scotgov_deaths or scotgov_management scripts
+original_root <- list(males = "https://www.nrscotland.gov.uk/",
+                      females = "https://www.nrscotland.gov.uk/",
+                      persons = "https://www.nrscotland.gov.uk/")
+original_path <- list(
+  males = paste0("files//statistics/population-estimates/",
+                 "sape-time-series/males/sape-2018-males.xlsx"),
+  females = paste0("files//statistics/population-estimates/",
+                   "sape-time-series/females/sape-2018-females.xlsx"),
+  persons = paste0("files//statistics/population-estimates/",
+                   "sape-time-series/persons/sape-2018-persons.xlsx"))
 
-# submission script storage root
-script_storageRootId <- new_storage_root(name = script_storageRoot,
-                                         root = "https://data.scrc.uk/api/text_file/",
-                                         key = key)
-
-# data product storage root
-product_storageRootId <- new_storage_root(name = product_storageRoot,
-                                          root = "ftp://boydorr.gla.ac.uk/scrc/",
-                                          key = key)
-
-# github repo storage root
-repo_storageRootId <- new_storage_root(name = github_info$repo_storageRoot,
-                                       root = "https://github.com",
-                                       key = key)
-
-# namespace
-namespaceId <- new_namespace(name = namespace,
-                             key = key)
-
-# download source data ----------------------------------------------------
-for(i in seq_along(source_path)){
-download_from_url(
-  source_root = original_root,
-  source_path = original_path[[i]],
-  path = source_path,
-  filename = source_filename[[i]])
+for (x in seq_along(original_root)) {
+  download_from_url(source_root = original_root[[x]],
+                    source_path = original_path[[x]],
+                    path = file.path("data-raw", product_name,
+                                     names(original_root)[x]),
+                    filename = source_filename)
 }
 
-# upload source metadata to registry --------------------------------------
 
-sourceDataURIs <- upload_source_data(
-  doi_or_unique_name = doi_or_unique_name,
-  original_source_id = original_sourceId,
-  original_root_id = original_storageRootId,
-  original_path = original_path,
-  local_path = file.path(local_path, source_filename),
-  storage_root_id = source_storageRootId,
-  target_path = paste(product_name, source_filename, sep = "/"),
-  download_date = source_downloadDate,
-  version = version_number,
-  key = key)
+# Where is the submission script stored? ----------------------------------
+
+# This template is an example of a submission script.
+# The submission script should download the source data, generate a data
+# product, and upload all associated metadata to the data registry.
+# This script assumes you will store your submission script in the
+# ScottishCovidResponse/SCRCdata repository within the inst/[namespace]/
+# directory
+
+submission_script <- "nrs_demographics.R"
 
 
-# generate data product ---------------------------------------------------
+# convert source data into a data product ---------------------------------
 
-# Process data and generate hdf5 file
-h5filename = paste0(paste("data-raw", product_name,version_number,sep = "/"), ".h5")
-sourcefile <- c("data-raw/sape-2018-persons.xlsx",
-                "data-raw/sape-2018-females.xlsx",
-                "data-raw/sape-2018-males.xlsx")
-
-genderbreakdown = list("persons"="persons",
-                       "genders"=c("females","males"))
+sourcefiles <- lapply(seq_along(original_root), function(x)
+  file.path("data-raw", product_name, names(original_root)[x], source_filename))
+names(sourcefiles) <- c("males", "females", "persons")
 
 
-grp.names <- c("dz","ur", "iz","mmw","spc","la", "hb", "ttwa"
-               , "grid1km",  "grid10km"
-               )
-
-full.names <- c("datazone","urban rural classification", "intermediate zone", "multi member ward",
-                "scottish parliamentary constituency", 
-                "local authority", 
-                "health board",
-                "travel to work area",
-                 "grid area",
-                "grid area")
-
-age.classes <- list(0:90)
-
-conversionh5filepath = paste("data-raw", "geography", "lookup_table", "gridcell_admin_area", "scotland",sep = "/")
-conversionh5version_number = "1.0.0.h5"
-if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath, conversionh5version_number,sep = "/"),
-                            component = conversionh5component)==FALSE){
+if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
+                                                conversionh5version_number,sep = "/"),
+                               component = conversionh5component)==FALSE){
   stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
 }
 
-process_nrs_demographics(sourcefile = sourcefile,
-                         h5filename = h5filename,
-                         grp.names = grp.names,
-                         full.names = full.names,
-                         age.classes = age.classes,
-                         conversionh5filepath = conversionh5filepath,
-                         conversionh5version_number = conversionh5version_number,
-                         genderbreakdown = genderbreakdown)
-
-# upload data product metadata to the registry ----------------------------
-
-dataProductURIs <- upload_data_product(
-  storage_root_id = product_storageRootId,
-  name = product_name,
-  processed_path = file.path(processed_path, product_filename),
-  product_path = paste(product_path, product_filename, sep = "/"),
-  version = version_number,
-  namespace_id = namespaceId,
-  key = key)
+process_nrs_demographics(sourcefile = sourcefiles,
+                         h5filename = file.path("data-raw", product_name,
+                                                product_filename),
+                         grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
+                                       "hb", "ttwa", "grid1km", "grid10km"),
+                         full.names = c("datazone","urban rural classification",
+                                        "intermediate zone", "multi member ward",
+                                        "scottish parliamentary constituency",
+                                        "local authority", "health board",
+                                        "travel to work area", "grid area",
+                                        "grid area"),
+                         age.classes = list(0:90),
+                         conversionh5filepath = file.path("data-raw", "geography",
+                                                          "scotland", "lookup_table"),
+                         conversionh5version_number = "0.1.0.h5",
+                         genderbreakdown = list(persons = "persons",
+                                                genders = c("females", "males")))
 
 
+# register metadata with the data registry --------------------------------
 
-# upload submission script metadata to the registry -----------------------
-
-submissionScriptURIs <- upload_submission_script(
-  storage_root_id = script_storageRootId,
-  hash = openssl::sha1(submission_text),
-  text = submission_text,
-  run_date = script_processingDate,
-  key = key)
-
-
-
-# link objects together ---------------------------------------------------
-
-githubRepoURIs <- upload_github_repo(
-  storage_root_id = repo_storageRootId,
-  repo = github_info$script_gitRepo,
-  hash = github_info$github_hash,
-  version = github_info$repo_version,
-  key = key)
-
-upload_object_links(run_date = script_processingDate,
-                    description = paste("Script run to upload and process",
-                                        doi_or_unique_name),
-                    code_repo_id = githubRepoURIs$repo_objectId,
-                    submission_script_id = submissionScriptURIs$script_objectId,
-                    inputs = list(sourceDataURIs$source_objectComponentId),
-                    outputs = dataProductURIs$product_objectComponentId,
+register_everything(product_name = product_name,
+                    version_number = version_number,
+                    doi_or_unique_name = doi_or_unique_name,
+                    namespace = namespace,
+                    submission_script = submission_script,
+                    original_source_name = original_source_name,
+                    original_sourceId = original_sourceId,
+                    original_root = original_root,
+                    original_path = original_path,
+                    accessibility = 0,
                     key = key)
+
+
+
+
