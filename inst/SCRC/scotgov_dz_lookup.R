@@ -16,7 +16,8 @@ doi_or_unique_name <- "Scottish spatial lookup table"
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
 version_number <- "0.1.0"
-source_filename <- paste0(version_number, ".csv")
+source_filename <- list(simd = paste0(version_number, ".xlsx"),
+                        dz = paste0(version_number, ".csv"))
 product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
@@ -76,7 +77,7 @@ for (x in seq_along(original_root)) {
                     source_path = original_path[[x]],
                     path = file.path("data-raw", product_name,
                                      names(original_root)[x]),
-                    filename = source_filename)
+                    filename = source_filename[[x]])
 }
 
 
@@ -95,7 +96,7 @@ submission_script <- "scotgov_dz_lookup.R"
 # convert source data into a data product ---------------------------------
 
 sourcefiles <- lapply(seq_along(original_root), function(x)
-  file.path("data-raw", product_name, names(original_root)[x], source_filename))
+  file.path("data-raw", product_name, names(original_root)[x], source_filename[[x]]))
 names(sourcefiles) <- c("simd", "dz")
 
 process_scotgov_lookup(
