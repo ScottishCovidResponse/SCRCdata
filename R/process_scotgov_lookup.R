@@ -48,7 +48,7 @@ process_scotgov_lookup <- function(sourcefile,
 
   # Create grid cell intersections
   gridsizes <- grid_names[grepl("^grid", grid_names)] %>%
-    sapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
+    lapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
     as.numeric()
 
   dz_subdivisions <- list()
@@ -61,7 +61,7 @@ process_scotgov_lookup <- function(sourcefile,
     grid_matrix[[g]] <- tmp$grid_matrix
     names(grid_matrix)[g] <- tag
     dz_subdivisions[[g]]$Datazone_component_id<-
-      c(1:length(dz_subdivisions[[g]]$grid_id))
+      c(seq_along(dz_subdivisions[[g]]$grid_id))
   }
 
   # Make dataframes of the area of each datazone component in each grid cell
@@ -83,8 +83,8 @@ process_scotgov_lookup <- function(sourcefile,
                               full_zone_area = as.numeric(sf::st_area(datazones)))
 
   # Find which 1km grid cells are in each 10km grid cell
-  gridslist <- list(grid1km = c(),
-                    grid10km = c())
+  gridslist <- list(grid1km = vector(),
+                    grid10km = vector())
 
   # From inside grid_intersection, get sf object of grids
   for(gridsize in gridsizes){
@@ -117,7 +117,7 @@ process_scotgov_lookup <- function(sourcefile,
   # Extract this into a more useable format
   grids.array <- array(0, dim = c(100, length(gridslist$grid10km$grid_id)))
 
-  for(i in 1:ncol(covered_grids)){
+  for(i in seq_along(covered_grids)){
     grids.array[,i] <- gridslist$grid1km$grid_id[which(covered_grids[,i] == TRUE)]
   }
   colnames(grids.array) <- gridslist$grid10k$grid_id

@@ -6,7 +6,7 @@ library(SCRCdataAPI)
 genders <- c("Persons", "Males", "Females")
 for (sex in seq_along(genders)) {
   for (age in 101:191) {
-    for (step in c(0,((c(24000)*c(1:7))))){
+    for (step in c(0,((24000*c(1:7))))){
       download_from_url(url="https://www.nomisweb.co.uk"
                         , path=sprintf("api/v01/dataset/NM_2010_1.data.csv?measures=20100&time=latest&geography=TYPE299&gender=%d&c_age=%d&RecordLimit=24000&RecordOffset=%d", sex-1,age, step ), 
                         local="data-raw", filename=sprintf("populationstore_g%d_a%d_s%d.csv", sex-1,age, step ))
@@ -59,7 +59,7 @@ full.names <- c("output area", "electoral ward",
                 "unitary authority", "local health board",
                 "grid area", "grid area")
 
-subgrp.names <- c("1year")
+subgrp.names <- "1year"
 age.classes <- list(0:90)
 
 process_ons_demographics(sourcefile = sourcefile,
