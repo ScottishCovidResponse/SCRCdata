@@ -21,7 +21,9 @@ doi_or_unique_name <- "demographic-population-Scotland"
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
 version_number <- "1.0.1"
-source_filename <- paste0(version_number, ".xlsx")
+source_filename <- list(males = paste0(version_number, ".xlsx"),
+                        females = paste0(version_number, ".xlsx"),
+                        persons = paste0(version_number, ".xlsx"))
 product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
