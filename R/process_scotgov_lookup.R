@@ -117,7 +117,7 @@ process_scotgov_lookup <- function(sourcefile,
   # Extract this into a more useable format
   grids.array <- array(0, dim = c(100, length(gridslist$grid10km$grid_id)))
 
-  for(i in seq_along(covered_grids)){
+  for(i in seq_len(ncol(covered_grids))){
     grids.array[,i] <- gridslist$grid1km$grid_id[which(covered_grids[,i] == TRUE)]
   }
   colnames(grids.array) <- gridslist$grid10k$grid_id
