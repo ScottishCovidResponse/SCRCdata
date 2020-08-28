@@ -70,7 +70,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
   
   # Create grid cell intersections
   gridsizes <- grid_names[grepl("^grid", grid_names)] %>%
-    sapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
+    lapply(function(x) gsub("grid", "", x) %>% gsub("km", "", .)) %>%
     as.numeric()
   
   oa_subdivisions <- list()
@@ -83,7 +83,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
     grid_matrix[[g]] <- tmp$grid_matrix
     names(grid_matrix)[g] <- tag
     oa_subdivisions[[g]]$Datazone_component_id<-
-      c(1:length(oa_subdivisions[[g]]$grid_id))
+      c(seq_along(oa_subdivisions[[g]]$grid_id))
   }
   
   # Make dataframes of the area of each datazone comoonent in each grid cell
@@ -106,8 +106,8 @@ process_ukgov_eng_lookup <- function(sourcefile,
   
   #Find which 1km grid cells are in each 10km grid cell
   
-  gridslist=list(grid1km=c(),
-                 grid10km=c())
+  gridslist=list(grid1km=vector(),
+                 grid10km=vector())
   
   #From inside grid_intersection, get sf object of grids
   for(gridsize in gridsizes){
@@ -138,7 +138,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
   #Extract this into a more useable format
   grids.array=array(0, dim = c(100,length(gridslist$grid10km$grid_id)))
   
-  for(i in 1:ncol(covered_grids)){
+  for(i in seq_along(covered_grids)){
     if(length(gridslist$grid1km$grid_id[which(covered_grids[,i]==TRUE)])<100){
       grids.array[,i]=c(gridslist$grid1km$grid_id[which(covered_grids[,i]==TRUE)], rep(0, 100-length(gridslist$grid1km$grid_id[which(covered_grids[,i]==TRUE)])))
     }else{
@@ -187,7 +187,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
                   grid10km_id,grid10km_area_proportion,AREAcode)
   
   conversion.table = left_join(grids_area,conversion.table, by="AREAcode")
-  conversion.table$oa_component_id=c(1:length(conversion.table$grid1km_id))
+  conversion.table$oa_component_id=c(seq_along(conversion.table$grid1km_id))
   conversion.table = conversion.table %>% tibble::column_to_rownames("oa_component_id")
   conversion.table[is.na(conversion.table)]=0
   
