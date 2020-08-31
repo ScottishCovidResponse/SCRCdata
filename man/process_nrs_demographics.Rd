@@ -7,6 +7,7 @@
 process_nrs_demographics(
   sourcefile,
   h5filename,
+  h5path,
   grp.names,
   full.names,
   age.classes,
@@ -19,7 +20,10 @@ process_nrs_demographics(
 \item{sourcefile}{a \code{string} specifying the local path and filename
 associated with the source data (the input of this function)}
 
-\item{h5filename}{a \code{string} specifying the local path and filename
+\item{h5filename}{a \code{string} specifying the  filename
+associated with the processed data (the output of this function)}
+
+\item{h5path}{a \code{string} specifying the local path 
 associated with the processed data (the output of this function)}
 
 \item{grp.names}{a \code{string} specifying the shortened names of the
