@@ -109,7 +109,7 @@ names(sourcefiles) <- c("males", "females", "persons")
 
 if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
                                                 conversionh5version_number,sep = "/"),
-                               component = conversionh5component)==FALSE){
+                               component = "conversiontable/scotland")==FALSE){
   stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
 }
 
@@ -136,6 +136,7 @@ process_nrs_demographics(sourcefile = sourcefiles,
 register_everything(product_name = product_name,
                     version_number = version_number,
                     doi_or_unique_name = doi_or_unique_name,
+                    source_filename = source_filename,
                     namespace = namespace,
                     submission_script = submission_script,
                     original_source_name = original_source_name,
