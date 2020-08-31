@@ -2,7 +2,9 @@
 #'
 #' @param sourcefile a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param h5filename a \code{string} specifying the local path and filename
+#' @param h5filename a \code{string} specifying the  filename
+#' associated with the processed data (the output of this function)
+#' @param h5path a \code{string} specifying the local path 
 #' associated with the processed data (the output of this function)
 #' @param grp.names a \code{string} specifying the shortened names of the
 #' administrative geographies - which should match those in the conversion table
@@ -24,6 +26,7 @@
 #'
 process_nrs_demographics <- function(sourcefile,
                                      h5filename,
+                                     h5path,
                                      grp.names,
                                      full.names,
                                      age.classes,
@@ -135,11 +138,12 @@ process_nrs_demographics <- function(sourcefile,
                                                            genderbreakdown)])
 
         # If file already exists read table, make array, delete table and resave array
-        if(check_for_hdf5(filename = h5filename,
+        if(check_for_hdf5(filename = file.path(h5path,h5filename),
                           component = location)){
           previous_table <- read_array(filename = h5filename,
+                                       path = h5path,
                                        component = location)
-          delete_hdf5_link(filename = h5filename,
+          delete_hdf5_link(filename = file.path(h5path,h5filename),
                            component = location)
 
           combined_array <- array(c(as.matrix(previous_table),
@@ -157,6 +161,7 @@ process_nrs_demographics <- function(sourcefile,
         }else{# Else save table
           create_array(
             filename = h5filename,
+            path = h5path,
             component = location,
             array = transarea.dat$grid_pop,
             dimension_names = dimension_names,
@@ -168,11 +173,12 @@ process_nrs_demographics <- function(sourcefile,
         location <- file.path(gsub(" ","_",full.names[i]), "age",
                               names(genderbreakdown)[grepl(dataset,genderbreakdown)])
         # If file already exists read table, make array, delete table and resave array
-        if(check_for_hdf5(filename = h5filename,
+        if(check_for_hdf5(filename = file.path(h5path,h5filename),
                           component = location)){
           previous_table=read_array(filename = h5filename,
+                                    path = h5path,
                                     component = location)
-          delete_hdf5_link(filename = h5filename,
+          delete_hdf5_link(filename = file.path(h5path,h5filename),
                            component=location)
 
           combined_array=array(c(as.matrix(previous_table),
@@ -180,12 +186,14 @@ process_nrs_demographics <- function(sourcefile,
                                dim=c(dim(transarea.dat$grid_pop),2))
           dimension_names$genders=genderbreakdown$genders
           create_array(filename = h5filename,
+                       path = h5path,
                        component = location,
                        array = combined_array,
                        dimension_names = dimension_names)
 
         }else{# Else save table
           create_array(filename = h5filename,
+                       path = h5path,
                        component = location,
                        array = transarea.dat$grid_pop,
                        dimension_names = dimension_names)

@@ -103,7 +103,7 @@ submission_script <- "nrs_demographics.R"
 # convert source data into a data product ---------------------------------
 
 sourcefiles <- lapply(seq_along(original_root), function(x)
-  file.path("data-raw", product_name, names(original_root)[x], source_filename))
+  file.path("data-raw", product_name, names(original_root)[x], source_filename[x]))
 names(sourcefiles) <- c("males", "females", "persons")
 
 
@@ -114,22 +114,21 @@ if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
 }
 
 process_nrs_demographics(sourcefile = sourcefiles,
-                         h5filename = file.path("data-raw", product_name,
-                                                product_filename),
+                         h5filename = product_filename,
+                         h5path = file.path("data-raw", product_name),
                          grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
                                        "hb", "ttwa", "grid1km", "grid10km"),
                          full.names = c("datazone","urban rural classification",
                                         "intermediate zone", "multi member ward",
                                         "scottish parliamentary constituency",
                                         "local authority", "health board",
-                                        "travel to work area", "grid area",
-                                        "grid area"),
+                                        "travel to work area", "grid area","grid area"),
                          age.classes = list(0:90),
                          conversionh5filepath = file.path("data-raw", "geography",
                                                           "scotland", "lookup_table"),
                          conversionh5version_number = "0.1.0.h5",
                          genderbreakdown = list(persons = "persons",
-                                                genders = c("females", "males")))
+                                                genders = c("males", "females")))
 
 
 # register metadata with the data registry --------------------------------
