@@ -152,6 +152,7 @@ process_nrs_demographics <- function(sourcefile,
           dimension_names$genders=genderbreakdown$genders
           create_array(
             filename = h5filename,
+            path = h5path,
             component = location,
             array = combined_array,
             dimension_names = dimension_names,
