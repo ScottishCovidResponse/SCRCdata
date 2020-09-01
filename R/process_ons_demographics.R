@@ -20,6 +20,9 @@
 #'  associated with the conversion table
 #' @param conversionh5version_number a \code{string} specifying the filename 
 #'  associated with the conversion table
+#' @param  genderbreakdown a \code{string} specifying the names which should
+#'  be assigned to gender categories in the output file and the gender files
+#'  from the input which should be used in each categotry
 #'
 #' @export
 #'
@@ -109,7 +112,7 @@ process_ons_demographics <- function (sourcefile,
         stop("OMG! - grpnames")
       }
       
-            tmp <- unlist(transarea.dat$grid_id)
+      tmp <- unlist(transarea.dat$grid_id)
       names(tmp) <- NULL
       dimension_names <- list(tmp,
                               colnames(transarea.dat$grid_pop))
