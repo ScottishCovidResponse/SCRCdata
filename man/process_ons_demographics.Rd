@@ -46,6 +46,10 @@ the age classes to which the data should be assigned.}
 
 \item{age.classes}{a \code{string} specifying the lower bounds of the age 
 classes to which the data should be assigned.}
+
+\item{genderbreakdown}{a \code{string} specifying the names which should
+be assigned to gender categories in the output file and the gender files
+from the input which should be used in each categotry}
 }
 \description{
 process_ons_demographics
