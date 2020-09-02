@@ -84,21 +84,16 @@ submission_script <- "ukgov_eng_lookup.R"
 
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path("data-raw", product_name, names(original_root)[x], source_filename))
-names(sourcefiles) <- c("simd", "dz")
+names(sourcefiles) <- c("OA_EW_LA", "OA_LSOA_MSOA_LA","LSOA_CCG","EW_UA","UA_HB")
 
-process_scotgov_lookup(
-  sourcefile = sourcefiles,
-  h5filename = product_filename,
-  path = file.path("data-raw", product_name),
-  grid_names = c("grid1km","grid10km"))
 
 process_ukgov_eng_lookup(sourcefile = sourcefiles,
-                         h5filename = "product_filename", 
-                         output_area_sf = "data-raw/outputarea_shapefile/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
+                         h5filename = product_filename, 
+                         output_area_sf = "data-raw/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
                          grid_names =  c("grid1km","grid10km"),
                          path = file.path("data-raw","geography","lookup_table","gridcell_admin_area","england"))
 
-library(SCRCdata)
+0library(SCRCdata)
 library(SCRCdataAPI)
 
 # Download source data
