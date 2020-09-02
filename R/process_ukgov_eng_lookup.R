@@ -24,7 +24,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
   OA_LSOA_MSOA_LA <- read.csv(sourcefile[["OA_LSOA_MSOA_LA"]])  %>%
-    dplyr::rename(AREAcode = `ï..OA11CD`, LSOAcode = LSOA11CD, LSOAname = LSOA11NM,
+    dplyr::rename(AREAcode = OA11CD, LSOAcode = LSOA11CD, LSOAname = LSOA11NM,
                   MSOAcode = MSOA11CD, MSOAname = MSOA11NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
