@@ -116,7 +116,7 @@ submission_script <- "scotgov_deaths.R"
 
 # download source data ----------------------------------------------------
 
-save_location <- file.path("~", "srv", "ftp", "scrc")
+save_location <- file.path("srv", "ftp", "scrc")
 save_data_here <- file.path(save_location, product_path)
 
 download_from_database(source_root = original_root,
