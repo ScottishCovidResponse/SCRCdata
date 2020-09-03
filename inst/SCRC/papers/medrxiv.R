@@ -1,30 +1,102 @@
 #' COVID-19 SARS-CoV-2 preprints from medRxiv and bioRxiv
 #' https://connect.medrxiv.org/relate/content/181
-#' missing 1
 
 library(dplyr)
 
-dat <- rjson::fromJSON(file = file.path("https://connect.medrxiv.org",
-                                        "relate",
-                                        "collection_json.php?grp=181"))
+version <- "0.1.0"
+key <- readLines("token/token.txt")
+
+# How many COVID-19 SARS-CoV-2 preprints are on medrXiv / bioarXiv?
+tmp <- httr::GET("https://api.biorxiv.org/covid19/0") %>%
+  httr::content(as = "text", encoding = "UTF-8") %>%
+  jsonlite::fromJSON(simplifyVector = FALSE)
+
+# How many loops should we run through if we're downloading in batches of 30?
+total <- tmp$messages[[1]]$total
+count <- tmp$messages[[1]]$count
+loops <- ceiling(total / count)
+index <- seq(31, loops*30, 30)
+index <- c(0, index)
 
 
-medrxiv_refs <- lapply(dat$rels, function(x) {
 
-  authors <- lapply(x$rel_authors, function(y) y$author_name) %>%
-    unlist() %>% paste(collapse = " and ")
 
-  data.frame(id = x$rel_doi,
-             title = x$rel_title,
-             journal = x$rel_site,
+
+# Download metadata associated with COVID-19 SARS-CoV-2 preprints
+# (this has to be done in batches of 30)
+medrxiv <- list()
+for (x in seq_along(index)) {
+  tmp <- httr::GET(paste0("https://api.biorxiv.org/covid19/", index[x])) %>%
+    httr::content(as = "text", encoding = "UTF-8") %>%
+    jsonlite::fromJSON(simplifyVector = FALSE)
+  medrxiv <- c(medrxiv, tmp$collection)
+}
+
+# Arrange the metadata in a useful format
+lapply(seq_along(tmp$collection), function(y) {
+
+  # Extract authors. If the author has more than one name, put the family
+  # name first, followed by a comma. Separate all author names by " and "
+  authors <- lapply(tmp$collection[[y]]$rel_authors, function(z) {
+    if(grepl(" ", z$author_name)) {
+      sort_names <- strsplit(z$author_name, " ")[[1]]
+      out <- paste0(tail(sort_names, 1), ", ",
+                    paste(head(sort_names, length(sort_names)-1),
+                          collapse = " "))
+    } else {
+      out <- z$author_name
+    }
+    out
+  }) %>%
+    paste(collapse = " and ")
+
+  # Output information required by the data registry
+  data.frame(abbreviation = tmp$collection[[y]]$rel_site,
+             title = tmp$collection[[y]]$rel_title,
              author = authors,
-             abstract = x$rel_abs,
-             doi = x$rel_doi,
-             keywords = NA,
-             year = x$rel_date,
-             link = x$rel_link)
-
+             abstract = tmp$collection[[y]]$rel_abs,
+             doi = tmp$collection[[y]]$rel_doi,
+             date = as.POSIXct(paste0(tmp$collection[[y]]$rel_date, " 12:00:00"),
+                               format = "%Y-%m-%d %H:%M:%S"),
+             journal = tmp$collection[[y]]$rel_site)
+}) %>% do.call(rbind.data.frame, .)
 }) %>% do.call(rbind.data.frame, .)
 
-write.csv(medrxiv_refs, file.path("data-raw", "medrxiv_papers.csv"),
-          row.names = FALSE)
+# Check that all data has been collected. For some reason we're missing one,
+# but N - 1 is pretty good!
+assertthat::assert_that(total - 1 == nrow(medrxiv))
+
+# These papers are already in the data registry:
+existing_papers <- get_existing("external_object", limit_results = FALSE) %>%
+  dplyr::select(doi_or_unique_name)
+
+# Compare the downloaded list with those currenrly in the data registry.
+# These papers haven't been uploaded yet:
+ind <- which(paste0("doi://", medrxiv$doi) %in% unlist(existing_papers))
+
+if(length(ind) > 0) {
+  upload_these <- medrxiv[-ind,]
+} else {
+  upload_these <- medrxiv
+}
+
+# Upload metadata to the data registry
+
+for(i in seq_len(nrow(upload_these))) {
+  # for(i in 8127:nrow(upload_these)) {
+  cat("\n", i, "of", nrow(upload_these))
+  tmp <- upload_these[i,]
+
+  upload_paper(title = tmp$title,
+               authors = tmp$author,
+               journal = tmp$journal,
+               journal_abbreviation = tmp$abbreviation,
+               journal_website = "https://www.medrxiv.org",
+               release_date = tmp$date,
+               abstract = tmp$abstract,
+               keywords = NA,
+               doi = tmp$doi,
+               primary_not_supplement = TRUE,
+               version = version,
+               key = key)
+}
