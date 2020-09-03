@@ -91,6 +91,7 @@ process_ukgov_eng_lookup(sourcefile = sourcefiles,
                          h5filename = product_filename, 
                          output_area_sf = "data-raw/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
                          grid_names =  c("grid1km","grid10km"),
+<<<<<<< Updated upstream
                          path = file.path("data-raw","geography","lookup_table","gridcell_admin_area","england"))
 #' Data Zone Lookup Table
 #'
@@ -216,8 +217,11 @@ register_everything(product_name = product_name,
                     key = key)
 
 
+=======
+                         path = file.path("data-raw","geography","england","lookup_table"))
+>>>>>>> Stashed changes
 
-0library(SCRCdata)
+library(SCRCdata)
 library(SCRCdataAPI)
 
 # Download source data
