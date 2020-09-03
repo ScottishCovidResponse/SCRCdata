@@ -72,10 +72,13 @@ original_root <- list(simd = "https://www.gov.scot/",
 original_path <- list(simd = "binaries/content/documents/govscot/publications/statistics/2020/01/scottish-index-of-multiple-deprivation-2020-data-zone-look-up-file/documents/scottish-index-of-multiple-deprivation-data-zone-look-up/scottish-index-of-multiple-deprivation-data-zone-look-up/govscot%3Adocument/SIMD%2B2020v2%2B-%2Bdatazone%2Blookup.xlsx?forceDownload=true",
                       dz = "downloads/file?id=5a9bf61e-7571-45e8-a307-7c1218d5f6b5%2FDatazone2011Lookup.csv")
 
+save_location <- "data-raw"
+save_data_here <- file.path(save_location, product_path)
+
 for (x in seq_along(original_root)) {
   download_from_url(source_root = original_root[[x]],
                     source_path = original_path[[x]],
-                    path = file.path("data-raw", product_name,
+                    path = file.path(save_data_here,
                                      names(original_root)[x]),
                     filename = source_filename[[x]])
 }
@@ -96,13 +99,13 @@ submission_script <- "scotgov_dz_lookup.R"
 # convert source data into a data product ---------------------------------
 
 sourcefiles <- lapply(seq_along(original_root), function(x)
-  file.path("data-raw", product_name, names(original_root)[x], source_filename[[x]]))
+  file.path(save_data_here, names(original_root)[x], source_filename[[x]]))
 names(sourcefiles) <- c("simd", "dz")
 
 process_scotgov_lookup(
   sourcefile = sourcefiles,
   h5filename = product_filename,
-  path = file.path("data-raw", product_name),
+  path = save_data_here,
   grid_names = c("grid1km","grid10km"))
 
 
@@ -110,6 +113,7 @@ process_scotgov_lookup(
 
 register_everything(product_name = product_name,
                     version_number = version_number,
+                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
                     namespace = namespace,
                     submission_script = submission_script,

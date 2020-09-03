@@ -55,7 +55,11 @@ process_scotgov_management <- function(sourcefile, filename) {
         "Adult care homes - Response rate",
         "Adult care homes - Total number of staff in adult care homes which submitted a return",
         "Adult care homes - Adult care homes which submitted a return",
-        "Adult care homes - Staff absence rate")))
+        "Adult care homes - Staff absence rate",
+        "School education - Number of pupils absent due to COVID-19 related reasons",
+        "School education - Percentage absence due to COVID-19 related reasons",
+        "School education - Percentage absence for non COVID-19 related reasons",
+        "School education - Percentage attendance")))
 
   # 1 -----------------------------------------------------------------------
   # Numbers of calls to NHS 111 and the coronavirus helpline

@@ -142,5 +142,6 @@ register_everything(product_name = product_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    source_filename = source_filename,
                     accessibility = 0,
                     key = key)

@@ -113,9 +113,12 @@ if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
   stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
 }
 
+save_location <- file.path("data-raw")
+save_data_here <- file.path(save_location, product_path)
+
 process_nrs_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
-                         h5path = file.path("data-raw", product_name),
+                         h5path = save_data_here,
                          grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
                                        "hb", "ttwa", "grid1km", "grid10km"),
                          full.names = c("datazone","urban rural classification",
@@ -135,14 +138,15 @@ process_nrs_demographics(sourcefile = sourcefiles,
 
 register_everything(product_name = product_name,
                     version_number = version_number,
+                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
-                    source_filename = source_filename,
                     namespace = namespace,
                     submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    source_filename = source_filename,
                     accessibility = 0,
                     key = key)
 
