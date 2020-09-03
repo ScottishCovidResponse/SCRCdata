@@ -5,6 +5,19 @@
 #' of deaths registered in Scotland, broken down by age, sex. (From: https://statistics.gov.scot/data/deaths-involving-coronavirus-covid-19)
 #'
 
+
+#' dataset-name
+#'
+#' The following script assumes:
+#' (1) your source data will be downloaded to data-raw/[product_name]
+#' (2) your source data will be saved as [version_number].csv
+#' (3) your data product will be saved to data-raw/[product_name]
+#' (4) your data product will be saved as [version_number].h5
+#' (5) you will upload your source data to the Boydorr FTP server
+#' (6) you will upload your data product to the Boydorr FTP server
+#' (7) you will store your submission script in ScottishCovidResponse/SCRCdata
+#'
+
 library(SCRCdataAPI)
 library(SCRCdata)
 
@@ -103,22 +116,25 @@ submission_script <- "scotgov_deaths.R"
 
 # download source data ----------------------------------------------------
 
+save_location <- file.path("~", "srv", "ftp", "scrc")
+save_data_here <- file.path(save_location, product_path)
+
 download_from_database(source_root = original_root,
                        source_path = original_path,
                        filename = source_filename,
-                       path = file.path("data-raw", product_path))
-
+                       path = save_data_here)
 
 # convert source data into a data product ---------------------------------
 
 process_scotgov_deaths(
-  sourcefile = file.path("data-raw", product_path, source_filename),
-  filename = file.path("data-raw", product_path, product_filename))
+  sourcefile = file.path(save_data_here, source_filename),
+  filename = file.path(save_data_here, product_filename))
 
 # register metadata with the data registry --------------------------------
 
 register_everything(product_name = product_name,
                     version_number = version_number,
+                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
                     namespace = namespace,
                     submission_script = submission_script,
@@ -126,4 +142,5 @@ register_everything(product_name = product_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    accessibility = 0,
                     key = key)

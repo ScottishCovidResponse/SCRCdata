@@ -9,7 +9,6 @@
 #'
 
 
-
 #' dataset-name
 #'
 #' The following script assumes:
@@ -112,21 +111,25 @@ submission_script <- "scotgov_management.R"
 
 # download source data ----------------------------------------------------
 
+save_location <- file.path("~", "srv", "ftp", "scrc")
+save_data_here <- file.path(save_location, product_path)
+
 download_from_database(source_root = original_root,
                        source_path = original_path,
                        filename = source_filename,
-                       path = file.path("data-raw", product_path))
+                       path = save_data_here)
 
 # convert source data into a data product ---------------------------------
 
 process_scotgov_management(
-  sourcefile = file.path("data-raw", product_path, source_filename),
-  filename = file.path("data-raw", product_path, product_filename))
+  sourcefile = file.path(save_data_here, source_filename),
+  filename = file.path(save_data_here, product_filename))
 
 # register metadata with the data registry --------------------------------
 
 register_everything(product_name = product_name,
                     version_number = version_number,
+                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
                     namespace = namespace,
                     submission_script = submission_script,
@@ -134,4 +137,5 @@ register_everything(product_name = product_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    accessibility = 0,
                     key = key)
