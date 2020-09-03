@@ -94,8 +94,12 @@ existing_papers <- get_existing("external_object", limit_results = FALSE) %>%
 
 # These papers haven't been uploaded yet ----------------------------------
 ind <- which(paste0("doi://", merge_dat$doi) %in% unlist(existing_papers))
-upload_these <- merge_dat[-ind,]
 
+if(length(ind) > 0) {
+  upload_these <- merge_dat[-ind,]
+} else {
+  upload_these <- merge_dat
+}
 
 
 for(i in seq_len(nrow(upload_these))) {
