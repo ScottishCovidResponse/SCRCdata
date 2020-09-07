@@ -1,4 +1,4 @@
-#' coronavirus-covid-19-management-information
+#' coronavirus-covid-19-management-information carehomes data
 #'
 #' This dataset presents Management Information, which is collected and
 #' distributed each day in order to support understanding of the progress
@@ -34,7 +34,7 @@ key <- readLines("token/token.txt")
 # Define data set ---------------------------------------------------------
 
 # doi_or_unique_name is a free text field specifying the name of your dataset
-doi_or_unique_name <- "scottish coronavirus-covid-19-management-information"
+doi_or_unique_name <- "scottish coronavirus-covid-19-management-information carehomes data"
 
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
@@ -53,7 +53,7 @@ product_filename <- paste0(version_number, ".h5")
 # (3) data product is processed, then saved locally to data-raw/[product_name]
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- "records/SARS-CoV-2/scotland/cases_and_management"
+product_name <- "records/SARS-CoV-2/scotland/cases-and-management/carehomes"
 # Construct the path to a file in a platform independent way
 product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
@@ -106,7 +106,7 @@ WHERE {
 # ScottishCovidResponse/SCRCdata repository within the inst/[namespace]/
 # directory
 
-submission_script <- "scotgov_management.R"
+submission_script <- "cam_carehomes.R"
 
 
 # download source data ----------------------------------------------------
@@ -121,7 +121,7 @@ download_from_database(source_root = original_root,
 
 # convert source data into a data product ---------------------------------
 
-process_scotgov_management(
+process_cam_carehomes(
   sourcefile = file.path(save_data_here, source_filename),
   filename = file.path(save_data_here, product_filename))
 
