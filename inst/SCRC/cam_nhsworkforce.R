@@ -28,7 +28,7 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- readLines("token/token.txt")
+key <- readLines("/home/soniamitchell/token/token.txt")
 
 
 # Define data set ---------------------------------------------------------
