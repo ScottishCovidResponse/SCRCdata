@@ -1,6 +1,6 @@
 #' test_cases_and_management
 #'
-test_cases_and_management(df) {
+test_cases_and_management <- function(df) {
   # Check column names match
   assertthat::assert_that(
     all(unique(df$variable) %in%
