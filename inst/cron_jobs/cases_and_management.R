@@ -1,6 +1,6 @@
 library(devtools)
 
-tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
+tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/GITHUB_CRON_PAT.txt")
 Sys.setenv(GITHUB_PAT = tmp)
 
 # Download and install the new versions of SCRCdataAPI and SCRCdata
