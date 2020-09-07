@@ -1,4 +1,4 @@
-#' process_cam_amulance
+#' process_cam_ambulance
 #'
 #' Process a subset of the cases-and-management dataset
 #'
@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-process_cam_amulance <- function(sourcefile, filename) {
+process_cam_ambulance <- function(sourcefile, filename) {
 
   # Read in data
   scotMan <- read.csv(file = sourcefile) %>%
