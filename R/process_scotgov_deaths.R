@@ -9,7 +9,7 @@
 #'
 process_scotgov_deaths <- function(sourcefile, filename) {
 
-  scotDeaths <- read.csv(file = sourcefile) %>%
+  scotDeaths <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "<http://statistics.gov.scot/id/statistical-geography/", "",
       featurecode),
