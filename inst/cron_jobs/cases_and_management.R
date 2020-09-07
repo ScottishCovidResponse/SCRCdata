@@ -1,7 +1,12 @@
 library(devtools)
 
+# write GitHub PAT to .Renviron
 tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/GITHUB_CRON_PAT.txt")
 Sys.setenv(GITHUB_PAT = tmp)
+
+# SCRC token
+tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
+Sys.setenv(SCRC_TOKEN = tmp)
 
 # Download and install the new versions of SCRCdataAPI and SCRCdata
 install_github("ScottishCovidResponse/SCRCdataAPI")
