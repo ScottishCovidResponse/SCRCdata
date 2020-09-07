@@ -7,7 +7,7 @@ library(SCRCdataAPI)
 library(SCRCdata)
 
 # Find submission script
-submission_script <- system.file("SCRC/scotgov_deaths.R",
+submission_script <- system.file(file.path("SCRC", "scotgov_deaths.R"),
                                  package = "SCRCdata")
 
 # Run submission script
@@ -23,4 +23,3 @@ for(i in seq_along(files)) {
   file.copy(from = files[i], to = file.path("/", path))
   file.remove(path[i])
 }
-
