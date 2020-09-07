@@ -10,10 +10,6 @@ install_github("ScottishCovidResponse/SCRCdata")
 library(SCRCdataAPI)
 library(SCRCdata)
 
-# SCRC token
-tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
-Sys.setenv(SCRC_TOKEN = tmp)
-
 # Make a separate h5 file for each of these data sets
 datasets <- c("carehomes", "hospital", "mortality",
               "nhsworkforce", "schools", "testing")

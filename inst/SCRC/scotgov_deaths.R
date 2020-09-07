@@ -25,6 +25,7 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
+key <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
 
 
 # Define data set ---------------------------------------------------------
@@ -64,7 +65,7 @@ original_sourceId <- new_source(
   name = original_source_name,
   abbreviation = "Scottish Government Open Data Repository",
   website = "https://statistics.gov.scot/",
-  key = SCRC_TOKEN)
+  key = key)
 
 # Note that file.path(original_root, original_path) is the download link.
 # Examples of downloading data from a database rather than a link, can be
@@ -143,4 +144,4 @@ register_everything(product_name = product_name,
                     original_path = original_path,
                     source_filename = source_filename,
                     accessibility = 0,
-                    key = SCRC_TOKEN)
+                    key = key)
