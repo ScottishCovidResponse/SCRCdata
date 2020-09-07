@@ -20,14 +20,14 @@ for(i in seq_along(datasets)) {
   # Run submission script
   source(submission_script)
 
-  # Get file names
-  path <- file.path("srv", "ftp", "scrc", "records", "SARS-CoV-2",
-                    "scotland", "cases-and-management", datasets[i])
-  files <- dir(path, full.names = TRUE)
-
-  # Move files
-  for(j in seq_along(files)) {
-    file.copy(from = files[j], to = file.path("/", path))
-    file.remove(path[j])
-  }
+  # # Get file names
+  # path <- file.path("srv", "ftp", "scrc", "records", "SARS-CoV-2",
+  #                   "scotland", "cases-and-management", datasets[i])
+  # files <- dir(path, full.names = TRUE)
+  #
+  # # Move files
+  # for(j in seq_along(files)) {
+  #   file.copy(from = files[j], to = file.path("/", path))
+  #   file.remove(path[j])
+  # }
 }
