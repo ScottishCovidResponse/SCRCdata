@@ -40,9 +40,7 @@ doi_or_unique_name <- "scottish coronavirus-covid-19-management-information call
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-todays_date <- Sys.time()
-tmp <- as.Date(todays_date, format = "%Y-%m-%d")
-version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
+version_number <- "0.1.0"
 source_filename <- paste0(version_number, ".csv")
 product_filename <- paste0(version_number, ".h5")
 
