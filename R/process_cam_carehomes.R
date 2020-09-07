@@ -12,7 +12,7 @@
 process_cam_carehomes <- function(sourcefile, filename) {
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile) %>%
+  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
