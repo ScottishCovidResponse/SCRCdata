@@ -58,7 +58,7 @@ product_name <- "records/SARS-CoV-2/scotland/cases-and-management"
 product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
 
-save_location <- file.path("data-raw")
+save_location <- file.path("srv", "ftp", "scrc")
 save_data_here <- file.path(save_location, product_path)
 
 todays_date <- Sys.time()
