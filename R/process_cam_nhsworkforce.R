@@ -11,6 +11,10 @@
 #'
 process_cam_nhsworkforce <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -39,6 +43,7 @@ process_cam_nhsworkforce <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-covid_related_absences-other_staff",
     array = as.matrix(nhs.other),
     dimension_names = list(
@@ -53,6 +58,7 @@ process_cam_nhsworkforce <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-covid_related_absences-medical_and_dental_staff",
     array = as.matrix(nhs.medical.dental),
     dimension_names = list(
@@ -67,6 +73,7 @@ process_cam_nhsworkforce <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-covid_related_absences-all_staff",
     array = as.matrix(nhs.all),
     dimension_names = list(
@@ -81,6 +88,7 @@ process_cam_nhsworkforce <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-covid_related_absences-nursing_and_midwifery_staff",
     array = as.matrix(nhs.nursing.midwifery),
     dimension_names = list(

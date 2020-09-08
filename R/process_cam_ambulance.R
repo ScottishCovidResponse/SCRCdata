@@ -11,6 +11,10 @@
 #'
 process_cam_ambulance <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile) %>%
     dplyr::mutate(featurecode = gsub(
@@ -38,12 +42,14 @@ process_cam_ambulance <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-covid19_suspected_patients_taken_to_hospital",
-                            array = as.matrix(ambulance.suspected.hospital),
-                            dimension_names = list(
-                              status = rownames(ambulance.suspected.hospital),
-                              date = colnames(ambulance.suspected.hospital)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-covid19_suspected_patients_taken_to_hospital",
+    array = as.matrix(ambulance.suspected.hospital),
+    dimension_names = list(
+      status = rownames(ambulance.suspected.hospital),
+      date = colnames(ambulance.suspected.hospital)))
 
   # COVID-19 suspected
   ambulance.suspected <- ambulance.dat %>%
@@ -51,12 +57,13 @@ process_cam_ambulance <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-covid19_suspected",
-                            array = as.matrix(ambulance.suspected),
-                            dimension_names = list(
-                              status = rownames(ambulance.suspected),
-                              date = colnames(ambulance.suspected)))
+  SCRCdataAPI::create_array( filename = filename,
+                             path = path,
+                             component = "date-covid19_suspected",
+                             array = as.matrix(ambulance.suspected),
+                             dimension_names = list(
+                               status = rownames(ambulance.suspected),
+                               date = colnames(ambulance.suspected)))
 
   # Total
   ambulance.total <- ambulance.dat %>%
@@ -65,6 +72,7 @@ process_cam_ambulance <- function(sourcefile, filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(filename = filename,
+                            path = path,
                             component = "date-total",
                             array = as.matrix(ambulance.total),
                             dimension_names = list(

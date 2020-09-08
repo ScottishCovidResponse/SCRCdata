@@ -11,6 +11,10 @@
 #'
 process_cam_mortality <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -31,10 +35,12 @@ process_cam_mortality <- function(sourcefile, filename) {
     reshape2::dcast(1 ~ date, value.var = "count") %>%
     dplyr::select(-"1")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-country-covid19_confirmed_deaths_registered-cumulative",
-                            array = as.matrix(deaths.dat),
-                            dimension_names = list(
-                              delayed = rownames(deaths.dat),
-                              date = colnames(deaths.dat)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-covid19_confirmed_deaths_registered-cumulative",
+    array = as.matrix(deaths.dat),
+    dimension_names = list(
+      delayed = rownames(deaths.dat),
+      date = colnames(deaths.dat)))
 }

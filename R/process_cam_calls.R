@@ -11,6 +11,10 @@
 #'
 process_cam_calls <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile) %>%
     dplyr::mutate(featurecode = gsub(
@@ -39,6 +43,7 @@ process_cam_calls <- function(sourcefile, filename) {
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(filename = filename,
+                            path = path,
                             component = "call_centre/date-number_of_calls",
                             array = as.matrix(calls.dat),
                             dimension_names = list(

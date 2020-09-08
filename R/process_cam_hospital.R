@@ -11,6 +11,10 @@
 #'
 process_cam_hospital <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -43,6 +47,7 @@ process_cam_hospital <- function(sourcefile, filename) {
     dplyr::select(-"1")
 
   SCRCdataAPI::create_array(filename = filename,
+                            path = path,
                             component = "date-delayed_discharges",
                             array = as.matrix(discharges.dat),
                             dimension_names = list(
@@ -65,6 +70,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "test_result/date-country-covid19_patients_in_hospital",
     array = as.matrix(patients.in.hospital.dat),
     dimension_names = list(
@@ -81,6 +87,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "total_suspected_confirmed/date-country-covid19_patients_in_icu",
     array = as.matrix(patients.in.icu.dat),
     dimension_names = list(
@@ -104,6 +111,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital",
     array = as.matrix(special.patients.in.hosp.dat),
     dimension_names = list(
@@ -118,6 +126,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-golden_jubilee-covid19_patients_in_icu-total",
     array = as.matrix(special.patients.in.icu.dat),
     dimension_names = list(
@@ -137,6 +146,7 @@ process_cam_hospital <- function(sourcefile, filename) {
     tibble::column_to_rownames("featurename")
 
   SCRCdataAPI::create_array(filename = filename,
+                            path = path,
                             component = "nhs_health_board/date-covid19_patients_in_icu-total",
                             array = as.matrix(hosp.nhs.total.dat),
                             dimension_names = list(
@@ -151,6 +161,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "nhs_health_board/date-covid19_patients_in_hospital-suspected",
     array = as.matrix(hosp.nhs.suspected.dat),
     dimension_names = list(
@@ -165,6 +176,7 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
     array = as.matrix(hosp.nhs.confirmed.dat),
     dimension_names = list(

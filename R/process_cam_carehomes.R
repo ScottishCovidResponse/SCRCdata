@@ -11,6 +11,10 @@
 #'
 process_cam_carehomes <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -39,6 +43,7 @@ process_cam_carehomes <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-staff_in_adult_carehomes_which_submitted_a_return",
     array = as.matrix(carehomes.count.total.staff.dat),
     dimension_names = list(
@@ -54,6 +59,7 @@ process_cam_carehomes <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-adult_carehomes_which_submitted_a_return",
     array = as.matrix(carehomes.count.carehomes.return.dat),
     dimension_names = list(
@@ -68,6 +74,7 @@ process_cam_carehomes <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-response_rate",
     array = as.matrix(carehomes.ratio.response.dat),
     dimension_names = list(
@@ -82,6 +89,7 @@ process_cam_carehomes <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-staff_absence_rate",
     array = as.matrix(carehomes.ratio.staff.absence.dat),
     dimension_names = list(
@@ -96,6 +104,7 @@ process_cam_carehomes <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-staff_reported_absent",
     array = as.matrix(carehomes.count.staff.dat),
     dimension_names = list(

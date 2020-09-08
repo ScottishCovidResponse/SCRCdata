@@ -11,6 +11,10 @@
 #'
 process_cam_testing <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -48,6 +52,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "test_result/date-people_tested_for_covid19-cumulative",
     array = as.matrix(testing.country.cumulative),
     dimension_names = list(
@@ -62,6 +67,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-people_found_positive-daily",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -79,6 +85,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "testing_location/date-covid19_tests_carried_out-cumulative",
     array = as.matrix(testing.cumulative),
     dimension_names = list(
@@ -95,6 +102,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "testing_location/date-covid19_tests_carried_out-daily",
     array = as.matrix(testing.daily),
     dimension_names = list(
@@ -109,6 +117,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-positive_cases-last_7_days",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -123,6 +132,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-people_tested-last_7_days",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -137,6 +147,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-tests-daily",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -151,6 +162,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "date-country-tests-last_7_days",
     array = as.matrix(testing.daily.positive),
     dimension_names = list(
@@ -175,6 +187,7 @@ process_cam_testing <- function(sourcefile, filename) {
 
   SCRCdataAPI::create_array(
     filename = filename,
+    path = path,
     component = "nhs_health_board/date-people_tested_positive_for_covid19-cumulative",
     array = as.matrix(testing.area.dat),
     dimension_names = list(

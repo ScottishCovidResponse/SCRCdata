@@ -11,6 +11,10 @@
 #'
 process_cam_schools <- function(sourcefile, filename) {
 
+  # Extract directory and filename
+  path <- dirname(filename)
+  filename <- basename(filename)
+
   # Read in data
   scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
@@ -38,12 +42,14 @@ process_cam_schools <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-country-percentage_absence_for_noncovid_reasons",
-                            array = as.matrix(school.percentage.absent.noncovid),
-                            dimension_names = list(
-                              delayed = rownames(school.percentage.absent.noncovid),
-                              date = colnames(school.percentage.absent.noncovid)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-percentage_absence_for_noncovid_reasons",
+    array = as.matrix(school.percentage.absent.noncovid),
+    dimension_names = list(
+      delayed = rownames(school.percentage.absent.noncovid),
+      date = colnames(school.percentage.absent.noncovid)))
 
   # Number of pupils absent due to COVID-19 related reasons
   school.number.absent.covid <- schools.dat %>%
@@ -52,12 +58,14 @@ process_cam_schools <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-country-pupils_absent_for_covid_reasons",
-                            array = as.matrix(school.number.absent.covid),
-                            dimension_names = list(
-                              delayed = rownames(school.number.absent.covid),
-                              date = colnames(school.number.absent.covid)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-pupils_absent_for_covid_reasons",
+    array = as.matrix(school.number.absent.covid),
+    dimension_names = list(
+      delayed = rownames(school.number.absent.covid),
+      date = colnames(school.number.absent.covid)))
 
   # Percentage absence due to COVID-19 related reasons
   school.percentage.absent.covid <- schools.dat %>%
@@ -66,12 +74,14 @@ process_cam_schools <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-country-percentage_absent_for_covid_reasons",
-                            array = as.matrix(school.percentage.absent.covid),
-                            dimension_names = list(
-                              delayed = rownames(school.percentage.absent.covid),
-                              date = colnames(school.percentage.absent.covid)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-percentage_absent_for_covid_reasons",
+    array = as.matrix(school.percentage.absent.covid),
+    dimension_names = list(
+      delayed = rownames(school.percentage.absent.covid),
+      date = colnames(school.percentage.absent.covid)))
 
   # Percentage attendance
   school.percentage.attendance <- schools.dat %>%
@@ -80,10 +90,12 @@ process_cam_schools <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            component = "date-country-percentage_attendance",
-                            array = as.matrix(school.percentage.attendance),
-                            dimension_names = list(
-                              delayed = rownames(school.percentage.attendance),
-                              date = colnames(school.percentage.attendance)))
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-percentage_attendance",
+    array = as.matrix(school.percentage.attendance),
+    dimension_names = list(
+      delayed = rownames(school.percentage.attendance),
+      date = colnames(school.percentage.attendance)))
 }
