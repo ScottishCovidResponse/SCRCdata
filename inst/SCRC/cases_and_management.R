@@ -11,7 +11,7 @@
 library(SCRCdataAPI)
 library(SCRCdata)
 
-key <- readLines("token/token.txt")
+key <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
 
 
 # Where was the data download from? (original source) ---------------------
