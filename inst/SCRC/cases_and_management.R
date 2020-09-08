@@ -268,7 +268,7 @@ submission_script <- "cases_and_management.R"
 
 # GitHub
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
-                                script_path = paste0("inst/SCRC/",
+                                script_path = paste0("SCRC/",
                                                      submission_script),
                                 package = "SCRCdata")
 
