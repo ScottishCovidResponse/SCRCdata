@@ -72,12 +72,6 @@ download_from_database(source_root = original_root,
                        filename = source_filename,
                        path = save_data_here)
 
-# Extract the date of the most recent entry, is it the same as today's date?
-latest_entry <- read.csv(file = file.path(save_data_here, source_filename),
-                         stringsAsFactors = F)
-latest_entry <- max(as.Date(latest_entry$date))
-assertthat::assert_that(latest_entry == tmp)
-
 
 # original data -----------------------------------------------------------
 
