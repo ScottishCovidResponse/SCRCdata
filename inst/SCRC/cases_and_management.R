@@ -119,6 +119,7 @@ product_storageRootId <- new_storage_root(
   root = "ftp://boydorr.gla.ac.uk/scrc/",
   key = key)
 
+outputs <- list()
 
 # ambulance ---------------------------------------------------------------
 
@@ -139,6 +140,8 @@ if(!file.exists(file.path(save_data_here, "ambulance", static_filename))) {
     version = static_version,
     namespace_id = namespaceId,
     key = key)
+
+  outputs <- c(outputs, ambulanceURIs$product_objectComponentId)
 }
 
 
@@ -161,6 +164,8 @@ callsURIs <- upload_data_product(
   version = static_version,
   namespace_id = namespaceId,
   key = key)
+
+outputs <- c(outputs, callsURIs$product_objectComponentId)
 }
 
 
@@ -180,6 +185,7 @@ carehomesURIs <- upload_data_product(
   namespace_id = namespaceId,
   key = key)
 
+outputs <- c(outputs, carehomesURIs$product_objectComponentId)
 
 # hospital ----------------------------------------------------------------
 
@@ -196,6 +202,8 @@ hospitalURIs <- upload_data_product(
   version = version_number,
   namespace_id = namespaceId,
   key = key)
+
+outputs <- c(outputs, hospitalURIs$product_objectComponentId)
 
 
 # mortality ---------------------------------------------------------------
@@ -214,6 +222,8 @@ mortalityURIs <- upload_data_product(
   namespace_id = namespaceId,
   key = key)
 
+outputs <- c(outputs, mortalityURIs$product_objectComponentId)
+
 
 # nhsworkforce ------------------------------------------------------------
 
@@ -230,6 +240,8 @@ nhsworkforceURIs <- upload_data_product(
   version = version_number,
   namespace_id = namespaceId,
   key = key)
+
+outputs <- c(outputs, nhsworkforceURIs$product_objectComponentId)
 
 
 # schools -----------------------------------------------------------------
@@ -248,6 +260,8 @@ schoolsURIs <- upload_data_product(
   namespace_id = namespaceId,
   key = key)
 
+outputs <- c(outputs, schoolsURIs$product_objectComponentId)
+
 
 # testing -----------------------------------------------------------------
 
@@ -264,6 +278,8 @@ testingURIs <- upload_data_product(
   version = version_number,
   namespace_id = namespaceId,
   key = key)
+
+outputs <- c(outputs, testingURIs$product_objectComponentId)
 
 
 # submission script -------------------------------------------------------
@@ -306,14 +322,6 @@ githubRepoURIs <- upload_github_repo(
   version = github_info$repo_version,
   key = key)
 
-outputs <- c(ambulanceURIs$product_objectComponentId,
-             callsURIs$product_objectComponentId,
-             carehomesURIs$product_objectComponentId,
-             hospitalURIs$product_objectComponentId,
-             mortalityURIs$product_objectComponentId,
-             nhsworkforceURIs$product_objectComponentId,
-             schoolsURIs$product_objectComponentId,
-             testingURIs$product_objectComponentId)
 
 upload_object_links(run_date = todays_date,
                     description = paste("Script run to upload and process",
