@@ -5,3 +5,4 @@
 
 /data-raw
 /token
+*.DS_Store
