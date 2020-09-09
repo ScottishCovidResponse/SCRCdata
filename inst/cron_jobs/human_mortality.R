@@ -16,14 +16,3 @@ submission_script <- system.file(file.path("SCRC", "scotgov_deaths.R"),
 
 # Run submission script
 source(submission_script)
-
-# # Get file names
-# path <- file.path("srv", "ftp", "scrc", "records", "SARS-CoV-2",
-#                   "scotland", "human-mortality")
-# files <- dir(path, full.names = TRUE)
-#
-# # Move files
-# for(i in seq_along(files)) {
-#   file.copy(from = files[i], to = file.path("/", path))
-#   file.remove(path[i])
-# }

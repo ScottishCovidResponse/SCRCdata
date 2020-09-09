@@ -10,7 +10,6 @@ install_github("ScottishCovidResponse/SCRCdata")
 library(SCRCdataAPI)
 library(SCRCdata)
 
-
 # Find submission script
 submission_script <- system.file(file.path("SCRC", "cases_and_management.R"),
                                  package = "SCRCdata")
