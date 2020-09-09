@@ -72,6 +72,12 @@ download_from_database(source_root = original_root,
                        filename = source_filename,
                        path = save_data_here)
 
+# Extract the date of the most recent entry, is it the same as today's date?
+latest_entry <- read.csv(file = file.path(save_data_here, source_filename),
+                         stringsAsFactors = F)
+latest_entry <- max(as.Date(latest_entry$date))
+assertthat::assert_that(latest_entry == tmp)
+
 
 # original data -----------------------------------------------------------
 
@@ -125,24 +131,21 @@ product_storageRootId <- new_storage_root(
 static_version <- "0.1.0"
 static_filename <- paste0(static_version, ".h5")
 
-process_cam_ambulance(
-  sourcefile = file.path(save_data_here, source_filename),
-  filename = file.path(save_data_here, "ambulance", static_filename))
+if(!file.exists(file.path(save_data_here, "ambulance", static_filename))) {
+  process_cam_ambulance(
+    sourcefile = file.path(save_data_here, source_filename),
+    filename = file.path(save_data_here, "ambulance", static_filename))
 
-# Extract component names
-file_structure(file.path(save_data_here, "ambulance", static_filename))
-
-read_array(filename = static_filename, path = file.path(save_data_here, "ambulance"), component = "date-covid19_suspected") %>% colnames() %>% as.Date() %>% max()
-
-ambulanceURIs <- upload_data_product(
-  storage_root_id = product_storageRootId,
-  name = paste0(product_name, "/ambulance"),
-  processed_path = file.path(save_location, product_path, "ambulance",
-                             static_filename),
-  product_path = paste(product_name, "ambulance", static_filename, sep = "/"),
-  version = static_version,
-  namespace_id = namespaceId,
-  key = key)
+  ambulanceURIs <- upload_data_product(
+    storage_root_id = product_storageRootId,
+    name = paste0(product_name, "/ambulance"),
+    processed_path = file.path(save_location, product_path, "ambulance",
+                               static_filename),
+    product_path = paste(product_name, "ambulance", static_filename, sep = "/"),
+    version = static_version,
+    namespace_id = namespaceId,
+    key = key)
+}
 
 
 # calls -------------------------------------------------------------------
@@ -150,6 +153,7 @@ ambulanceURIs <- upload_data_product(
 static_version <- "0.1.0"
 static_filename <- paste0(static_version, ".h5")
 
+if(!file.exists(file.path(save_data_here, "calls", static_filename))) {
 process_cam_calls(
   sourcefile = file.path(save_data_here, source_filename),
   filename = file.path(save_data_here, "calls", static_filename))
@@ -163,6 +167,7 @@ callsURIs <- upload_data_product(
   version = static_version,
   namespace_id = namespaceId,
   key = key)
+}
 
 
 # carehomes ---------------------------------------------------------------
