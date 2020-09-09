@@ -129,6 +129,11 @@ process_cam_ambulance(
   sourcefile = file.path(save_data_here, source_filename),
   filename = file.path(save_data_here, "ambulance", static_filename))
 
+# Extract component names
+file_structure(file.path(save_data_here, "ambulance", static_filename))
+
+read_array(filename = static_filename, path = file.path(save_data_here, "ambulance"), component = "date-covid19_suspected") %>% colnames() %>% as.Date() %>% max()
+
 ambulanceURIs <- upload_data_product(
   storage_root_id = product_storageRootId,
   name = paste0(product_name, "/ambulance"),

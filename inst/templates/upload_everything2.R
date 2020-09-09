@@ -1,35 +1,29 @@
-#' dataset-name
-#'
-#' The following script assumes:
-#' (1) your source data will be downloaded to data-raw/[product_name]
-#' (2) your source data will be saved as [version_number].csv
-#' (3) your data product will be saved to data-raw/[product_name]
-#' (4) your data product will be saved as [version_number].h5
-#' (5) you will upload your source data to the Boydorr FTP server
-#' (6) you will upload your data product to the Boydorr FTP server
-#' (7) you will store your submission script in ScottishCovidResponse/SCRCdata
+#' Small Area Population Estimates 2018. Estimated population by sex,
+#' single year of age, 2011 Data Zone area, and council area: 30 June 2018.
+#' (From: https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/2011-based-special-area-population-estimates/small-area-population-estimates/time-series)
 #'
 
-library(SCRCdataAPI)
-library(SCRCdata)
+#' Data Zone Lookup Table
+#'
+#' Geography lookup tables used for aggregation, from 2011 data zones to higher
+#' level geographies. (From: https://statistics.gov.scot/resource?uri=http%3A%2F%2Fstatistics.gov.scot%2Fdata%2Fdata-zone-lookup)
+#'
 
-
-# Go to data.scrc.uk, click on Links, then Generate API Token, and save your
-# token in your working directory as token.txt. If the following returns an
-# error, then save a carriage return after the token.
 key <- readLines("token/token.txt")
 
 
 # Define data set ---------------------------------------------------------
 
 # doi_or_unique_name is a free text field specifying the name of your dataset
-doi_or_unique_name <- "Scottish small area population estimates"
+doi_or_unique_name <- "demographic-population-Scotland"
 
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-version_number <- "0.1.0"
-source_filename <- paste0(version_number, ".csv")
+version_number <- "1.0.1"
+source_filename <- list(males = paste0(version_number, ".xlsx"),
+                        females = paste0(version_number, ".xlsx"),
+                        persons = paste0(version_number, ".xlsx"))
 product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
@@ -40,7 +34,8 @@ product_filename <- paste0(version_number, ".h5")
 # (3) data product is processed, then saved locally to data-raw/[product_name]
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- "human/demographics/population/scotland"
+product_name <-"human/demographics/population/scotland"
+
 # Construct the path to a file in a platform independent way
 product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
@@ -48,20 +43,49 @@ namespace <- "SCRC"
 
 # Where was the data download from? (original source) ---------------------
 
-original_source_name <- "National Records of Scotland"
+original_source_name1 <- "National Records of Scotland"
+
+original_source_name <- list(males = original_source_name1,
+                             females = original_source_name1,
+                             persons = original_source_name1)
 
 # Add the website to the data registry (e.g. home page of the database)
-original_sourceId <- new_source(
-  name = original_source_name,
-  abbreviation = "National Records of Scotland",
-  website = "https://www.nrscotland.gov.uk",
+
+# - Dataset 1
+original_sourceId1 <- new_source(
+  name = original_source_name1,
+  abbreviation = "NRS",
+  website = "https://www.nrscotland.gov.uk/",
   key = key)
 
-# Note that file.path(original_root, original_path) is the download link.
+original_sourceId <- list(males = original_sourceId1,
+                          females = original_sourceId1,
+                          persons = original_sourceId1)
+
+# Note that file.path(original_root, original_path) is the download link and
+# original_root MUST have a trailing slash. Here, two datasets are being
+# downloaded, so original_root and original_path are lists of length two,
+# with the name of each element identifying each dataset.
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
-original_root <- "https://www.nrscotland.gov.uk/"
-original_path <- "files/statistics/population-estimates/sape-time-series/persons/sape-2018-persons.xlsx"
+original_root <- list(males = "https://www.nrscotland.gov.uk/",
+                      females = "https://www.nrscotland.gov.uk/",
+                      persons = "https://www.nrscotland.gov.uk/")
+original_path <- list(
+  males = paste0("files//statistics/population-estimates/",
+                 "sape-time-series/males/sape-2018-males.xlsx"),
+  females = paste0("files//statistics/population-estimates/",
+                   "sape-time-series/females/sape-2018-females.xlsx"),
+  persons = paste0("files//statistics/population-estimates/",
+                   "sape-time-series/persons/sape-2018-persons.xlsx"))
+
+for (x in seq_along(original_root)) {
+  download_from_url(source_root = original_root[[x]],
+                    source_path = original_path[[x]],
+                    path = file.path("data-raw", product_name,
+                                     names(original_root)[x]),
+                    filename = source_filename)
+}
 
 
 # Where is the submission script stored? ----------------------------------
@@ -76,30 +100,58 @@ original_path <- "files/statistics/population-estimates/sape-time-series/persons
 submission_script <- "nrs_demographics.R"
 
 
-# download source data ----------------------------------------------------
-
-download_from_url(source_root = original_root,
-                  source_path = original_path,
-                  path = file.path("data-raw", product_path),
-                  filename = source_filename)
-
-
 # convert source data into a data product ---------------------------------
 
-process_scotgov_management(
-  sourcefile = file.path("data-raw", product_path, source_filename),
-  filename = file.path("data-raw", product_path, product_filename))
+sourcefiles <- lapply(seq_along(original_root), function(x)
+  file.path("data-raw", product_name, names(original_root)[x], source_filename[x]))
+names(sourcefiles) <- c("males", "females", "persons")
+
+
+if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
+                                                conversionh5version_number,sep = "/"),
+                               component = "conversiontable/scotland")==FALSE){
+  stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
+}
+
+save_location <- file.path("data-raw")
+save_data_here <- file.path(save_location, product_path)
+
+process_nrs_demographics(sourcefile = sourcefiles,
+                         h5filename = product_filename,
+                         h5path = save_data_here,
+                         grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
+                                       "hb", "ttwa", "grid1km", "grid10km"),
+                         full.names = c("datazone","urban rural classification",
+                                        "intermediate zone", "multi member ward",
+                                        "scottish parliamentary constituency",
+                                        "local authority", "health board",
+                                        "travel to work area", "grid area","grid area"),
+                         age.classes = list(0:90),
+                         conversionh5filepath = file.path("data-raw", "geography",
+                                                          "scotland", "lookup_table"),
+                         conversionh5version_number = "0.1.0.h5",
+                         genderbreakdown = list(persons = "persons",
+                                                genders = c("males", "females")))
 
 
 # register metadata with the data registry --------------------------------
 
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script_path = paste0("inst/SCRC/",
+                                                     submission_script),
+                                package = "SCRCdata")
+
 register_everything(product_name = product_name,
                     version_number = version_number,
                     doi_or_unique_name = doi_or_unique_name,
+                    save_location = save_location,
                     namespace = namespace,
-                    submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    source_filename = source_filename,
+                    submission_script = submission_script,
+                    github_info = github_info,
+                    accessibility = 0,
                     key = key)

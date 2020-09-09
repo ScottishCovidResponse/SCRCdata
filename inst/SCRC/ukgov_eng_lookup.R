@@ -38,7 +38,7 @@ original_source_name <- "Office for National Statistics Open Georaphy Portal"
 
 # Add the website to the data registry (e.g. home page of the database)
 
-# - Dataset 
+# - Dataset
 original_sourceId <- new_source(
   name = original_source_name,
   abbreviation = "ONS Open Portal",
@@ -88,8 +88,8 @@ names(sourcefiles) <- c("OA_EW_LA", "OA_LSOA_MSOA_LA","LSOA_CCG","EW_UA","UA_HB"
 
 
 process_ukgov_eng_lookup(sourcefile = sourcefiles,
-                         h5filename = product_filename, 
-                         output_area_sf = "data-raw/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
+                         h5filename = product_filename,
+                         output_area_sf = "data-raw/Output_Areas__December_2011__Boundaries_EW_BFC.shp",
                          grid_names =  c("grid1km","grid10km"),
                          path = file.path("data-raw","geography","lookup_table","gridcell_admin_area","england"))
 #' Data Zone Lookup Table
@@ -202,22 +202,29 @@ process_scotgov_lookup(
 
 # register metadata with the data registry --------------------------------
 
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script_path = paste0("inst/SCRC/",
+                                                     submission_script),
+                                package = "SCRCdata")
+
 register_everything(product_name = product_name,
                     version_number = version_number,
                     doi_or_unique_name = doi_or_unique_name,
+                    save_location = "data-raw",
                     namespace = namespace,
-                    submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
                     source_filename = source_filename,
+                    submission_script = submission_script,
+                    github_info = github_info,
                     accessibility = 0,
                     key = key)
 
 
 
-0library(SCRCdata)
+library(SCRCdata)
 library(SCRCdataAPI)
 
 # Download source data
@@ -260,7 +267,7 @@ sourcefile <- c(OA_EW_LA = file.path("data-raw", "england_lookup",
 h5filename <- c("uk_gov_eng_lookup.h5")
 
 process_ukgov_eng_lookup(sourcefile = sourcefile,
-                         h5filename = "1.0.2.h5", 
-                         output_area_sf = "data-raw/outputarea_shapefile/Output_Areas__December_2011__Boundaries_EW_BFC.shp", 
+                         h5filename = "1.0.2.h5",
+                         output_area_sf = "data-raw/outputarea_shapefile/Output_Areas__December_2011__Boundaries_EW_BFC.shp",
                          grid_names =  c("grid1km","grid10km"),
                          path = file.path("data-raw","geography","lookup_table","gridcell_admin_area","england"))
