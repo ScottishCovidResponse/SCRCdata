@@ -132,22 +132,10 @@ process_scotgov_deaths(
 
 # register metadata with the data registry --------------------------------
 
-
-# # new
-# script <- "https://raw.githubusercontent.com/ScottishCovidResponse/SCRCdata/master/inst/SCRC/scotgov_deaths.R"
-# filename <- basename(script)
-
-# ensure that github is in the data registry ------------------------------
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
                                 script_path = paste0("inst/SCRC/",
                                                      submission_script),
                                 package = "SCRCdata")
-
-# repo_storageRoot = "github"
-# script_gitRepo = "ScottishCovidResponse/SCRCdata",
-# repo_version = repo_version,
-# github_hash = get_github_hash(repo),
-# submission_script = script_path
 
 register_everything(product_name = product_name,
                     version_number = version_number,
