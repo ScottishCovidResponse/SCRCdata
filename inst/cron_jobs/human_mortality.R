@@ -1,7 +1,8 @@
 library(devtools)
 
 # write GitHub PAT to .Renviron
-tmp <- readLines("/home/soniamitchell/scrc_cron_scripts/token/GITHUB_CRON_PAT.txt")
+tmp <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
+                 "token", "GITHUB_CRON_PAT.txt"))
 Sys.setenv(GITHUB_PAT = tmp)
 
 # Download and install the new versions of SCRCdataAPI and SCRCdata

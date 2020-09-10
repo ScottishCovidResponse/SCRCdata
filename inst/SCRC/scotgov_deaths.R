@@ -25,8 +25,8 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
-
+key <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
+                           "token", "token.txt"))
 
 # Define data set ---------------------------------------------------------
 
@@ -116,7 +116,7 @@ submission_script <- "scotgov_deaths.R"
 
 # download source data ----------------------------------------------------
 
-save_location <- file.path("srv", "ftp", "scrc")
+save_location <- file.path("", "srv", "ftp", "scrc")
 save_data_here <- file.path(save_location, product_path)
 
 download_from_database(source_root = original_root,

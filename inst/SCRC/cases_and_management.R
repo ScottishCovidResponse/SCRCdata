@@ -11,7 +11,8 @@
 library(SCRCdataAPI)
 library(SCRCdata)
 
-key <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
+key <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
+                           "token", "token.txt"))
 
 
 # Where was the data download from? (original source) ---------------------
@@ -58,7 +59,7 @@ product_name <- "records/SARS-CoV-2/scotland/cases-and-management"
 product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
 
-save_location <- file.path("srv", "ftp", "scrc")
+save_location <- file.path("", "srv", "ftp", "scrc")
 save_data_here <- file.path(save_location, product_path)
 
 todays_date <- Sys.time()
@@ -151,21 +152,21 @@ static_version <- "0.1.0"
 static_filename <- paste0(static_version, ".h5")
 
 if(!file.exists(file.path(save_data_here, "calls", static_filename))) {
-process_cam_calls(
-  sourcefile = file.path(save_data_here, source_filename),
-  filename = file.path(save_data_here, "calls", static_filename))
+  process_cam_calls(
+    sourcefile = file.path(save_data_here, source_filename),
+    filename = file.path(save_data_here, "calls", static_filename))
 
-callsURIs <- upload_data_product(
-  storage_root_id = product_storageRootId,
-  name = paste0(product_name, "/calls"),
-  processed_path = file.path(save_location, product_path, "calls",
-                             static_filename),
-  product_path = paste(product_name, "calls", static_filename, sep = "/"),
-  version = static_version,
-  namespace_id = namespaceId,
-  key = key)
+  callsURIs <- upload_data_product(
+    storage_root_id = product_storageRootId,
+    name = paste0(product_name, "/calls"),
+    processed_path = file.path(save_location, product_path, "calls",
+                               static_filename),
+    product_path = paste(product_name, "calls", static_filename, sep = "/"),
+    version = static_version,
+    namespace_id = namespaceId,
+    key = key)
 
-outputs <- c(outputs, callsURIs$product_objectComponentId)
+  outputs <- c(outputs, callsURIs$product_objectComponentId)
 }
 
 
