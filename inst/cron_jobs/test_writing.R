@@ -1,4 +1,20 @@
-cat("writing works", file = "/srv/ftp/scrc/records/SARS-CoV-2/scotland/cases-and-management/test.txt")
+library(SCRCdataAPI)
+library(SCRCdata)
+
+key <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
+                           "token", "token.txt"))
 
 
-download.file("https://www.opendata.nhs.scot/dataset/b318bddf-a4dc-4262-971f-0ba329e09b87/resource/7fad90e5-6f19-455b-bc07-694a22f8d5dc/download/total_cases_by_hb_20200909.csv", "/srv/ftp/scrc/records/SARS-CoV-2/scotland/cases-and-management/test.csv")
+# Where was the data download from? (original source) ---------------------
+
+original_source_name <- "Scottish Government Open Data Repository"
+
+# Add the website to the data registry (e.g. home page of the database)
+original_sourceId <- new_source(
+  name = original_source_name,
+  abbreviation = "Scottish Government Open Data Repository",
+  website = "https://statistics.gov.scot/",
+  key = key)
+
+cat("this works", file = "/srv/ftp/scrc/records/SARS-CoV-2/scotland/cases-and-management/test.txt")
+
