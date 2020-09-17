@@ -84,7 +84,7 @@ for (x in seq_along(original_root)) {
                     source_path = original_path[[x]],
                     path = file.path("data-raw", product_name,
                                      names(original_root)[x]),
-                    filename = source_filename)
+                    filename = source_filename[[x]])
 }
 
 
@@ -107,31 +107,18 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
 names(sourcefiles) <- c("males", "females", "persons")
 
 
-if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
-                                                conversionh5version_number,sep = "/"),
-                               component = "conversiontable/scotland")==FALSE){
-  stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
-}
+# Make sure conversion table (generated with scotgov_dz_lookup.R) file exists
+conversion_table_loc <- file.path("data-raw", "geography", "scotland",
+                                  "lookup_table", "0.1.0.h5")
+assertthat::assert_that(file.exists(conversion_table_loc))
 
-save_location <- file.path("data-raw")
+save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
 
 process_nrs_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
                          h5path = save_data_here,
-                         grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
-                                       "hb", "ttwa", "grid1km", "grid10km"),
-                         full.names = c("datazone","urban rural classification",
-                                        "intermediate zone", "multi member ward",
-                                        "scottish parliamentary constituency",
-                                        "local authority", "health board",
-                                        "travel to work area", "grid area","grid area"),
-                         age.classes = list(0:90),
-                         conversionh5filepath = file.path("data-raw", "geography",
-                                                          "scotland", "lookup_table"),
-                         conversionh5version_number = "0.1.0.h5",
-                         genderbreakdown = list(persons = "persons",
-                                                genders = c("males", "females")))
+                         conversionfile = conversion_table_loc)
 
 
 # register metadata with the data registry --------------------------------
