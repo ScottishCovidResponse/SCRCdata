@@ -6,8 +6,7 @@
 #' associated with the processed data (the output of this function)
 #' @param h5path a \code{string} specifying the local path
 #' associated with the processed data (the output of this function)
-#' @param conversionfile a \code{string} specifying the local path and filename
-#' associated with the conversion table
+#' @param conversionfile a \code{data.frame} containing a spatial conversion table
 #'
 #' @export
 #'
@@ -15,17 +14,9 @@ process_nrs_demographics <- function(sourcefile,
                                      h5filename,
                                      h5path,
                                      conversionfile) {
-  # Prepare conversion table
-  conversion.table <- SCRCdataAPI::read_table(
-    filepath = conversionfile,
-    component = "conversiontable/scotland")
-
   # Process raw data --------------------------------------------------------
 
   transage.dat <- lapply(seq_along(sourcefile), function(k) {
-    # Which gender category? (persons, females, males)
-    dataset <- names(sourcefile)[k]
-
     # Read source data
     sape_tmp <- readxl::read_excel(sourcefile[[k]], col_names = FALSE)
     # Read source header
@@ -80,9 +71,9 @@ process_nrs_demographics <- function(sourcefile,
     fullname <- admin_geo$fullname[i]
 
     # persons
-    persons <- convert_area(x = abbreviation,
-                            transage.dat$persons,
-                            conversion.table)
+    persons <- convert_area_nrs(x = abbreviation,
+                                transage.dat$persons,
+                                conversionfile)
 
     assertthat::assert_that(total_persons == sum(persons$grid_pop))
 
@@ -97,12 +88,12 @@ process_nrs_demographics <- function(sourcefile,
                  dimension_names = dimension_names)
 
     # male and female
-    males <- convert_area(x = abbreviation,
-                          transage.dat$males,
-                          conversion.table)$grid_pop
-    females <- convert_area(x = abbreviation,
-                            transage.dat$females,
-                            conversion.table)$grid_pop
+    males <- convert_area_nrs(x = abbreviation,
+                              transage.dat$males,
+                              conversionfile)$grid_pop
+    females <- convert_area_nrs(x = abbreviation,
+                                transage.dat$females,
+                                conversionfile)$grid_pop
 
     assertthat::assert_that(total_females == sum(females))
     assertthat::assert_that(total_males == sum(males))
@@ -128,9 +119,9 @@ process_nrs_demographics <- function(sourcefile,
     fullname <- grid_areas$fullname[i]
 
     # persons
-    persons <- convert_area(x = abbreviation,
-                            transage.dat$persons,
-                            conversion.table)
+    persons <- convert_area_nrs(x = abbreviation,
+                                transage.dat$persons,
+                                conversionfile)
 
     assertthat::assert_that(total_persons == sum(persons$grid_pop))
 
@@ -147,12 +138,12 @@ process_nrs_demographics <- function(sourcefile,
                  dimension_units = list(gsub("grid", "", abbreviation)))
 
     # male and female
-    males <- convert_area(x = abbreviation,
-                          transage.dat$males,
-                          conversion.table)$grid_pop
-    females <- convert_area(x = abbreviation,
-                            transage.dat$females,
-                            conversion.table)$grid_pop
+    males <- convert_area_nrs(x = abbreviation,
+                              transage.dat$males,
+                              conversionfile)$grid_pop
+    females <- convert_area_nrs(x = abbreviation,
+                                transage.dat$females,
+                                conversionfile)$grid_pop
 
     assertthat::assert_that(total_females == sum(females))
     assertthat::assert_that(total_males == sum(males))
@@ -173,12 +164,12 @@ process_nrs_demographics <- function(sourcefile,
 }
 
 
-convert_area <- function(x, transage.dat, conversion.table) {
+convert_area_nrs <- function(x, transage.dat, conversionfile) {
   # If datazone, transform to output format
   if(x %in% "dz") {
 
     transformed_data <- list(data = transage.dat,
-                             area.names = conversion.table %>%
+                             area.names = conversionfile %>%
                                dplyr::rename(DZcode = AREAcode,
                                              DZname = AREAname) %>%
                                dplyr::select(DZcode, DZname))
@@ -193,7 +184,7 @@ convert_area <- function(x, transage.dat, conversion.table) {
     transformed_data <- SCRCdataAPI::convert2lower(
       dat = transage.dat,
       convert_to = x,
-      conversion_table = conversion.table)
+      conversion_table = conversionfile)
     transarea.dat <- list(grid_pop = as.matrix(transformed_data$data[, -1]),
                           grid_id = transformed_data$data[, 1])
     area.names <- transformed_data$area.names
@@ -204,7 +195,7 @@ convert_area <- function(x, transage.dat, conversion.table) {
     transarea.dat <- SCRCdataAPI::convert2grid(
       dat = transage.dat,
       grid_size = x,
-      conversion.table = conversion.table)
+      conversion.table = conversionfile)
 
   } else
     stop("Something has gone wrong")
