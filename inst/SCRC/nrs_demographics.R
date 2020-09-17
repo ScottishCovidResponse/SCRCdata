@@ -102,23 +102,25 @@ submission_script <- "nrs_demographics.R"
 
 # convert source data into a data product ---------------------------------
 
+save_location <- "data-raw"
+save_data_here <- file.path(save_location, product_path)
+
+# Download latest conversion table
+download_dataproduct(name = "geography/lookup_table/gridcell_admin_area/scotland",
+                     data_dir = "data-raw/conversion_table")
+filename <- dir("data-raw/conversion_table", full.names = TRUE)
+conversion_table <- SCRCdataAPI::read_table(filepath = filename,
+                                            component = "conversiontable/scotland")
+
+# Source file locations
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path("data-raw", product_name, names(original_root)[x], source_filename[x]))
 names(sourcefiles) <- c("males", "females", "persons")
 
-
-# Make sure conversion table (generated with scotgov_dz_lookup.R) file exists
-conversion_table_loc <- file.path("data-raw", "geography", "scotland",
-                                  "lookup_table", "0.1.0.h5")
-assertthat::assert_that(file.exists(conversion_table_loc))
-
-save_location <- "data-raw"
-save_data_here <- file.path(save_location, product_path)
-
 process_nrs_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
                          h5path = save_data_here,
-                         conversionfile = conversion_table_loc)
+                         conversion_table = conversion_table)
 
 
 # register metadata with the data registry --------------------------------
@@ -142,7 +144,3 @@ register_everything(product_name = product_name,
                     github_info = github_info,
                     accessibility = 0,
                     key = key)
-
-
-
-
