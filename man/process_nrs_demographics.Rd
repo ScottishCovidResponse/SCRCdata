@@ -16,8 +16,7 @@ associated with the processed data (the output of this function)}
 \item{h5path}{a \code{string} specifying the local path
 associated with the processed data (the output of this function)}
 
-\item{conversionfile}{a \code{string} specifying the local path and filename
-associated with the conversion table}
+\item{conversionfile}{a \code{data.frame} containing a spatial conversion table}
 }
 \description{
 process_nrs_demographics
