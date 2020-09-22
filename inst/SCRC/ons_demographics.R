@@ -8,21 +8,24 @@ genders <- c("Persons", "Males", "Females")
 
 # Download source data ----------------------------------------------------
 
-for (sex in c(2,3)) {
-  for (age in 101:191) {
+# 15.4 GB
+for (sex in 1:3) {
+  # for (age in 101:191) {
+  for (age in 150:191) {
     for (step in seq(0, 168000, 24000)) {
       # Download file
-      download_from_url(source_root = "https://www.nomisweb.co.uk/",
-                        source_path = sprintf(source_path, sex-1, age, step),
-                        path = file.path("data-raw", product_name,genders[sex]),
-                        filename = sprintf("populationstore_g%d_a%d_s%d.csv",
-                                           sex-1, age, step))
+      if(!file.exists(file.path("data-raw", product_name, genders[sex],
+                                sprintf("populationstore_g%d_a%d_s%d.csv",
+                                        sex-1, age, step))))
+        download_from_url(source_root = "https://www.nomisweb.co.uk/",
+                          source_path = sprintf(source_path, sex-1, age, step),
+                          path = file.path("data-raw", product_name,genders[sex]),
+                          filename = sprintf("populationstore_g%d_a%d_s%d.csv",
+                                             sex-1, age, step))
     }}}
 
 for (sex in c(2,3)) {
-
   for (age in 101:191) {
-
     for (step in seq(0, 168000, 24000)) {
       # Read file
       temp_pop_table <- read.csv(
@@ -34,9 +37,9 @@ for (sex in c(2,3)) {
                       MEASURES_NAME, OBS_VALUE)
 
       # Delete original file
-      file.remove(file.path("data-raw", product_name, genders[sex],
-                            sprintf("populationstore_g%d_a%d_s%d.csv",
-                                    sex-1, age, step)))
+      # file.remove(file.path("data-raw", product_name, genders[sex],
+      #                       sprintf("populationstore_g%d_a%d_s%d.csv",
+      #                               sex-1, age, step)))
 
       # Make some edits
       names(temp_pop_table)[8] <- unique(temp_pop_table$C_AGE_NAME)
@@ -72,17 +75,18 @@ save_data_here <- file.path(save_location, product_path)
 # Download latest conversion table
 download_dataproduct(name = "geography/lookup_table/gridcell_admin_area/england",
                      data_dir = "data-raw/conversion_table_eng")
-filename <- dir("data-raw/conversion_table_eng", full.names = TRUE)
+filename <- dir("data-raw/geography/lookup_table/gridcell_admin_area/england",
+                full.names = TRUE)
 conversion_table <- SCRCdataAPI::read_table(filepath = filename,
-                                            component = "conversiontable/scotland")
+                                            component = "conversiontable/englandwales")
 
 # Source file locations
-sourcefiles <- c("data-raw/england_Females.csv",
-                 "data-raw/england_Males.csv",
+sourcefiles <- c("data-raw/human/demographics/population/england/Females/england_Females.csv",
+                 "data-raw/human/demographics/population/england/Males/england_Males.csv",
                  "data-raw/england_Persons.csv")
 names(sourcefiles) <- c("females", "males", "persons")
 
 process_ons_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
                          h5path = save_data_here,
-                         conversion_table = conversion_table)
+                         conversionfile = conversion_table)
