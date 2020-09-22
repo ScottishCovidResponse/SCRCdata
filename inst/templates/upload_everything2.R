@@ -1,3 +1,11 @@
+#' scottish deaths-involving-coronavirus-covid-19
+#'
+#' This dataset presents the weekly, and year to date, provisional number of
+#' deaths associated with coronavirus (COVID-19) alongside the total number
+#' of deaths registered in Scotland, broken down by age, sex. (From: https://statistics.gov.scot/data/deaths-involving-coronavirus-covid-19)
+#'
+
+
 #' dataset-name
 #'
 #' The following script assumes:
@@ -17,18 +25,20 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- readLines("token/token.txt")
+key <- readLines("/home/soniamitchell/scrc_cron_scripts/token/token.txt")
 
 
 # Define data set ---------------------------------------------------------
 
 # doi_or_unique_name is a free text field specifying the name of your dataset
-doi_or_unique_name <- "Scottish small area population estimates"
+doi_or_unique_name <- "scottish deaths-involving-coronavirus-covid-19"
 
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-version_number <- "0.1.0"
+todays_date <- Sys.time()
+tmp <- as.Date(todays_date, format = "%Y-%m-%d")
+version_number <- paste("0", gsub("-", "", tmp), "0" , sep = ".")
 source_filename <- paste0(version_number, ".csv")
 product_filename <- paste0(version_number, ".h5")
 
@@ -40,7 +50,7 @@ product_filename <- paste0(version_number, ".h5")
 # (3) data product is processed, then saved locally to data-raw/[product_name]
 # (4) data product should be stored on the Boydorr server at
 # ../../srv/ftp/scrc/[product_name]
-product_name <- "human/demographics/population/scotland"
+product_name <- "records/SARS-CoV-2/scotland/human-mortality"
 # Construct the path to a file in a platform independent way
 product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
@@ -48,20 +58,48 @@ namespace <- "SCRC"
 
 # Where was the data download from? (original source) ---------------------
 
-original_source_name <- "National Records of Scotland"
+original_source_name <- "Scottish Government Open Data Repository"
 
 # Add the website to the data registry (e.g. home page of the database)
 original_sourceId <- new_source(
   name = original_source_name,
-  abbreviation = "National Records of Scotland",
-  website = "https://www.nrscotland.gov.uk",
+  abbreviation = "Scottish Government Open Data Repository",
+  website = "https://statistics.gov.scot/",
   key = key)
 
 # Note that file.path(original_root, original_path) is the download link.
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
-original_root <- "https://www.nrscotland.gov.uk/"
-original_path <- "files/statistics/population-estimates/sape-time-series/persons/sape-2018-persons.xlsx"
+original_root <- "https://statistics.gov.scot/sparql.csv?query="
+original_path <- "PREFIX qb: <http://purl.org/linked-data/cube#>
+PREFIX data: <http://statistics.gov.scot/data/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dim: <http://purl.org/linked-data/sdmx/2009/dimension#>
+PREFIX sdim: <http://statistics.gov.scot/def/dimension/>
+PREFIX stat: <http://statistics.data.gov.uk/def/statistical-entity#>
+PREFIX mp: <http://statistics.gov.scot/def/measure-properties/>
+SELECT ?featurecode ?featurename ?areatypename ?date ?cause ?location ?gender ?age ?type ?count
+WHERE {
+  ?indicator qb:dataSet data:deaths-involving-coronavirus-covid-19;
+              mp:count ?count;
+              qb:measureType ?measType;
+              sdim:age ?value;
+              sdim:causeofdeath ?causeDeath;
+              sdim:locationofdeath ?locDeath;
+              sdim:sex ?sex;
+              dim:refArea ?featurecode;
+              dim:refPeriod ?period.
+
+              ?measType rdfs:label ?type.
+              ?value rdfs:label ?age.
+              ?causeDeath rdfs:label ?cause.
+              ?locDeath rdfs:label ?location.
+              ?sex rdfs:label ?gender.
+              ?featurecode stat:code ?areatype;
+                rdfs:label ?featurename.
+              ?areatype rdfs:label ?areatypename.
+              ?period rdfs:label ?date.
+}"
 
 
 # Where is the submission script stored? ----------------------------------
@@ -73,33 +111,47 @@ original_path <- "files/statistics/population-estimates/sape-time-series/persons
 # ScottishCovidResponse/SCRCdata repository within the inst/[namespace]/
 # directory
 
-submission_script <- "nrs_demographics.R"
+submission_script <- "scotgov_deaths.R"
 
 
 # download source data ----------------------------------------------------
 
-download_from_url(source_root = original_root,
-                  source_path = original_path,
-                  path = file.path("data-raw", product_path),
-                  filename = source_filename)
+save_location <- file.path("srv", "ftp", "scrc")
+save_data_here <- file.path(save_location, product_path)
 
+download_from_database(source_root = original_root,
+                       source_path = original_path,
+                       filename = source_filename,
+                       path = save_data_here)
 
 # convert source data into a data product ---------------------------------
 
-process_scotgov_management(
-  sourcefile = file.path("data-raw", product_path, source_filename),
-  filename = file.path("data-raw", product_path, product_filename))
-
+process_scotgov_deaths(
+  sourcefile = file.path(save_data_here, source_filename),
+  filename = file.path(save_data_here, product_filename))
 
 # register metadata with the data registry --------------------------------
+
+repo <- "ScottishCovidResponse/SCRCdata"
+repo_version <- "0.8.0"
+github_info <- list(repo_storageRoot = "github",
+                    script_gitRepo = repo,
+                    repo_version = repo_version,
+                    github_hash = get_github_hash(repo),
+                    submission_script = paste0("inst/SCRC/",
+                                               submission_script))
 
 register_everything(product_name = product_name,
                     version_number = version_number,
                     doi_or_unique_name = doi_or_unique_name,
+                    save_location = save_location,
                     namespace = namespace,
-                    submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
+                    source_filename = source_filename,
+                    submission_script = submission_script,
+                    github_info = github_info,
+                    accessibility = 0,
                     key = key)

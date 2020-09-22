@@ -4,47 +4,19 @@
 #' associated with the source data (the input of this function)
 #' @param h5filename a \code{string} specifying the  filename
 #' associated with the processed data (the output of this function)
-#' @param h5path a \code{string} specifying the local path 
+#' @param h5path a \code{string} specifying the local path
 #' associated with the processed data (the output of this function)
-#' @param grp.names a \code{string} specifying the shortened names of the
-#' administrative geographies - which should match those in the conversion table
-#'  - and the sizes of the grid squares used in the conversion table in the
-#'  format gridxkm
-#' @param full.names a \code{string} specifying the full names of the
-#'  administrative geographies to which the data is converted to.
-#' @param age.classes a \code{string} specifying the lower bounds of the age
-#'  classes to which the data should be assigned.
-#' @param conversionh5filepath a \code{string} specifying the local path
-#'   associated with the conversion table
-#' @param  genderbreakdown a \code{string} specifying the names which should
-#'  be assigned to gender categories in the output file and the gender files
-#'  from the input which should be used in each categotry
-#' @param conversionh5version_number a \code{string} specifying the version
-#' number (which is also the filename) of the conversion table
+#' @param conversionfile a \code{data.frame} containing a spatial conversion table
 #'
 #' @export
 #'
 process_nrs_demographics <- function(sourcefile,
                                      h5filename,
                                      h5path,
-                                     grp.names,
-                                     full.names,
-                                     age.classes,
-                                     conversionh5filepath,
-                                     conversionh5version_number,
-                                     genderbreakdown) {
-
-  # Prepare conversion table
-  conversion.table <- SCRCdataAPI::read_table(filename = conversionh5version_number,
-                                              path = conversionh5filepath,
-                                              component = "conversiontable/scotland")
-
-
+                                     conversionfile) {
   # Process raw data --------------------------------------------------------
-  original.dat <- lapply(seq_along(sourcefile), function(k) {
-    # Which gender category? (persons, females, males)
-    dataset <- names(sourcefile)[k]
 
+  transage.dat <- lapply(seq_along(sourcefile), function(k) {
     # Read source data
     sape_tmp <- readxl::read_excel(sourcefile[[k]], col_names = FALSE)
     # Read source header
@@ -56,7 +28,7 @@ process_nrs_demographics <- function(sourcefile,
       names()
 
     # Process source data into useable form, removing in-built metadata etc.
-    transage.dat <- sape_tmp %>%
+    sape_tmp %>%
       # Remove first 6 rows
       .[-c(1:6),] %>%
       # Rename columns
@@ -74,132 +46,159 @@ process_nrs_demographics <- function(sourcefile,
       dplyr::mutate_at(vars(dplyr::starts_with("AGE")), as.numeric) %>%
       dplyr::rename(AREAcode = DataZone2011Code) %>%
       as.data.frame()
-
-
-    # Generate data and attach to hdf5 file ---------------------------------
-
-    # For each geography category
-    for(i in seq_along(grp.names)) {
-      cat(paste0("\rProcessing",": ",
-                 i, "/", length(grp.names), "..."))
-
-      # If datazone transform to output format
-      if(grp.names[i] %in% "dz") {
-
-        # Transformed data (non-grid transformed)
-        tmp.dat <- list(data = transage.dat,
-                        area.names = conversion.table %>%
-                          dplyr::rename(DZcode = AREAcode,
-                                        DZname = AREAname) %>%
-                          dplyr::select(DZcode, DZname))
-        transarea.dat <- list(
-          grid_pop = as.matrix(tmp.dat$data[, -1, drop = FALSE]),
-          grid_id = tmp.dat$data[, 1])
-        area.names <- tmp.dat$area.names
-
-
-        # If larger geography use converion table to convert
-      } else if(grp.names[i] %in% c("ur","iz","mmw","spc","la",
-                                    "hb", "ttwa")) {
-
-        # Transformed data (non-grid transformed)
-        tmp.dat <- SCRCdataAPI::convert2lower(
-          dat = transage.dat,
-          convert_to = grp.names[i],
-          conversion_table = conversion.table)
-        transarea.dat <- list(grid_pop = as.matrix(tmp.dat$data[, -1]),
-                              grid_id = tmp.dat$data[, 1])
-        area.names <- tmp.dat$area.names
-
-
-        # If grid:
-      } else if(grepl("grid",  grp.names[i])) {
-
-        # Transformed data (grid transformed)
-        transarea.dat <- SCRCdataAPI::convert2grid(
-          dat = transage.dat,
-          grid_size=grp.names[i],
-          conversion.table = conversion.table)
-
-      } else {
-        stop("OMG! - grpnames")
-      }
-
-      tmp <- unlist(transarea.dat$grid_id)
-      names(tmp) <- NULL
-      dimension_names <- list(tmp,
-                              colnames(transarea.dat$grid_pop))
-      names(dimension_names) <- c(full.names[i], "age groups")
-
-      # If grid
-      if(grepl("grid",  grp.names[i])) {
-        location <- file.path(gsub(" ","_",grp.names[i]), "age",
-                              names(genderbreakdown)[grepl(dataset,
-                                                           genderbreakdown)])
-
-        # If file already exists read table, make array, delete table and resave array
-        if(check_for_hdf5(filename = file.path(h5path,h5filename),
-                          component = location)){
-          previous_table <- read_array(filename = h5filename,
-                                       path = h5path,
-                                       component = location)
-          delete_hdf5_link(filename = file.path(h5path,h5filename),
-                           component = location)
-
-          combined_array <- array(c(as.matrix(previous_table),
-                                    as.matrix(transarea.dat$grid_pop)),
-                                  dim=c(dim(transarea.dat$grid_pop),2))
-          dimension_names$genders=genderbreakdown$genders
-          create_array(
-            filename = h5filename,
-            path = h5path,
-            component = location,
-            array = combined_array,
-            dimension_names = dimension_names,
-            dimension_values = list(transarea.dat$grid_id),
-            dimension_units = list(gsub("grid", "", grp.names[i])))
-
-        }else{# Else save table
-          create_array(
-            filename = h5filename,
-            path = h5path,
-            component = location,
-            array = transarea.dat$grid_pop,
-            dimension_names = dimension_names,
-            dimension_values = list(transarea.dat$grid_id),
-            dimension_units = list(gsub("grid", "", grp.names[i])))
-        }
-        # If administrative geography:
-      } else {
-        location <- file.path(gsub(" ","_",full.names[i]), "age",
-                              names(genderbreakdown)[grepl(dataset,genderbreakdown)])
-        # If file already exists read table, make array, delete table and resave array
-        if(check_for_hdf5(filename = file.path(h5path,h5filename),
-                          component = location)){
-          previous_table=read_array(filename = h5filename,
-                                    path = h5path,
-                                    component = location)
-          delete_hdf5_link(filename = file.path(h5path,h5filename),
-                           component=location)
-
-          combined_array=array(c(as.matrix(previous_table),
-                                 as.matrix(transarea.dat$grid_pop)),
-                               dim=c(dim(transarea.dat$grid_pop),2))
-          dimension_names$genders=genderbreakdown$genders
-          create_array(filename = h5filename,
-                       path = h5path,
-                       component = location,
-                       array = combined_array,
-                       dimension_names = dimension_names)
-
-        }else{# Else save table
-          create_array(filename = h5filename,
-                       path = h5path,
-                       component = location,
-                       array = transarea.dat$grid_pop,
-                       dimension_names = dimension_names)
-        }
-      }
-    }
   })
+  names(transage.dat) <- names(sourcefile)
+
+  # Check data
+  tmp <- lapply(transage.dat, dim)
+  assertthat::assert_that(all(tmp$males == tmp$females))
+  assertthat::assert_that(all(tmp$males == tmp$persons))
+  total_persons <- sum(transage.dat$persons[,-1])
+  total_females <- sum(transage.dat$females[,-1])
+  total_males <- sum(transage.dat$males[,-1])
+  assertthat::assert_that(total_persons == (total_females + total_males))
+
+  # Administrative geographies ----------------------------------------------
+
+  admin_geo <- data.frame(
+    abbreviation = c("dz", "ur", "iz", "mmw", "spc", "la", "hb", "ttwa"),
+    fullname = c("datazone","urban rural classification", "intermediate zone",
+                 "multi member ward", "scottish parliamentary constituency",
+                 "local authority", "health board", "travel to work area"))
+
+  for(i in seq_len(nrow(admin_geo))) {
+    abbreviation <- admin_geo$abbreviation[i]
+    fullname <- admin_geo$fullname[i]
+
+    # persons
+    persons <- convert_area_nrs(x = abbreviation,
+                                transage.dat$persons,
+                                conversionfile)
+
+    assertthat::assert_that(total_persons == sum(persons$grid_pop))
+
+    dimension_names <- list(unname(unlist(persons$grid_id)),
+                            colnames(persons$grid_pop))
+    names(dimension_names) <- c(fullname, "age groups")
+
+    create_array(filename = h5filename,
+                 path = h5path,
+                 component = paste0(fullname, "/age/persons"),
+                 array = persons$grid_pop,
+                 dimension_names = dimension_names)
+
+    # male and female
+    males <- convert_area_nrs(x = abbreviation,
+                              transage.dat$males,
+                              conversionfile)$grid_pop
+    females <- convert_area_nrs(x = abbreviation,
+                                transage.dat$females,
+                                conversionfile)$grid_pop
+
+    assertthat::assert_that(total_females == sum(females))
+    assertthat::assert_that(total_males == sum(males))
+    assertthat::assert_that(all(dim(males) == dim(females)))
+    assertthat::assert_that(all(dim(persons) == dim(females)))
+
+    dimension_names$genders <- c("males", "females")
+
+    create_array(filename = h5filename,
+                 path = h5path,
+                 component = paste0(fullname, "/age/genders"),
+                 array = array(c(males, females), dim = c(dim(females), 2)),
+                 dimension_names = dimension_names)
+  }
+
+  # Grid areas --------------------------------------------------------------
+
+  grid_areas <- data.frame(abbreviation = c("grid1km", "grid10km"),
+                           fullname = c("grid area","grid area"))
+
+  for(i in seq_len(nrow(grid_areas))) {
+    abbreviation <- grid_areas$abbreviation[i]
+    fullname <- grid_areas$fullname[i]
+
+    # persons
+    persons <- convert_area_nrs(x = abbreviation,
+                                transage.dat$persons,
+                                conversionfile)
+
+    assertthat::assert_that(total_persons == sum(persons$grid_pop))
+
+    dimension_names <- list(unname(unlist(persons$grid_id)),
+                            colnames(persons$grid_pop))
+    names(dimension_names) <- c(fullname, "age groups")
+
+    create_array(filename = h5filename,
+                 path = h5path,
+                 component = paste0(fullname, "/age/persons"),
+                 array = persons$grid_pop,
+                 dimension_names = dimension_names,
+                 dimension_values = list(persons$grid_id),
+                 dimension_units = list(gsub("grid", "", abbreviation)))
+
+    # male and female
+    males <- convert_area_nrs(x = abbreviation,
+                              transage.dat$males,
+                              conversionfile)$grid_pop
+    females <- convert_area_nrs(x = abbreviation,
+                                transage.dat$females,
+                                conversionfile)$grid_pop
+
+    assertthat::assert_that(total_females == sum(females))
+    assertthat::assert_that(total_males == sum(males))
+    assertthat::assert_that(all(dim(males) == dim(females)))
+    assertthat::assert_that(all(dim(persons) == dim(females)))
+
+    dimension_names$genders <- c("males", "females")
+
+    create_array(filename = h5filename,
+                 path = h5path,
+                 component = paste0(fullname, "/age/genders"),
+                 array = array(c(males, females), dim = c(dim(females), 2)),
+                 dimension_names = dimension_names,
+                 dimension_values = list(persons$grid_id),
+                 dimension_units = list(gsub("grid", "", abbreviation)))
+  }
+
+}
+
+
+convert_area_nrs <- function(x, transage.dat, conversionfile) {
+  # If datazone, transform to output format
+  if(x %in% "dz") {
+
+    transformed_data <- list(data = transage.dat,
+                             area.names = conversionfile %>%
+                               dplyr::rename(DZcode = AREAcode,
+                                             DZname = AREAname) %>%
+                               dplyr::select(DZcode, DZname))
+    transarea.dat <- list(
+      grid_pop = as.matrix(transformed_data$data[, -1, drop = FALSE]),
+      grid_id = transformed_data$data[, 1])
+    area.names <- transformed_data$area.names
+
+    # If larger geography, use converion table to convert
+  } else if(x %in% c("ur","iz","mmw","spc","la", "hb", "ttwa")) {
+
+    transformed_data <- SCRCdataAPI::convert2lower(
+      dat = transage.dat,
+      convert_to = x,
+      conversion_table = conversionfile)
+    transarea.dat <- list(grid_pop = as.matrix(transformed_data$data[, -1]),
+                          grid_id = transformed_data$data[, 1])
+    area.names <- transformed_data$area.names
+
+    # If grid, use converion table to convert
+  } else if(grepl("grid", x)) {
+
+    transarea.dat <- SCRCdataAPI::convert2grid(
+      dat = transage.dat,
+      grid_size = x,
+      conversion.table = conversionfile)
+
+  } else
+    stop("Something has gone wrong")
+
+  transarea.dat
 }

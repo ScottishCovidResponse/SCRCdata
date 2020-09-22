@@ -4,18 +4,7 @@
 \alias{process_ons_demographics}
 \title{process_ons_demographics}
 \usage{
-process_ons_demographics(
-  sourcefile,
-  h5filename,
-  h5path,
-  conversionh5version_number,
-  conversionh5filepath,
-  grp.names,
-  full.names,
-  subgrp.names,
-  age.classes,
-  genderbreakdown
-)
+process_ons_demographics(sourcefile, h5filename, h5path, conversionfile)
 }
 \arguments{
 \item{sourcefile}{a \code{string} specifying the local path and filename
@@ -24,32 +13,10 @@ associated with the source data (the input of this function)}
 \item{h5filename}{a \code{string} specifying the local path and filename
 associated with the processed data (the output of this function)}
 
-\item{h5path}{a \code{string} specifying the local path 
+\item{h5path}{a \code{string} specifying the local path
 associated with the processed data (the output of this function)}
 
-\item{conversionh5version_number}{a \code{string} specifying the filename 
-associated with the conversion table}
-
-\item{conversionh5filepath}{a \code{string} specifying the local path 
-associated with the conversion table}
-
-\item{grp.names}{a \code{string} specifying the shortened names of the 
-administrative geographies which should match those in the conversion table
- and the sizes of the grid squares used in the conversion table in the 
- format gridxkm}
-
-\item{full.names}{a \code{string} specifying the full names of the 
-administrative geographies to which the data is converted to.}
-
-\item{subgrp.names}{a \code{string} specifying the human readable names of 
-the age classes to which the data should be assigned.}
-
-\item{age.classes}{a \code{string} specifying the lower bounds of the age 
-classes to which the data should be assigned.}
-
-\item{genderbreakdown}{a \code{string} specifying the names which should
-be assigned to gender categories in the output file and the gender files
-from the input which should be used in each categotry}
+\item{conversionfile}{a \code{data.frame} containing a spatial conversion table}
 }
 \description{
 process_ons_demographics

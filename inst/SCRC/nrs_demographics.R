@@ -84,7 +84,7 @@ for (x in seq_along(original_root)) {
                     source_path = original_path[[x]],
                     path = file.path("data-raw", product_name,
                                      names(original_root)[x]),
-                    filename = source_filename)
+                    filename = source_filename[[x]])
 }
 
 
@@ -102,54 +102,45 @@ submission_script <- "nrs_demographics.R"
 
 # convert source data into a data product ---------------------------------
 
+save_location <- "data-raw"
+save_data_here <- file.path(save_location, product_path)
+
+# Download latest conversion table
+download_dataproduct(name = "geography/lookup_table/gridcell_admin_area/scotland",
+                     data_dir = "data-raw/conversion_table_scot")
+filename <- dir("data-raw/conversion_table_scot", full.names = TRUE)
+conversion_table <- SCRCdataAPI::read_table(filepath = filename,
+                                            component = "conversiontable/scotland")
+
+# Source file locations
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path("data-raw", product_name, names(original_root)[x], source_filename[x]))
 names(sourcefiles) <- c("males", "females", "persons")
 
-
-if(SCRCdataAPI::check_for_hdf5(filename = paste(conversionh5filepath,
-                                                conversionh5version_number,sep = "/"),
-                               component = "conversiontable/scotland")==FALSE){
-  stop("Can't find conversion table, SCRCdata/inst/SCRC/scotgov_dz_lookup.R should be used to download and process file")
-}
-
-save_location <- file.path("data-raw")
-save_data_here <- file.path(save_location, product_path)
-
 process_nrs_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
                          h5path = save_data_here,
-                         grp.names = c("dz", "ur", "iz", "mmw", "spc", "la",
-                                       "hb", "ttwa", "grid1km", "grid10km"),
-                         full.names = c("datazone","urban rural classification",
-                                        "intermediate zone", "multi member ward",
-                                        "scottish parliamentary constituency",
-                                        "local authority", "health board",
-                                        "travel to work area", "grid area","grid area"),
-                         age.classes = list(0:90),
-                         conversionh5filepath = file.path("data-raw", "geography",
-                                                          "scotland", "lookup_table"),
-                         conversionh5version_number = "0.1.0.h5",
-                         genderbreakdown = list(persons = "persons",
-                                                genders = c("males", "females")))
+                         conversion_table = conversion_table)
 
 
 # register metadata with the data registry --------------------------------
 
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script_path = paste0("inst/SCRC/",
+                                                     submission_script),
+                                package = "SCRCdata")
+
 register_everything(product_name = product_name,
                     version_number = version_number,
-                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
+                    save_location = save_location,
                     namespace = namespace,
-                    submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
                     source_filename = source_filename,
+                    submission_script = submission_script,
+                    github_info = github_info,
                     accessibility = 0,
                     key = key)
-
-
-
-

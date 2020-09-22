@@ -25,8 +25,8 @@ library(SCRCdata)
 # Go to data.scrc.uk, click on Links, then Generate API Token, and save your
 # token in your working directory as token.txt. If the following returns an
 # error, then save a carriage return after the token.
-key <- readLines("token/token.txt")
-
+key <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
+                           "token", "token.txt"))
 
 # Define data set ---------------------------------------------------------
 
@@ -116,7 +116,7 @@ submission_script <- "scotgov_deaths.R"
 
 # download source data ----------------------------------------------------
 
-save_location <- file.path("srv", "ftp", "scrc")
+save_location <- file.path("", "srv", "ftp", "scrc")
 save_data_here <- file.path(save_location, product_path)
 
 download_from_database(source_root = original_root,
@@ -132,16 +132,22 @@ process_scotgov_deaths(
 
 # register metadata with the data registry --------------------------------
 
+github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
+                                script_path = paste0("inst/SCRC/",
+                                                     submission_script),
+                                package = "SCRCdata")
+
 register_everything(product_name = product_name,
                     version_number = version_number,
-                    save_location = save_location,
                     doi_or_unique_name = doi_or_unique_name,
+                    save_location = save_location,
                     namespace = namespace,
-                    submission_script = submission_script,
                     original_source_name = original_source_name,
                     original_sourceId = original_sourceId,
                     original_root = original_root,
                     original_path = original_path,
                     source_filename = source_filename,
+                    submission_script = submission_script,
+                    github_info = github_info,
                     accessibility = 0,
                     key = key)
