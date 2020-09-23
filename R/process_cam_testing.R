@@ -119,10 +119,10 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "date-country-positive_cases-last_7_days",
-    array = as.matrix(testing.daily.positive),
+    array = as.matrix(testing.7days.positive),
     dimension_names = list(
-      delayed = rownames(testing.daily.positive),
-      date = colnames(testing.daily.positive)))
+      delayed = rownames(testing.7days.positive),
+      date = colnames(testing.7days.positive)))
 
   # Testing - People tested in last 7 days
   testing.7days.people <- testing.country.dat %>%
@@ -134,10 +134,10 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "date-country-people_tested-last_7_days",
-    array = as.matrix(testing.daily.positive),
+    array = as.matrix(testing.7days.people),
     dimension_names = list(
-      delayed = rownames(testing.daily.positive),
-      date = colnames(testing.daily.positive)))
+      delayed = rownames(testing.7days.people),
+      date = colnames(testing.7days.people)))
 
   # Testing - Total daily tests
   testing.7days.total <- testing.country.dat %>%
@@ -149,10 +149,10 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "date-country-tests-daily",
-    array = as.matrix(testing.daily.positive),
+    array = as.matrix(testing.7days.total),
     dimension_names = list(
-      delayed = rownames(testing.daily.positive),
-      date = colnames(testing.daily.positive)))
+      delayed = rownames(testing.7days.total),
+      date = colnames(testing.7days.total)))
 
   # Testing - Tests in last 7 days
   testing.7days.tests <- testing.country.dat %>%
@@ -164,10 +164,10 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "date-country-tests-last_7_days",
-    array = as.matrix(testing.daily.positive),
+    array = as.matrix(testing.7days.tests),
     dimension_names = list(
-      delayed = rownames(testing.daily.positive),
-      date = colnames(testing.daily.positive)))
+      delayed = rownames(testing.7days.tests),
+      date = colnames(testing.7days.tests)))
 
 
   # Special health board ----------------------------------------------------

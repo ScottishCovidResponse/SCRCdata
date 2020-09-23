@@ -332,3 +332,16 @@ upload_object_links(run_date = todays_date,
                     inputs = list(sourceDataURIs$source_objectComponentId),
                     outputs = outputs,
                     key = key)
+
+
+# Download latest version of testing component from FTP server
+
+# dp_name <- "records/SARS-CoV-2/scotland/cases-and-management/testing"
+# tmp <- download_dataproduct(name = dp_name, "data-raw")
+# look_at_these <- tmp$components[grepl("^date", tmp$components)]
+#
+# dp_components <- lapply(look_at_these, function(x) {
+#   read_array(tmp$downloaded_to, x)
+# })
+
+
