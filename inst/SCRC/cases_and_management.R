@@ -334,14 +334,61 @@ upload_object_links(run_date = todays_date,
                     key = key)
 
 
-# Download latest version of testing component from FTP server
+# Attach issues -----------------------------------------------------------
 
-# dp_name <- "records/SARS-CoV-2/scotland/cases-and-management/testing"
-# tmp <- download_dataproduct(name = dp_name, "data-raw")
-# look_at_these <- tmp$components[grepl("^date", tmp$components)]
-#
-# dp_components <- lapply(look_at_these, function(x) {
-#   read_array(tmp$downloaded_to, x)
-# })
+description <- "Data dump caused a spike on the 15th of June"
+severity <- 19
+
+dp_name <- paste0(product_name, "/testing")
+component <- "date-country-people_tested-last_7_days"
+
+attach_issue(description = description,
+             severity = severity,
+             namespace = "SCRC",
+             data_product = dp_name,
+             component = component,
+             version = version_number,
+             key = key)
 
 
+# -------------------------------------------------------------------------
+
+description <- "COVID-19 data by NHS Board contains *s which represent a count of <5 (?). These have been changed to 0 in the dataset."
+severity <- 10
+
+# "Testing - Cumulative people tested for COVID-19 - Positive"
+dp_name <- paste0(product_name, "/testing")
+component <- "test_result/date-people_tested_for_covid19-cumulative"
+
+attach_issue(description = description,
+             severity = severity,
+             namespace = "SCRC",
+             data_product = dp_name,
+             component = component,
+             version = version_number,
+             key = key)
+
+# "COVID-19 patients in ICU - Total"
+dp_name <- paste0(product_name, "/hospital")
+component <- "total_suspected_confirmed/date-country-covid19_patients_in_icu"
+
+attach_issue(description = description,
+             severity = severity,
+             namespace = "SCRC",
+             data_product = dp_name,
+             component = component,
+             version = version_number,
+             key = key)
+
+# "COVID-19 patients in hospital - Confirmed"
+# "COVID-19 patients in hospital - Suspected"
+dp_name <- paste0(product_name, "/hospital")
+component <- "test_result/date-country-covid19_patients_in_hospital"
+
+attach_issue(description = description,
+             severity = severity,
+             namespace = "SCRC",
+             data_product = dp_name,
+             component = component,
+             version = version_number,
+             key = key)
