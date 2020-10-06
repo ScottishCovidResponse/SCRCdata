@@ -28,6 +28,7 @@ process_ons_demographics <- function(sourcefile,
       gsub("GEOGRAPHY_NAME", "AREAcode", ., fixed = TRUE)
 
     colnames(tmp) <- header_new
+    tmp
   })
   names(transage.dat) <- names(sourcefile)
 
@@ -52,11 +53,12 @@ process_ons_demographics <- function(sourcefile,
                  "unitary authority", "local health board"))
 
   for(i in seq_len(nrow(admin_geo))) {
+    cat(paste0("\rRunning: ", admin_geo$fullname[i], ". Administrative area: ", i," of ", nrow(admin_geo)))
     abbreviation <- admin_geo$abbreviation[i]
     fullname <- admin_geo$fullname[i]
 
     # persons
-    persons <- convert_area_ons(x = grp.names[i],
+    persons <- convert_area_ons(x = abbreviation,
                                 transage.dat$persons,
                                 conversionfile)
 
@@ -66,7 +68,7 @@ process_ons_demographics <- function(sourcefile,
     names(tmp) <- NULL
     dimension_names <- list(tmp,
                             colnames(persons$grid_pop))
-    names(dimension_names) <- c(full.names[i], "age groups")
+    names(dimension_names) <- c(fullname, "age groups")
 
     create_array(filename = h5filename,
                  path = h5path,
@@ -101,9 +103,10 @@ process_ons_demographics <- function(sourcefile,
   grid_area <- data.frame(abbreviation = c("grid1km", "grid10km"),
                           fullname = c("grid area", "grid area"))
 
-  for(i in seq_len(nrow(grid_areas))) {
-    abbreviation <- grid_areas$abbreviation[i]
-    fullname <- grid_areas$fullname[i]
+  for(i in seq_len(nrow(grid_area))) {
+    cat(paste0("\rRunning: ", grid_area$abbreviation[i], ". Grid size ", i," of ", nrow(grid_area)))
+    abbreviation <- grid_area$abbreviation[i]
+    fullname <- grid_area$fullname[i]
 
     # persons
     persons <- convert_area_ons(x = abbreviation,
@@ -117,7 +120,7 @@ process_ons_demographics <- function(sourcefile,
     dimension_names <- list(tmp,
                             colnames(persons$grid_pop))
 
-    names(dimension_names) <- c(full.names[i], "age groups")
+    names(dimension_names) <- c(fullname, "age groups")
 
     create_array(
       filename = h5filename,
@@ -192,8 +195,10 @@ convert_area_ons <- function(x, transage.dat, conversionfile) {
       conversion.table = conversionfile,
       grid_size = x)
 
+  }else{
+     stop("Something has gone wrong")
   }
-  stop("Something has gone wrong")
+ 
 
   transarea.dat
 }
