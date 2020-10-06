@@ -3,8 +3,6 @@
 #' associated with the source data (the input of this function)
 #' @param h5filename a \code{string} specifying the local path and filename
 #' associated with the processed data (the output of this function)
-#' @param grid_names a \code{string} specifying the sizes of the grid squares 
-#'used in the conversion table in the format gridxkm
 #' @param output_area_sf a \code{string} specifying the local path and filename
 #' associated with the UK government output area shapefile
 #' @param path a \code{string} specifying the local path associated 
@@ -15,7 +13,6 @@
 process_ukgov_eng_lookup <- function(sourcefile,
                                      h5filename, 
                                      output_area_sf, 
-                                     grid_names,
                                      path) {
   
   OA_EW_LA <- read.csv(sourcefile[["OA_EW_LA"]])  %>%
@@ -114,7 +111,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
   datazone_area$dz_area <- as.numeric(datazone_area$dz_area)
   intersection_area <- intersection_area %>% left_join(datazone_area, "AREAcode")
   conversion.table <- intersection_area %>% 
-    mutate(grid1km_area_proportion=areagrid1km/"dz_area")%>%
+    mutate(grid1km_area_proportion=.data[["areagrid1km"]]/.data[["dz_area"]])%>%
     select("Datazone_component_id", "grid1km_area_proportion", "grid1km_id", "AREAcode")%>%
     left_join(conversion.table, "AREAcode")
   conversion.table <- conversion.table %>%
@@ -123,7 +120,7 @@ process_ukgov_eng_lookup <- function(sourcefile,
   
   SCRCdataAPI::create_table(filename = h5filename,
                             path = path,
-                            component = "conversiontable/scotland",
+                            component = "conversiontable/englandwales",
                             df = conversion.table,
                             row_names = rownames(conversion.table),
                             column_units = colnames(conversion.table))

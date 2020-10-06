@@ -98,7 +98,7 @@ process_scotgov_lookup <- function(sourcefile,
   datazone_area$dz_area <- as.numeric(datazone_area$dz_area)
   intersection_area <- intersection_area %>% left_join(datazone_area, "AREAcode")
   conversion.table <- intersection_area %>% 
-    mutate(grid1km_area_proportion="areagrid1km"/"dz_area")%>%
+    mutate(grid1km_area_proportion=areagrid1km/dz_area)%>%
     select("Datazone_component_id", "grid1km_area_proportion", "grid1km_id", "AREAcode")%>%
     left_join(conversion.table, "AREAcode")
   conversion.table <- conversion.table %>%

@@ -20,7 +20,7 @@ doi_or_unique_name <- "demographic-population-Scotland"
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-version_number <- "1.0.1"
+version_number <- "1.0.2"
 source_filename <- list(males = paste0(version_number, ".xlsx"),
                         females = paste0(version_number, ".xlsx"),
                         persons = paste0(version_number, ".xlsx"))
@@ -120,7 +120,7 @@ names(sourcefiles) <- c("males", "females", "persons")
 process_nrs_demographics(sourcefile = sourcefiles,
                          h5filename = product_filename,
                          h5path = save_data_here,
-                         conversion_table = conversion_table)
+                         conversionfile = conversion_table)
 
 
 # register metadata with the data registry --------------------------------

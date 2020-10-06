@@ -111,8 +111,8 @@ process_nrs_demographics <- function(sourcefile,
 
   # Grid areas --------------------------------------------------------------
 
-  grid_areas <- data.frame(abbreviation = c("grid1km", "grid10km"),
-                           fullname = c("grid area","grid area"))
+  grid_areas <- data.frame(abbreviation = c("grid1km"),
+                           fullname = c("grid area"))
 
   for(i in seq_len(nrow(grid_areas))) {
     abbreviation <- grid_areas$abbreviation[i]
