@@ -15,9 +15,10 @@ doi_or_unique_name <- "Scottish spatial lookup table"
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-version_number <- "0.1.0"
+version_number <- "1.0.1"
 source_filename <- list(simd = paste0(version_number, ".xlsx"),
-                        dz = paste0(version_number, ".csv"))
+                        dz = paste0(version_number, ".csv"),
+                        grid_shapefile = "shapefiles.zip")
 product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
@@ -38,9 +39,11 @@ namespace <- "SCRC"
 
 original_source_name1 <- "Scottish Government"
 original_source_name2 <- "Scottish Government Open Data Repository downloadable file"
+original_source_name3 <- "Github repo - charlesroper/OSGB_Grids"
 
 original_source_name <- list(simd = original_source_name1,
-                             dz = original_source_name2)
+                             dz = original_source_name2,
+                             grid_shapefile = original_source_name3)
 
 # Add the website to the data registry (e.g. home page of the database)
 
@@ -58,8 +61,16 @@ original_sourceId2 <- new_source(
   website = "https://statistics.gov.scot/",
   key = key)
 
+# - Dataset 3 (grid_shapefile)
+original_sourceId3 <- new_source(
+  name = original_source_name3,
+  abbreviation = "Github/charlesroper/OSGB_Grids",
+  website = "https://github.com/Github/charlesroper",
+  key = key)
+
 original_sourceId <- list(simd = original_sourceId1,
-                          dz = original_sourceId2)
+                          dz = original_sourceId2,
+                          grid_shapefile = original_sourceId3)
 
 # Note that file.path(original_root, original_path) is the download link and
 # original_root MUST have a trailing slash. Here, two datasets are being
@@ -68,9 +79,11 @@ original_sourceId <- list(simd = original_sourceId1,
 # Examples of downloading data from a database rather than a link, can be
 # found in the scotgov_deaths or scotgov_management scripts
 original_root <- list(simd = "https://www.gov.scot/",
-                      dz = "http://statistics.gov.scot/")
+                      dz = "http://statistics.gov.scot/",
+                      grid_shapefile = "https://github.com/")
 original_path <- list(simd = "binaries/content/documents/govscot/publications/statistics/2020/01/scottish-index-of-multiple-deprivation-2020-data-zone-look-up-file/documents/scottish-index-of-multiple-deprivation-data-zone-look-up/scottish-index-of-multiple-deprivation-data-zone-look-up/govscot%3Adocument/SIMD%2B2020v2%2B-%2Bdatazone%2Blookup.xlsx?forceDownload=true",
-                      dz = "downloads/file?id=5a9bf61e-7571-45e8-a307-7c1218d5f6b5%2FDatazone2011Lookup.csv")
+                      dz = "downloads/file?id=5a9bf61e-7571-45e8-a307-7c1218d5f6b5%2FDatazone2011Lookup.csv",
+                      grid_shapefile = "charlesroper/OSGB_Grids/archive/master.zip")
 
 save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
@@ -80,9 +93,10 @@ for (x in seq_along(original_root)) {
                     source_path = original_path[[x]],
                     path = file.path(save_data_here,
                                      names(original_root)[x]),
-                    filename = source_filename[[x]])
+                    filename = source_filename[[x]],
+                    unzip = if(grepl("zip",source_filename[[x]])){TRUE}else{FALSE})
+  
 }
-
 
 # Where is the submission script stored? ----------------------------------
 
@@ -97,10 +111,10 @@ submission_script <- "scotgov_dz_lookup.R"
 
 
 # convert source data into a data product ---------------------------------
-
+source_filename$grid_shapefile = file.path("OSGB_Grids-master","OSGB_Grid_1km.shp")
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path(save_data_here, names(original_root)[x], source_filename[[x]]))
-names(sourcefiles) <- c("simd", "dz")
+names(sourcefiles) <- c("simd", "dz", "grid_shapefile")
 
 process_scotgov_lookup(
   sourcefile = sourcefiles,
@@ -109,7 +123,7 @@ process_scotgov_lookup(
   grid_names = c("grid1km","grid10km"))
 
 
-# register metadata with the data registry --------------------------------
+o# register metadata with the data registry --------------------------------
 
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
                                 script_path = paste0("inst/SCRC/",
