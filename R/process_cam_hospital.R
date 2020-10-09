@@ -71,7 +71,7 @@ process_cam_hospital <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "test_result/date-country-covid19_patients_in_hospital-archived",
+    component = "total_suspected_confirmed/date-country-covid19_patients_in_hospital-archived",
     array = as.matrix(patients.in.hospital.dat),
     dimension_names = list(
       status = rownames(patients.in.hospital.dat),
@@ -86,7 +86,7 @@ process_cam_hospital <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "test_result/date-country-covid19_patients_in_hospital",
+    component = "date-country-covid19_patients_in_hospital-confirmed",
     array = as.matrix(patients.in.hospital.dat),
     dimension_names = list(
       status = rownames(patients.in.hospital.dat),
@@ -118,7 +118,7 @@ process_cam_hospital <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "total_suspected_confirmed/date-country-covid19_patients_in_icu",
+    component = "date-country-covid19_patients_in_icu-confirmed",
     array = as.matrix(patients.in.icu.dat),
     dimension_names = list(
       status = rownames(patients.in.icu.dat),
