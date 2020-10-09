@@ -3,6 +3,8 @@ library(SCRCdata)
 library(SCRCdataAPI)
 
 product_name <- "human/demographics/population/england"
+product_path <- file.path("data-raw","human", "demographics","population","england")
+product_filename <- "0.1.0.h5"
 source_path <- "api/v01/dataset/NM_2010_1.data.csv?measures=20100&time=latest&geography=TYPE299&gender=%d&c_age=%d&RecordLimit=24000&RecordOffset=%d"
 genders <- c("Persons", "Males", "Females")
 
@@ -83,7 +85,7 @@ conversion_table <- SCRCdataAPI::read_table(filepath = filename,
 # Source file locations
 sourcefiles <- c("data-raw/human/demographics/population/england/Females/england_Females.csv",
                  "data-raw/human/demographics/population/england/Males/england_Males.csv",
-                 "data-raw/england_Persons.csv")
+                 "data-raw/human/demographics/population/england/Persons/england_Persons.csv")
 names(sourcefiles) <- c("females", "males", "persons")
 
 process_ons_demographics(sourcefile = sourcefiles,
