@@ -15,26 +15,26 @@ process_ukgov_eng_lookup <- function(sourcefile,
                                      output_area_sf, 
                                      path) {
   
-  OA_EW_LA <- read.csv(sourcefile[["OA_EW_LA"]])  %>%
+  OA_EW_LA <- read.csv(sourcefile[["OA_EW_LA"]],fileEncoding="UTF-8-BOM")  %>%
     dplyr::rename(AREAcode = OA11CD, EWcode = WD19CD, EWname = WD19NM,
                   LAcode = LAD19CD, LAname = LAD19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
-  OA_LSOA_MSOA_LA <- read.csv(sourcefile[["OA_LSOA_MSOA_LA"]])  %>%
+  OA_LSOA_MSOA_LA <- read.csv(sourcefile[["OA_LSOA_MSOA_LA"]],fileEncoding="UTF-8-BOM")  %>%
     dplyr::rename(AREAcode = OA11CD, LSOAcode = LSOA11CD, LSOAname = LSOA11NM,
                   MSOAcode = MSOA11CD, MSOAname = MSOA11NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
-  LSOA_CCG <- read.csv(sourcefile[["LSOA_CCG"]])  %>%
+  LSOA_CCG <- read.csv(sourcefile[["LSOA_CCG"]],fileEncoding="UTF-8-BOM")  %>%
     dplyr::rename(LSOAcode = LSOA11CD, CCGcode = CCG19CD, CCGname = CCG19NM,
                   STPcode = STP19CD, STPname = STP19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
-  EW_UA <- read.csv(sourcefile[["EW_UA"]])  %>%
+  EW_UA <- read.csv(sourcefile[["EW_UA"]],fileEncoding="UTF-8-BOM")  %>%
     dplyr::rename(EWcode = WD19CD, UAcode = UA19CD, UAname = UA19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
-  UA_HB <- read.csv(sourcefile[["UA_HB"]])  %>%
+  UA_HB <- read.csv(sourcefile[["UA_HB"]],fileEncoding="UTF-8-BOM")  %>%
     dplyr::rename(UAcode = UA19CD, LHBcode = LHB19CD, LHBname = LHB19NM) %>%
     dplyr::select_if(grepl("name$|code$", colnames(.)))
   
