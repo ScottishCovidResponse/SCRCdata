@@ -39,7 +39,7 @@ namespace <- "SCRC"
 
 original_source_name1 <- "Scottish Government"
 original_source_name2 <- "Scottish Government Open Data Repository downloadable file"
-original_source_name3 <- "Github repo - charlesroper/OSGB_Grids"
+original_source_name3 <- "GitHub - charlesroper"
 
 original_source_name <- list(simd = original_source_name1,
                              dz = original_source_name2,
@@ -80,10 +80,10 @@ original_sourceId <- list(simd = original_sourceId1,
 # found in the scotgov_deaths or scotgov_management scripts
 original_root <- list(simd = "https://www.gov.scot/",
                       dz = "http://statistics.gov.scot/",
-                      grid_shapefile = "https://github.com/")
+                      grid_shapefile = "https://github.com/charlesroper/")
 original_path <- list(simd = "binaries/content/documents/govscot/publications/statistics/2020/01/scottish-index-of-multiple-deprivation-2020-data-zone-look-up-file/documents/scottish-index-of-multiple-deprivation-data-zone-look-up/scottish-index-of-multiple-deprivation-data-zone-look-up/govscot%3Adocument/SIMD%2B2020v2%2B-%2Bdatazone%2Blookup.xlsx?forceDownload=true",
                       dz = "downloads/file?id=5a9bf61e-7571-45e8-a307-7c1218d5f6b5%2FDatazone2011Lookup.csv",
-                      grid_shapefile = "charlesroper/OSGB_Grids/archive/master.zip")
+                      grid_shapefile = "OSGB_Grids/archive/master.zip")
 
 save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
@@ -95,7 +95,7 @@ for (x in seq_along(original_root)) {
                                      names(original_root)[x]),
                     filename = source_filename[[x]],
                     unzip = if(grepl("zip",source_filename[[x]])){TRUE}else{FALSE})
-  
+
 }
 
 # Where is the submission script stored? ----------------------------------
@@ -111,7 +111,8 @@ submission_script <- "scotgov_dz_lookup.R"
 
 
 # convert source data into a data product ---------------------------------
-source_filename$grid_shapefile = file.path("OSGB_Grids-master","OSGB_Grid_1km.shp")
+source_filename$grid_shapefile <- file.path("OSGB_Grids-master", "Shapefile",
+                                            "OSGB_Grid_1km.shp")
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path(save_data_here, names(original_root)[x], source_filename[[x]]))
 names(sourcefiles) <- c("simd", "dz", "grid_shapefile")
@@ -123,7 +124,7 @@ process_scotgov_lookup(
   grid_names = c("grid1km","grid10km"))
 
 
-o# register metadata with the data registry --------------------------------
+# register metadata with the data registry --------------------------------
 
 github_info <- get_package_info(repo = "ScottishCovidResponse/SCRCdata",
                                 script_path = paste0("inst/SCRC/",
