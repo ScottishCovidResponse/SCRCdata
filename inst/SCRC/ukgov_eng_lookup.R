@@ -38,10 +38,10 @@ product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
 
 # Where was the data download from? (original source) ---------------------
-
+# This should describe the original_root
 geoportal <- "Office for National Statistics Open Georaphy Portal"
 opendata <- "Office for National Statistics ArcGIS Hub"
-charlesroper <- "Github repo - charlesroper/OSGB_Grids"
+charlesroper <- "github"
 
 original_source_name <- list(OA_EW_LA = geoportal,
                              OA_LSOA_MSOA_LA = geoportal,
@@ -101,8 +101,7 @@ original_path <- list(
   LSOA_CCG = "datasets/520e9cd294c84dfaaf97cc91494237ac_0.csv",
   EW_UA = "datasets/e6d0a1c8ce3344a7b79ce1c24e3174c9_0.csv",
   UA_HB = "datasets/680c9b730655473787cb594f328a86fa_0.csv",
-  grid_shapefile = "charlesroper/OSGB_Grids/archive/master.zip"
-)
+  grid_shapefile = "charlesroper/OSGB_Grids/archive/master.zip")
 
 save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
@@ -141,7 +140,6 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
             source_filename[x]))
 names(sourcefiles) <- c("OA_EW_LA", "OA_LSOA_MSOA_LA","LSOA_CCG","EW_UA",
                         "UA_HB","grid_shapefile")
-
 
 process_ukgov_eng_lookup(sourcefile = sourcefiles,
                          h5filename = product_filename,
