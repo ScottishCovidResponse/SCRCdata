@@ -60,35 +60,65 @@ process_cam_hospital <- function(sourcefile, filename) {
   hosp.country.dat <- hospital.dat %>%
     dplyr::filter(areatypename == "Country")
 
-  # COVID-19 patients in hospital - Total
-  # COVID-19 patients in hospital - Confirmed
-  # COVID-19 patients in hospital - Suspected
+  # COVID-19 patients in hospital - Total (archived)
+  # COVID-19 patients in hospital - Confirmed (archived)
+  # COVID-19 patients in hospital - Suspected (archived)
   patients.in.hospital.dat <- hosp.country.dat %>%
-    dplyr::filter(grepl("hospital", variable)) %>%
+    dplyr::filter(grepl("hospital", variable) & grepl("archived", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "test_result/date-country-covid19_patients_in_hospital",
+    component = "total_suspected_confirmed/date-country-covid19_patients_in_hospital-archived",
     array = as.matrix(patients.in.hospital.dat),
     dimension_names = list(
       status = rownames(patients.in.hospital.dat),
       date = colnames(patients.in.hospital.dat)))
 
-  # COVID-19 patients in ICU - Total
-  # COVID-19 patients in ICU - Suspected
-  # COVID-19 patients in ICU - Confirmed
-  patients.in.icu.dat <- hosp.country.dat %>%
-    dplyr::filter(grepl("ICU", variable)) %>%
+  # COVID-19 patients in hospital - Confirmed
+  patients.in.hospital.dat <- hosp.country.dat %>%
+    dplyr::filter(grepl("hospital - Confirmed$", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "total_suspected_confirmed/date-country-covid19_patients_in_icu",
+    component = "date-country-covid19_patients_in_hospital-confirmed",
+    array = as.matrix(patients.in.hospital.dat),
+    dimension_names = list(
+      status = rownames(patients.in.hospital.dat),
+      date = colnames(patients.in.hospital.dat)))
+
+  # COVID-19 patients in ICU - Total (archived)
+  # COVID-19 patients in ICU - Suspected (archived)
+  # COVID-19 patients in ICU - Confirmed (archived)
+  patients.in.icu.dat <- hosp.country.dat %>%
+    dplyr::filter(grepl("ICU", variable) & grepl("archived", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "total_suspected_confirmed/date-country-covid19_patients_in_icu-archived",
+    array = as.matrix(patients.in.icu.dat),
+    dimension_names = list(
+      status = rownames(patients.in.icu.dat),
+      date = colnames(patients.in.icu.dat)))
+
+  # COVID-19 patients in ICU - Confirmed
+  patients.in.icu.dat <- hosp.country.dat %>%
+    dplyr::filter(grepl("ICU - Confirmed$", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-covid19_patients_in_icu-confirmed",
     array = as.matrix(patients.in.icu.dat),
     dimension_names = list(
       status = rownames(patients.in.icu.dat),
@@ -102,8 +132,8 @@ process_cam_hospital <- function(sourcefile, filename) {
 
   assert_that(length(unique(hosp.special.dat$featurename)) == 1)
 
-  # COVID-19 patients in hospital - Suspected
-  # COVID-19 patients in hospital - Confirmed
+  # COVID-19 patients in hospital - Suspected (archived)
+  # COVID-19 patients in hospital - Confirmed (archived)
   special.patients.in.hosp.dat <- hosp.special.dat %>%
     dplyr::filter(grepl("hospital", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
