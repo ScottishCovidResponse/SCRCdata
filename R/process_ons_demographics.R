@@ -197,8 +197,9 @@ convert_area_ons <- function(x, transage.dat, conversionfile) {
       conversion.table = conversionfile,
       grid_size = x)
 
-  }
+  }else{
   stop("Something has gone wrong")
+  }
 
   transarea.dat
 }

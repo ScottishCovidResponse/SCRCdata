@@ -77,9 +77,9 @@ save_data_here <- file.path(save_location, product_path)
 # Download latest conversion table
 download_dataproduct(name = "geography/lookup_table/gridcell_admin_area/england",
                      data_dir = "data-raw/conversion_table_eng")
-filename <- dir("data-raw/geography/lookup_table/gridcell_admin_area/england",
+filename <- dir("data-raw/geography/england/lookup_table",
                 full.names = TRUE)
-conversion_table <- SCRCdataAPI::read_table(filepath = filename,
+conversion_table <- SCRCdataAPI::read_table(filepath = filename[2],
                                             component = "conversiontable/englandwales")
 
 # Source file locations
