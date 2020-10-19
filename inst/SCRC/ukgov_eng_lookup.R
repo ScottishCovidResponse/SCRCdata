@@ -38,10 +38,10 @@ product_path <- do.call(file.path, as.list(strsplit(product_name, "/")[[1]]))
 namespace <- "SCRC"
 
 # Where was the data download from? (original source) ---------------------
-# This should describe the original_root
+
 geoportal <- "Office for National Statistics Open Georaphy Portal"
 opendata <- "Office for National Statistics ArcGIS Hub"
-charlesroper <- "github"
+charlesroper <- "GitHub - charlesroper"
 
 original_source_name <- list(OA_EW_LA = geoportal,
                              OA_LSOA_MSOA_LA = geoportal,
@@ -69,7 +69,7 @@ opendata_source <- new_source(
 charlesroper_source <- new_source(
   name = charlesroper,
   abbreviation = "Github/charlesroper/OSGB_Grids",
-  website = "https://github.com/Github/charlesroper",
+  website = "https://github.com/charlesroper/",
   key = key)
 
 original_sourceId <- list(OA_EW_LA = geoportal_source,
@@ -87,13 +87,14 @@ original_sourceId <- list(OA_EW_LA = geoportal_source,
 # found in the scotgov_deaths or scotgov_management scripts
 geoportal_root <- "http://geoportal1-ons.opendata.arcgis.com/"
 opendata_root <- "https://opendata.arcgis.com/"
+charlesroper_root <- "https://github.com/charlesroper/"
 
 original_root <- list(OA_EW_LA = geoportal_root,
                       OA_LSOA_MSOA_LA = geoportal_root,
                       LSOA_CCG = opendata_root,
                       EW_UA = geoportal_root,
                       UA_HB = opendata_root,
-                      grid_shapefile = "https://github.com/")
+                      grid_shapefile = charlesroper_root)
 
 original_path <- list(
   OA_EW_LA = "datasets/c721b6da8ea04f189baa27a1f3e32e06_0.csv",
@@ -101,7 +102,7 @@ original_path <- list(
   LSOA_CCG = "datasets/520e9cd294c84dfaaf97cc91494237ac_0.csv",
   EW_UA = "datasets/e6d0a1c8ce3344a7b79ce1c24e3174c9_0.csv",
   UA_HB = "datasets/680c9b730655473787cb594f328a86fa_0.csv",
-  grid_shapefile = "charlesroper/OSGB_Grids/archive/master.zip")
+  grid_shapefile = "OSGB_Grids/archive/master.zip")
 
 save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
