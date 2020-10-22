@@ -70,8 +70,8 @@ product_filename <- paste0(version_number, ".h5")
 
 download_from_database(source_root = original_root,
                        source_path = original_path,
-                       filename = source_filename,
-                       path = save_data_here)
+                       path = save_data_here,
+                       filename = source_filename)
 
 
 # original data -----------------------------------------------------------

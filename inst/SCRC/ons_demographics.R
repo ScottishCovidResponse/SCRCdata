@@ -26,9 +26,11 @@ for (sex in 1:3) {
                                              sex-1, age, step))
     }}}
 
-for (sex in c(2,3)) {
+
+for (sex in c(1,3)) {
   for (age in 101:191) {
     for (step in seq(0, 168000, 24000)) {
+      cat(paste0("\rsex ", sex, "/3 : age ", age, "/191 : step ", step, "/168000"))
       # Read file
       temp_pop_table <- read.csv(
         file.path("data-raw", product_name, genders[sex],
@@ -37,11 +39,6 @@ for (sex in c(2,3)) {
         dplyr::select(DATE, GEOGRAPHY_NAME, GEOGRAPHY_CODE,
                       GEOGRAPHY_TYPE, GENDER_NAME, C_AGE_NAME,
                       MEASURES_NAME, OBS_VALUE)
-
-      # Delete original file
-      # file.remove(file.path("data-raw", product_name, genders[sex],
-      #                       sprintf("populationstore_g%d_a%d_s%d.csv",
-      #                               sex-1, age, step)))
 
       # Make some edits
       names(temp_pop_table)[8] <- unique(temp_pop_table$C_AGE_NAME)
@@ -72,20 +69,18 @@ for (sex in c(2,3)) {
 # Process data and generate hdf5 file -------------------------------------
 
 save_location <- "data-raw"
-save_data_here <- file.path(save_location, product_path)
+save_data_here <- product_path
 
 # Download latest conversion table
-download_dataproduct(name = "geography/lookup_table/gridcell_admin_area/england",
-                     data_dir = "data-raw/conversion_table_eng")
-filename <- dir("data-raw/geography/england/lookup_table",
-                full.names = TRUE)
-conversion_table <- SCRCdataAPI::read_table(filepath = filename[2],
-                                            component = "conversiontable/englandwales")
+filename <- download_dataproduct(name = "geography/england/lookup_table",
+                                 data_dir = "data-raw/conversiontable_englandwales")
+conversion_table <- SCRCdataAPI::read_table(filepath = filename$downloaded_to,
+                                            component = filename$components)
 
 # Source file locations
-sourcefiles <- c("data-raw/human/demographics/population/england/Females/england_Females.csv",
-                 "data-raw/human/demographics/population/england/Males/england_Males.csv",
-                 "data-raw/human/demographics/population/england/Persons/england_Persons.csv")
+sourcefiles <- c(file.path(product_path, "Females", "england_Females.csv"),
+                 file.path(product_path, "Males", "england_Males.csv"),
+                 file.path(product_path, "Persons", "england_Persons.csv"))
 names(sourcefiles) <- c("females", "males", "persons")
 
 process_ons_demographics(sourcefile = sourcefiles,
