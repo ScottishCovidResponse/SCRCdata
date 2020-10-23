@@ -123,52 +123,147 @@ product_storageRootId <- new_storage_root(
 outputs <- list()
 
 # ambulance ---------------------------------------------------------------
+# This data is supposedly static
 
-static_version <- "0.1.0"
-static_filename <- paste0(static_version, ".h5")
+# Get the current version of the data product from the data registry
+tmp <- download_dataproduct(name = file.path(product_name, "ambulance"),
+                            data_dir = file.path(save_data_here, "ambulance"))
 
-if(!file.exists(file.path(save_data_here, "ambulance", static_filename))) {
+local_version <- max(get_version_numbers(paste(product_name, "ambulance",
+                                               sep = "/")))
+static_filename <- paste0(local_version, ".h5")
+
+# If the download wasn't successful (file doesn't exist on the data registry),
+# process downloaded data and upload it to the data registry
+if(is.null(tmp)) {
+  local_version <- "0.1.0"
+  static_filename <- paste0(local_version, ".h5")
+
   process_cam_ambulance(
     sourcefile = file.path(save_data_here, source_filename),
-    filename = file.path(save_data_here, "ambulance", static_filename))
+    filename = file.path(save_data_here, "ambulance", tmp_filename))
 
   ambulanceURIs <- upload_data_product(
     storage_root_id = product_storageRootId,
     name = paste0(product_name, "/ambulance"),
     processed_path = file.path(save_location, product_path, "ambulance",
                                static_filename),
-    product_path = paste(product_name, "ambulance", static_filename, sep = "/"),
-    version = static_version,
+    product_path = paste(product_name, "ambulance", static_filename,
+                         sep = "/"),
+    version = local_version,
     namespace_id = namespaceId,
     key = key)
 
   outputs <- c(outputs, ambulanceURIs$product_objectComponentId)
+
+} else {
+  # If the download was successful, compare its hash to that of today's dataset
+
+  # Get local file hash
+  old_hash <- get_hash(file.path(save_data_here, "ambulance", static_filename))
+
+  # Process downloaded data (under an incremented version number) and get new
+  # file hash
+  increment_version_number <- increment_version(
+    data_product = paste(product_name, "ambulance", sep = "/")) %>%
+    as.character()
+  tmp_filename <- paste0(increment_version_number, ".h5")
+  process_cam_ambulance(
+    sourcefile = file.path(save_data_here, source_filename),
+    filename = file.path(save_data_here, "ambulance", tmp_filename))
+  new_hash <- get_hash(file.path(save_data_here, "ambulance", tmp_filename))
+
+  # If the hashes match, delete the new version of the file
+  # Otherwise add it to the data registry
+  if(old_hash == new_hash) {
+    file.remove(file.path(save_data_here, "ambulance", tmp_filename))
+
+  } else {
+    ambulanceURIs <- upload_data_product(
+      storage_root_id = product_storageRootId,
+      name = paste0(product_name, "/ambulance"),
+      processed_path = file.path(save_location, product_path, "ambulance",
+                                 tmp_filename),
+      product_path = paste(product_name, "ambulance", tmp_filename, sep = "/"),
+      version = increment_version_number,
+      namespace_id = namespaceId,
+      key = key)
+
+    outputs <- c(outputs, ambulanceURIs$product_objectComponentId)
+  }
 }
 
 
 # calls -------------------------------------------------------------------
+# This data is supposedly static
 
-static_version <- "0.1.0"
-static_filename <- paste0(static_version, ".h5")
+# Get the current version of the data product from the data registry
+tmp <- download_dataproduct(name = file.path(product_name, "calls"),
+                            data_dir = file.path(save_data_here, "calls"))
 
-if(!file.exists(file.path(save_data_here, "calls", static_filename))) {
+local_version <- max(get_version_numbers(paste(product_name, "calls",
+                                               sep = "/")))
+static_filename <- paste0(local_version, ".h5")
+
+# If the download wasn't successful (file doesn't exist on the data registry),
+# process downloaded data and upload it to the data registry
+if(is.null(tmp)) {
+  local_version <- "0.1.0"
+  static_filename <- paste0(local_version, ".h5")
+
   process_cam_calls(
     sourcefile = file.path(save_data_here, source_filename),
-    filename = file.path(save_data_here, "calls", static_filename))
+    filename = file.path(save_data_here, "calls", tmp_filename))
 
   callsURIs <- upload_data_product(
     storage_root_id = product_storageRootId,
     name = paste0(product_name, "/calls"),
     processed_path = file.path(save_location, product_path, "calls",
                                static_filename),
-    product_path = paste(product_name, "calls", static_filename, sep = "/"),
-    version = static_version,
+    product_path = paste(product_name, "calls", static_filename,
+                         sep = "/"),
+    version = local_version,
     namespace_id = namespaceId,
     key = key)
 
   outputs <- c(outputs, callsURIs$product_objectComponentId)
-}
 
+} else {
+  # If the download was successful, compare its hash to that of today's dataset
+
+  # Get local file hash
+  old_hash <- get_hash(file.path(save_data_here, "calls", static_filename))
+
+  # Process downloaded data (under an incremented version number) and get new
+  # file hash
+  increment_version_number <- increment_version(
+    data_product = paste(product_name, "calls", sep = "/")) %>%
+    as.character()
+  tmp_filename <- paste0(increment_version_number, ".h5")
+  process_cam_calls(
+    sourcefile = file.path(save_data_here, source_filename),
+    filename = file.path(save_data_here, "calls", tmp_filename))
+  new_hash <- get_hash(file.path(save_data_here, "calls", tmp_filename))
+
+  # If the hashes match, delete the new version of the file
+  # Otherwise add it to the data registry
+  if(old_hash == new_hash) {
+    file.remove(file.path(save_data_here, "calls", tmp_filename))
+
+  } else {
+    callsURIs <- upload_data_product(
+      storage_root_id = product_storageRootId,
+      name = paste0(product_name, "/calls"),
+      processed_path = file.path(save_location, product_path, "calls",
+                                 tmp_filename),
+      product_path = paste(product_name, "calls", tmp_filename, sep = "/"),
+      version = increment_version_number,
+      namespace_id = namespaceId,
+      key = key)
+
+    outputs <- c(outputs, callsURIs$product_objectComponentId)
+  }
+}
 
 # carehomes ---------------------------------------------------------------
 
@@ -322,7 +417,6 @@ githubRepoURIs <- upload_github_repo(
   hash = github_info$github_hash,
   version = github_info$repo_version,
   key = key)
-
 
 upload_object_links(run_date = todays_date,
                     description = paste("Script run to upload and process",
