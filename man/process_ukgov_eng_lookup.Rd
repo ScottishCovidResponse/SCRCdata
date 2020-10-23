@@ -16,7 +16,7 @@ associated with the processed data (the output of this function)}
 \item{output_area_sf}{a \code{string} specifying the local path and filename
 associated with the UK government output area shapefile}
 
-\item{path}{a \code{string} specifying the local path associated 
+\item{path}{a \code{string} specifying the local path associated
 with the processed data}
 }
 \description{

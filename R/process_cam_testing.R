@@ -45,7 +45,7 @@ process_cam_testing <- function(sourcefile, filename) {
   # Testing - Cumulative people tested for COVID-19 - Negative
   # Testing - Cumulative people tested for COVID-19 - Positive
   # Testing - Cumulative people tested for COVID-19 - Total
-  testing.country.cumulative <- testing.country.dat %>%
+  tmp <- testing.country.dat %>%
     dplyr::filter(grepl("Cumulative people tested for COVID-19", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
@@ -54,31 +54,14 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "test_result/date-people_tested_for_covid19-cumulative",
-    array = as.matrix(testing.country.cumulative),
-    dimension_names = list(
-      delayed = rownames(testing.country.cumulative),
-      date = colnames(testing.country.cumulative)))
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - Daily people found positive
-  testing.daily.positive <- testing.country.dat %>%
-    dplyr::filter(grepl("Daily people found positive", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-people_found_positive-daily",
-    array = as.matrix(testing.daily.positive),
-    dimension_names = list(
-      delayed = rownames(testing.daily.positive),
-      date = colnames(testing.daily.positive)))
-
-  # Testing - Total number of COVID-19 tests carried out by NHS Labs -
-  # Cumulative
-  # Testing - Total number of COVID-19 tests carried out by Regional Testing
-  # Centres - Cumulative
-  testing.cumulative <- testing.country.dat %>%
+  # Testing - Total number of COVID-19 tests reported by NHS Labs - Cumulative
+  # Testing - Total number of COVID-19 tests reported by UK Gov testing programme - Cumulative
+  tmp <- testing.country.dat %>%
     dplyr::filter(grepl("- Cumulative$", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
@@ -87,15 +70,14 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "testing_location/date-covid19_tests_carried_out-cumulative",
-    array = as.matrix(testing.cumulative),
-    dimension_names = list(
-      delayed = rownames(testing.cumulative),
-      date = colnames(testing.cumulative)))
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - Total number of COVID-19 tests carried out by NHS Labs - Daily
-  # Testing - Total number of COVID-19 tests carried out by Regional Testing
-  # Centres - Daily
-  testing.daily <- testing.country.dat %>%
+
+  # Testing - Total number of COVID-19 tests reported by NHS Labs - Daily
+  # Testing - Total number of COVID-19 tests reported by UK Gov testing programme - Daily
+  tmp <- testing.country.dat %>%
     dplyr::filter(grepl("- Daily$", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
@@ -104,58 +86,110 @@ process_cam_testing <- function(sourcefile, filename) {
     filename = filename,
     path = path,
     component = "testing_location/date-covid19_tests_carried_out-daily",
-    array = as.matrix(testing.daily),
-    dimension_names = list(
-      delayed = rownames(testing.daily),
-      date = colnames(testing.daily)))
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - Positive cases in last 7 days
-  testing.7days.positive <- testing.country.dat %>%
-    dplyr::filter(grepl("Positive cases in last 7 days", variable)) %>%
+  # Testing - New cases as percentage of people newly tested
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("New cases as percentage of people", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "date-country-positive_cases-last_7_days",
-    array = as.matrix(testing.7days.positive),
-    dimension_names = list(
-      delayed = rownames(testing.7days.positive),
-      date = colnames(testing.7days.positive)))
+    component = "date-country-new_cases_as_percentage_of_people_newly_tested",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - People tested in last 7 days
-  testing.7days.people <- testing.country.dat %>%
-    dplyr::filter(grepl("People tested in last 7 days", variable)) %>%
+  # Testing - New cases reported
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("New cases reported", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "date-country-people_tested-last_7_days",
-    array = as.matrix(testing.7days.people),
-    dimension_names = list(
-      delayed = rownames(testing.7days.people),
-      date = colnames(testing.7days.people)))
+    component = "date-country-new_cases_reported",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - Total daily tests
-  testing.7days.total <- testing.country.dat %>%
-    dplyr::filter(grepl("Total daily tests", variable)) %>%
+  # Testing - People with first test results in last 7 days
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("People with first test results", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "date-country-tests-daily",
-    array = as.matrix(testing.7days.total),
-    dimension_names = list(
-      delayed = rownames(testing.7days.total),
-      date = colnames(testing.7days.total)))
+    component = "date-country-people_with_first_test_results_in_last_7_days",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-  # Testing - Tests in last 7 days
-  testing.7days.tests <- testing.country.dat %>%
+  # Testing - Positive cases reported in last 7 days
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Positive cases reported in", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-positive_cases_reported_in_last_7_days",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Positive tests reported in last 7 days
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Positive tests reported", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-positive_tests_reported_in_last_7_days",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Test positivity (percent of tests that are positive)
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("percent of tests that are positive", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-test_positivity_percent_of_tests_that_are_positive",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Test positivity rate in last 7 days
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Test positivity rate in last 7 days", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-test_positivity_rate_in_last_7_days",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Tests in last 7 days per 1000 population
+  tmp <- testing.country.dat %>%
     dplyr::filter(grepl("Tests in last 7 days", variable)) %>%
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
@@ -163,34 +197,50 @@ process_cam_testing <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "date-country-tests-last_7_days",
-    array = as.matrix(testing.7days.tests),
-    dimension_names = list(
-      delayed = rownames(testing.7days.tests),
-      date = colnames(testing.7days.tests)))
+    component = "date-country-tests_in_last_7_days_per_1000_population",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 
-
-  # Special health board ----------------------------------------------------
-
-  assertthat::assert_that(!"Special board" %in% testing.dat$areatypename)
-
-
-  # NHS health board --------------------------------------------------------
-
-  testing.area.dat <- testing.dat %>%
-    dplyr::filter(areatypename == "NHS board")
-
-  # Testing - Cumulative people tested for COVID-19 - Positive
-  testing.area.dat <- testing.area.dat %>%
-    reshape2::dcast(featurename ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("featurename")
+  # Testing - Tests reported in last 7 days
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Tests reported in last 7 days", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "nhs_health_board/date-people_tested_positive_for_covid19-cumulative",
-    array = as.matrix(testing.area.dat),
-    dimension_names = list(
-      delayed = rownames(testing.area.dat),
-      date = colnames(testing.area.dat)))
+    component = "date-country-tests_reported_in_last_7_days",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Total daily number of positive tests reported
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Total daily number of positive tests", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-total_daily_number_of_positive_tests_reported",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
+
+  # Testing - Total daily tests reported
+  tmp <- testing.country.dat %>%
+    dplyr::filter(grepl("Total daily tests reported", variable)) %>%
+    reshape2::dcast(variable ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("variable")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "date-country-total_daily_tests_reported",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 }

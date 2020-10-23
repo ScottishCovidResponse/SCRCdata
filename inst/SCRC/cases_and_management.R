@@ -267,6 +267,12 @@ if(is.null(tmp)) {
 
 # carehomes ---------------------------------------------------------------
 
+# components <- get_components(filename = file.path(save_data_here, "calls",
+#                                                   tmp_filename))
+# max_date <- get_max_date(
+#   filepath = file.path(save_data_here, "calls", tmp_filename),
+#   components = components)
+
 process_cam_carehomes(
   sourcefile = file.path(save_data_here, source_filename),
   filename = file.path(save_data_here, "carehomes", product_filename))
