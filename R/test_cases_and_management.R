@@ -37,14 +37,21 @@ test_cases_and_management <- function(df) {
             "Testing - Cumulative people tested for COVID-19 - Negative",
             "Testing - Cumulative people tested for COVID-19 - Positive",
             "Testing - Cumulative people tested for COVID-19 - Total",
-            "Testing - Daily people found positive",
-            "Testing - People tested in last 7 days",
-            "Testing - Positive cases in last 7 days",
-            "Testing - Tests in last 7 days",
-            "Testing - Total daily tests",
-            "Testing - Total number of COVID-19 tests carried out by NHS Labs - Cumulative",
-            "Testing - Total number of COVID-19 tests carried out by NHS Labs - Daily",
-            "Testing - Total number of COVID-19 tests carried out by Regional Testing Centres - Cumulative",
-            "Testing - Total number of COVID-19 tests carried out by Regional Testing Centres - Daily")
+
+            "Testing - New cases as percentage of people newly tested",
+            "Testing - New cases reported",
+            "Testing - People with first test results in last 7 days",
+            "Testing - Positive cases reported in last 7 days",
+            "Testing - Positive tests reported in last 7 days",
+            "Testing - Test positivity (percent of tests that are positive)",
+            "Testing - Test positivity rate in last 7 days",
+            "Testing - Tests in last 7 days per 1000 population",
+            "Testing - Tests reported in last 7 days",
+            "Testing - Total daily number of positive tests reported",
+            "Testing - Total daily tests reported",
+            "Testing - Total number of COVID-19 tests reported by NHS Labs - Cumulative",
+            "Testing - Total number of COVID-19 tests reported by NHS Labs - Daily",
+            "Testing - Total number of COVID-19 tests reported by UK Gov testing programme - Cumulative",
+            "Testing - Total number of COVID-19 tests reported by UK Gov testing programme - Daily")
     ))
 }
