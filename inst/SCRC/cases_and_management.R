@@ -141,7 +141,7 @@ if(is.null(tmp)) {
 
   process_cam_ambulance(
     sourcefile = file.path(save_data_here, source_filename),
-    filename = file.path(save_data_here, "ambulance", tmp_filename))
+    filename = file.path(save_data_here, "ambulance", static_filename))
 
   ambulanceURIs <- upload_data_product(
     storage_root_id = product_storageRootId,
@@ -213,7 +213,7 @@ if(is.null(tmp)) {
 
   process_cam_calls(
     sourcefile = file.path(save_data_here, source_filename),
-    filename = file.path(save_data_here, "calls", tmp_filename))
+    filename = file.path(save_data_here, "calls", static_filename))
 
   callsURIs <- upload_data_product(
     storage_root_id = product_storageRootId,
