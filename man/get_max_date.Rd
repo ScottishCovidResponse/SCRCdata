@@ -7,7 +7,9 @@
 get_max_date(filepath, components)
 }
 \arguments{
-\item{components}{}
+\item{filepath}{filepath}
+
+\item{components}{components}
 }
 \value{
 

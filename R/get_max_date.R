@@ -1,7 +1,7 @@
 #' get_max_date
 #'
-#' @param filepath
-#' @param components
+#' @param filepath filepath
+#' @param components components
 #'
 #' @return
 #'
