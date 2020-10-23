@@ -10,6 +10,7 @@
 
 library(SCRCdataAPI)
 library(SCRCdata)
+library(dplyr)
 
 key <- readLines(file.path("", "home", "soniamitchell", "scrc_cron_scripts",
                            "token", "token.txt"))
