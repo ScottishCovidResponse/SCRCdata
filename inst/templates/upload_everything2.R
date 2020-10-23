@@ -121,8 +121,8 @@ save_data_here <- file.path(save_location, product_path)
 
 download_from_database(source_root = original_root,
                        source_path = original_path,
-                       filename = source_filename,
-                       path = save_data_here)
+                       path = save_data_here,
+                       filename = source_filename)
 
 # convert source data into a data product ---------------------------------
 

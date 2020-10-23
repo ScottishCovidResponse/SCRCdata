@@ -159,8 +159,8 @@ namespaceId <- new_namespace(name = namespace,
 
 download_from_database(source_root = original_root,
                        source_path = original_path,
-                       filename = source_filename,
-                       path = local_path)
+                       path = local_path,
+                       filename = source_filename)
 
 
 
