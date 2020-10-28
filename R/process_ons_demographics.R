@@ -59,7 +59,7 @@ process_ons_demographics <- function(sourcefile,
     fullname <- admin_geo$fullname[i]
 
     # persons
-    persons <- convert_area_ons(x =abbreviation,
+    persons <- convert_area_ons(x = abbreviation,
                                 transage.dat$persons,
                                 conversionfile)
 
