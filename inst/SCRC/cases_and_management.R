@@ -127,8 +127,8 @@ outputs <- list()
 # This data is supposedly static
 
 # Get the current version of the data product from the data registry
-tmp <- download_dataproduct(name = file.path(product_name, "ambulance"),
-                            data_dir = file.path(save_data_here, "ambulance"))
+tmp <- download_data_product(name = file.path(product_name, "ambulance"),
+                             data_dir = file.path(save_data_here, "ambulance"))
 
 local_version <- max(get_version_numbers(paste(product_name, "ambulance",
                                                sep = "/")))
@@ -199,8 +199,8 @@ if(is.null(tmp)) {
 # This data is supposedly static
 
 # Get the current version of the data product from the data registry
-tmp <- download_dataproduct(name = file.path(product_name, "calls"),
-                            data_dir = file.path(save_data_here, "calls"))
+tmp <- download_data_product(name = file.path(product_name, "calls"),
+                             data_dir = file.path(save_data_here, "calls"))
 
 local_version <- max(get_version_numbers(paste(product_name, "calls",
                                                sep = "/")))
@@ -438,7 +438,7 @@ upload_object_links(run_date = todays_date,
 # Download latest version of testing component from FTP server
 
 # dp_name <- "records/SARS-CoV-2/scotland/cases-and-management/testing"
-# tmp <- download_dataproduct(name = dp_name, "data-raw")
+# tmp <- download_data_product(name = dp_name, "data-raw")
 # look_at_these <- tmp$components[grepl("^date", tmp$components)]
 #
 # dp_components <- lapply(look_at_these, function(x) {
