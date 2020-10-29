@@ -180,7 +180,7 @@ convert_area_ons <- function(x, transage.dat, conversionfile) {
              c("EW", "LA", "LSOA", "MSOA", "CCG", "STP", "UA","LHB")) {
 
     # Transformed data (non-grid transformed)
-    transformed_data <- SCRCdataAPI::convert2lower(
+    transformed_data <- SCRCdataAPI::convert_to_lower(
       dat = transage.dat,
       convert_to = x,
       conversion_table = conversionfile)
@@ -192,7 +192,7 @@ convert_area_ons <- function(x, transage.dat, conversionfile) {
   } else if (grepl("grid", x)) {
 
     # Transformed data (grid transformed)
-    transarea.dat <- SCRCdataAPI::convert2grid(
+    transarea.dat <- SCRCdataAPI::convert_to_grid(
       dat = transage.dat,
       conversion.table = conversionfile,
       grid_size = x)
