@@ -4,7 +4,13 @@
 \alias{process_scotgov_lookup}
 \title{process_scotgov_lookup}
 \usage{
-process_scotgov_lookup(sourcefile, h5filename, path, grid_names)
+process_scotgov_lookup(
+  sourcefile,
+  h5filename,
+  path,
+  grid_names,
+  scot_datazone_sf
+)
 }
 \arguments{
 \item{sourcefile}{a \code{string} specifying the local path and filename
@@ -13,11 +19,13 @@ associated with the source data (the input of this function)}
 \item{h5filename}{a \code{string} specifying the filename
 associated with the processed data (the output of this function)}
 
-\item{path}{a \code{string} specifying the local path associated 
+\item{path}{a \code{string} specifying the local path associated
 with the processed data}
 
 \item{grid_names}{a \code{string} specifying the sizes of the grid squares
 used in the conversion table in the format gridxkm}
+
+\item{scot_datazone_sf}{Scottish shapefile}
 }
 \description{
 process_scotgov_lookup

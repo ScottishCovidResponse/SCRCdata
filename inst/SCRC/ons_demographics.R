@@ -12,8 +12,7 @@ genders <- c("Persons", "Males", "Females")
 
 # 15.4 GB
 for (sex in 1:3) {
-  # for (age in 101:191) {
-  for (age in 150:191) {
+  for (age in 101:191) {
     for (step in seq(0, 168000, 24000)) {
       # Download file
       if(!file.exists(file.path("data-raw", product_name, genders[sex],
