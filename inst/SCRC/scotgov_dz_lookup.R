@@ -123,7 +123,8 @@ save_to <- do.call(file.path, as.list(strsplit(external_object, "/")[[1]]))
 downloaded_to <- download_external_object(name = external_object,
                                           data_dir = file.path("data-raw",
                                                                save_to))
-scot_datazone_sf <- sf::st_read(downloaded_to$downloaded_to,
+scot_datazone_sf <- sf::st_read(file.path(downloaded_to$downloaded_to,
+                                          "SG_DataZone_Bdry_2011.shp"),
                                 quiet = TRUE)
 
 process_scotgov_lookup(
