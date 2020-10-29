@@ -16,7 +16,7 @@ source_data <- list(
   target_path = file.path(
     "human", "infection", "SARS-CoV-2", "scotland", "mortality",
     "deaths-involving-coronavirus-covid-19.csv"),
-  hash = get_hash(file.path("data-raw",
+  hash = get_file_hash(file.path("data-raw",
                             "deaths-involving-coronavirus-covid-19.csv")))
 
 data_product <- list(
@@ -30,7 +30,7 @@ data_product <- list(
     "deaths-involving-coronavirus-covid-19.h5"),
   target_path = file.path("human", "infection", "SARS-CoV-2", "scotland",
                           "mortality", "deaths-involving-coronavirus-covid-19.h5"),
-  hash = get_hash("deaths-involving-coronavirus-covid-19.h5"))
+  hash = get_file_hash("deaths-involving-coronavirus-covid-19.h5"))
 
 processing_script <- list(
   storage_type = "GitHub",
@@ -39,7 +39,7 @@ processing_script <- list(
   processing_script = "process_scotgov_deaths.R",
   processing_script_version = "0.1.0",
   target_path = file.path("R", "process_scotgov_deaths.R"),
-  hash = get_hash(file.path("R", "process_scotgov_deaths.R"))
+  hash = get_file_hash(file.path("R", "process_scotgov_deaths.R"))
 )
 
 get_existing("storage_type")

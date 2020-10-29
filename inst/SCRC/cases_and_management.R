@@ -127,8 +127,8 @@ outputs <- list()
 # This data is supposedly static
 
 # Get the current version of the data product from the data registry
-tmp <- download_dataproduct(name = file.path(product_name, "ambulance"),
-                            data_dir = file.path(save_data_here, "ambulance"))
+tmp <- download_data_product(name = file.path(product_name, "ambulance"),
+                             data_dir = file.path(save_data_here, "ambulance"))
 
 local_version <- max(get_version_numbers(paste(product_name, "ambulance",
                                                sep = "/")))
@@ -161,7 +161,8 @@ if(is.null(tmp)) {
   # If the download was successful, compare its hash to that of today's dataset
 
   # Get local file hash
-  old_hash <- get_hash(file.path(save_data_here, "ambulance", static_filename))
+  old_hash <- get_file_hash(file.path(save_data_here, "ambulance",
+                                      static_filename))
 
   # Process downloaded data (under an incremented version number) and get new
   # file hash
@@ -172,7 +173,8 @@ if(is.null(tmp)) {
   process_cam_ambulance(
     sourcefile = file.path(save_data_here, source_filename),
     filename = file.path(save_data_here, "ambulance", tmp_filename))
-  new_hash <- get_hash(file.path(save_data_here, "ambulance", tmp_filename))
+  new_hash <- get_file_hash(file.path(save_data_here, "ambulance",
+                                      tmp_filename))
 
   # If the hashes match, delete the new version of the file
   # Otherwise add it to the data registry
@@ -199,8 +201,8 @@ if(is.null(tmp)) {
 # This data is supposedly static
 
 # Get the current version of the data product from the data registry
-tmp <- download_dataproduct(name = file.path(product_name, "calls"),
-                            data_dir = file.path(save_data_here, "calls"))
+tmp <- download_data_product(name = file.path(product_name, "calls"),
+                             data_dir = file.path(save_data_here, "calls"))
 
 local_version <- max(get_version_numbers(paste(product_name, "calls",
                                                sep = "/")))
@@ -233,7 +235,7 @@ if(is.null(tmp)) {
   # If the download was successful, compare its hash to that of today's dataset
 
   # Get local file hash
-  old_hash <- get_hash(file.path(save_data_here, "calls", static_filename))
+  old_hash <- get_file_hash(file.path(save_data_here, "calls", static_filename))
 
   # Process downloaded data (under an incremented version number) and get new
   # file hash
@@ -244,7 +246,7 @@ if(is.null(tmp)) {
   process_cam_calls(
     sourcefile = file.path(save_data_here, source_filename),
     filename = file.path(save_data_here, "calls", tmp_filename))
-  new_hash <- get_hash(file.path(save_data_here, "calls", tmp_filename))
+  new_hash <- get_file_hash(file.path(save_data_here, "calls", tmp_filename))
 
   # If the hashes match, delete the new version of the file
   # Otherwise add it to the data registry
@@ -438,7 +440,7 @@ upload_object_links(run_date = todays_date,
 # Download latest version of testing component from FTP server
 
 # dp_name <- "records/SARS-CoV-2/scotland/cases-and-management/testing"
-# tmp <- download_dataproduct(name = dp_name, "data-raw")
+# tmp <- download_data_product(name = dp_name, "data-raw")
 # look_at_these <- tmp$components[grepl("^date", tmp$components)]
 #
 # dp_components <- lapply(look_at_these, function(x) {
