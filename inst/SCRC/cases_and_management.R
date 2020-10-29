@@ -161,7 +161,8 @@ if(is.null(tmp)) {
   # If the download was successful, compare its hash to that of today's dataset
 
   # Get local file hash
-  old_hash <- get_hash(file.path(save_data_here, "ambulance", static_filename))
+  old_hash <- get_file_hash(file.path(save_data_here, "ambulance",
+                                      static_filename))
 
   # Process downloaded data (under an incremented version number) and get new
   # file hash
@@ -172,7 +173,8 @@ if(is.null(tmp)) {
   process_cam_ambulance(
     sourcefile = file.path(save_data_here, source_filename),
     filename = file.path(save_data_here, "ambulance", tmp_filename))
-  new_hash <- get_hash(file.path(save_data_here, "ambulance", tmp_filename))
+  new_hash <- get_file_hash(file.path(save_data_here, "ambulance",
+                                      tmp_filename))
 
   # If the hashes match, delete the new version of the file
   # Otherwise add it to the data registry
@@ -233,7 +235,7 @@ if(is.null(tmp)) {
   # If the download was successful, compare its hash to that of today's dataset
 
   # Get local file hash
-  old_hash <- get_hash(file.path(save_data_here, "calls", static_filename))
+  old_hash <- get_file_hash(file.path(save_data_here, "calls", static_filename))
 
   # Process downloaded data (under an incremented version number) and get new
   # file hash
@@ -244,7 +246,7 @@ if(is.null(tmp)) {
   process_cam_calls(
     sourcefile = file.path(save_data_here, source_filename),
     filename = file.path(save_data_here, "calls", tmp_filename))
-  new_hash <- get_hash(file.path(save_data_here, "calls", tmp_filename))
+  new_hash <- get_file_hash(file.path(save_data_here, "calls", tmp_filename))
 
   # If the hashes match, delete the new version of the file
   # Otherwise add it to the data registry
