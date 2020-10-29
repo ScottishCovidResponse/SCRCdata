@@ -117,11 +117,21 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path(save_data_here, names(original_root)[x], source_filename[[x]]))
 names(sourcefiles) <- c("simd", "dz", "grid_shapefile")
 
+# Read in shape file
+external_object <- "geography/shapefile/scotland/datazone_boundary/2011"
+save_to <- do.call(file.path, as.list(strsplit(external_object, "/")[[1]]))
+downloaded_to <- download_external_object(name = external_object,
+                                          data_dir = file.path("data-raw",
+                                                               save_to))
+scot_datazone_sf <- sf::st_read(downloaded_to$downloaded_to,
+                                quiet = TRUE)
+
 process_scotgov_lookup(
   sourcefile = sourcefiles,
   h5filename = product_filename,
   path = save_data_here,
-  grid_names = c("grid1km","grid10km"))
+  grid_names = c("grid1km","grid10km"),
+  scot_datazone_sf = scot_datazone_sf)
 
 
 # register metadata with the data registry --------------------------------
