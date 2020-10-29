@@ -118,12 +118,15 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
 names(sourcefiles) <- c("simd", "dz", "grid_shapefile")
 
 # Read in shape file
-external_object <- "geography/shapefile/scotland/datazone_boundary/2011"
-save_to <- do.call(file.path, as.list(strsplit(external_object, "/")[[1]]))
+external_object <- "Scottish datazone shapefile"
+save_to <- file.path("shapefile", "scotland")
 downloaded_to <- download_external_object(name = external_object,
                                           data_dir = file.path("data-raw",
-                                                               save_to))
-scot_datazone_sf <- sf::st_read(downloaded_to$downloaded_to,
+                                                               save_to),
+                                          unzip = TRUE)
+
+scot_datazone_sf <- sf::st_read(file.path("data-raw", save_to, "1.0.0",
+                                          "SG_DataZone_Bdry_2011.shp"),
                                 quiet = TRUE)
 
 process_scotgov_lookup(
