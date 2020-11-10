@@ -110,11 +110,14 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path("data-raw", product_name, names(original_root)[x], source_filename[[x]]))
 
 names(sourcefiles) <- c("shapefile", "pollution/example")
-
+scotgov_lookup = "data-raw/geography/scotland/lookup_table/1.0.1.h5"
+ukgov_engwales_lookup = "data-raw/conversiontable_englandwales/1.0.1.h5"
 
 process_pollution_lookup(sourcefile =sourcefiles,
-                         filename = paste0(version_number, ".h5"),
-                         output_area_sf = "data-raw/outputarea_shapefile/Output_Areas__December_2011__Boundaries_EW_BFC.shp")
+                         h5filename = paste0(version_number, ".h5"),
+                         storage_path = file.path("data-raw","geography","pollution","lookup"),
+                         scotgov_lookup = scotgov_lookup,
+                         ukgov_engwales_lookup = ukgov_engwales_lookup)
 
 
 # register metadata with the data registry --------------------------------
