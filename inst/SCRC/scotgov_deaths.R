@@ -84,8 +84,8 @@ WHERE {
               mp:count ?count;
               qb:measureType ?measType;
               sdim:age ?value;
-              sdim:causeofdeath ?causeDeath;
-              sdim:locationofdeath ?locDeath;
+              sdim:causeOfDeath ?causeDeath;
+              sdim:locationOfDeath ?locDeath;
               sdim:sex ?sex;
               dim:refArea ?featurecode;
               dim:refPeriod ?period.
