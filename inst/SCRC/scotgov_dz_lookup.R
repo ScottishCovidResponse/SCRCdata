@@ -68,12 +68,12 @@ original_sourceId2 <- new_source(
 original_sourceId3 <- new_source(
   name = original_source_name3,
   abbreviation = "Github/charlesroper/OSGB_Grids",
-  website = "https://github.com/Github/charlesroper",
+  website ="https://github.com/charlesroper/",
   key = key)
 
 # - Dataset 4 example pollution dataset
 original_sourceId4 <- new_source(
-  name = original_source_name2,
+  name = original_source_name4,
   abbreviation = "UK AIR",
   website = "https://uk-air.defra.gov.uk/datastore/pcm/",
   key = key)
@@ -124,7 +124,7 @@ submission_script <- "scotgov_dz_lookup.R"
 
 
 # convert source data into a data product ---------------------------------
-source_filename$grid_shapefile <- file.path("OSGB_Grids-master", "Shapefile",
+source_filename$grid_shapefile <- file.path(
                                             "OSGB_Grid_1km.shp")
 sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path(save_data_here, names(original_root)[x], source_filename[[x]]))
