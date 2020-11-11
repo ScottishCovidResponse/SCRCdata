@@ -243,4 +243,23 @@ process_cam_testing <- function(sourcefile, filename) {
     array = as.matrix(tmp),
     dimension_names = list(delayed = rownames(tmp),
                            date = colnames(tmp)))
+
+  # Not country -------------------------------------------------------------
+
+  # "Testing - Cumulative people tested for COVID-19 - Positive"
+  testing.notcountry.dat <- testing.dat %>%
+    dplyr::filter(areatypename != "Country")
+
+  tmp <- testing.notcountry.dat %>%
+    dplyr::filter(grepl("Testing - Cumulative people tested", variable)) %>%
+    reshape2::dcast(featurename ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("featurename")
+
+  SCRCdataAPI::create_array(
+    filename = filename,
+    path = path,
+    component = "nhsboard/date-total_daily_tests_reported",
+    array = as.matrix(tmp),
+    dimension_names = list(delayed = rownames(tmp),
+                           date = colnames(tmp)))
 }
