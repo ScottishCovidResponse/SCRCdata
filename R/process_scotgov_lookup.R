@@ -17,7 +17,8 @@ process_scotgov_lookup <- function(sourcefile,
                                    path,
                                    grid_names,
                                    scot_datazone_sf) {
-
+  # ADMIN AREAS -------------------------------------------------
+  
   simdlookup<- readxl::read_excel(
     sourcefile[["simd"]],
     sheet = 3) %>%
@@ -45,6 +46,8 @@ process_scotgov_lookup <- function(sourcefile,
 
   conversion.table <- left_join(simdlookup, dzlookup, by = "AREAcode")
 
+  # GRIDS -------------------------------------------------
+  
   # Check for non-intersecting geometries
   datazones <- scot_datazone_sf %>%
     sf::st_make_valid() %>%
@@ -109,6 +112,49 @@ process_scotgov_lookup <- function(sourcefile,
     tibble::column_to_rownames("Datazone_component_id")
   conversion.table[is.na(conversion.table)] <- 0
 
+  # POLLUTION -------------------------------------------------
+  # Read in example pollution data, the datapoint locations are consistent
+  # across different pollution data.
+  grid_shp  = grid_shp %>% rename("GRID_NUM" = "grid_id")
+  pollution.sf = read.csv(sourcefile[["pollution/example"]], skip = 5)%>%
+    sf::st_as_sf(coords = c("x","y"), crs="EPSG:27700")
+  
+  # Use st_contains to find which OS grid the centre point of the pollution
+  # grid is in
+  grids_contain = sf::st_contains(grid_shp, pollution.sf)
+  
+  #Convert the list produced to a dataframe
+  contains.df = matrix(0, nrow = length(grids_contain))
+  for(i in 1:length(grids_contain)){
+    if(length(grids_contain[[i]])==1){
+      contains.df[i,1]=grids_contain[[i]]
+    }else
+      if(length(grids_contain[[i]])==0){
+        contains.df[i,1]=0
+      }else{
+        stop("More than 1 point in cell!!")
+        #Stop here as this shouldnt be possible - both systems are 1km grids
+      }
+    
+  }
+  
+  # Match pollution codes to UK national grid codes
+  
+  # Column of the contains dataframe should represent rows of the pollution sf dataframe
+  # rows of the contains dataframe represent the rows of the uk national grid shapefile
+  contains.df = as.data.frame(contains.df) %>% rename("rowname" = "V1")
+  pollution.sf = rownames_to_column(pollution.sf) 
+  pollution.sf =   pollution.sf %>% mutate("rowname" = as.numeric(pollution.sf$rowname))
+  rownames(contains.df) = grid_shp$GRID_NUM
+  contains.df = rownames_to_column(contains.df,"GRID_NUM")
+  lookup = left_join(contains.df, pollution.sf, by = "rowname") %>% select("GRID_NUM", "ukgridcode") %>% rename("grid1km_id" = "GRID_NUM","pollution_code" = "ukgridcode" )
+  lookup = lookup[-which(is.na(lookup$pollution_code)),]
+  
+  
+  
+  conversion.table = left_join(conversion.table, lookup, by = "grid1km_id") 
+  
+  
   SCRCdataAPI::create_table(filename = h5filename,
                             path = path,
                             component = "conversiontable/scotland",

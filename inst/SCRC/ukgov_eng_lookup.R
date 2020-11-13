@@ -15,13 +15,14 @@ doi_or_unique_name <- "England/Wales spatial lookup table"
 # version_number is used to generate the source data and data product
 # filenames, e.g. 0.20200716.0.csv and 0.20200716.0.h5 for data that is
 # downloaded daily, or 0.1.0.csv and 0.1.0.h5 for data that is downloaded once
-version_number <- "1.0.1"
+version_number <- "1.0.2"
 source_filename <- list(OA_EW_LA = paste0(version_number, ".csv"),
                         OA_LSOA_MSOA_LA = paste0(version_number, ".csv"),
                         LSOA_CCG = paste0(version_number, ".csv"),
                         EW_UA = paste0(version_number, ".csv"),
                         UA_HB = paste0(version_number, ".csv"),
-                        grid_shapefile = "shapefiles.zip")
+                        grid_shapefile = "shapefiles.zip",
+                        "pollution/example" = paste0(version_number, ".csv"))
 product_filename <- paste0(version_number, ".h5")
 
 # product_name is used to identify the data product as well as being used to
@@ -42,13 +43,15 @@ namespace <- "SCRC"
 geoportal <- "Office for National Statistics Open Georaphy Portal"
 opendata <- "Office for National Statistics ArcGIS Hub"
 charlesroper <- "GitHub - charlesroper"
+Ukair <- "UK Air Information Resource"
 
 original_source_name <- list(OA_EW_LA = geoportal,
                              OA_LSOA_MSOA_LA = geoportal,
                              LSOA_CCG = opendata,
                              EW_UA = geoportal,
                              UA_HB = opendata,
-                             grid_shapefile = charlesroper)
+                             grid_shapefile = charlesroper,
+                             "pollution/example" = Ukair)
 
 # Add the website to the data registry (e.g. home page of the database)
 
@@ -72,12 +75,20 @@ charlesroper_source <- new_source(
   website = "https://github.com/charlesroper/",
   key = key)
 
+# - Dataset 3 (example pollution dataset)
+UKair_source <- new_source(
+  name = original_source_name4,
+  abbreviation = "UK AIR",
+  website = "https://uk-air.defra.gov.uk/datastore/pcm/",
+  key = key)
+
 original_sourceId <- list(OA_EW_LA = geoportal_source,
                           OA_LSOA_MSOA_LA = geoportal_source,
                           LSOA_CCG = opendata_source,
                           EW_UA = geoportal_source,
                           UA_HB = opendata_source,
-                          grid_shapefile = charlesroper_source)
+                          grid_shapefile = charlesroper_source,
+                          "pollution/lookup" = UKair_source)
 
 # Note that file.path(original_root, original_path) is the download link and
 # original_root MUST have a trailing slash. Here, two datasets are being
@@ -88,13 +99,15 @@ original_sourceId <- list(OA_EW_LA = geoportal_source,
 geoportal_root <- "http://geoportal1-ons.opendata.arcgis.com/"
 opendata_root <- "https://opendata.arcgis.com/"
 charlesroper_root <- "https://github.com/charlesroper/"
+pollution_root <- "https://uk-air.defra.gov.uk/datastore/pcm/"
 
 original_root <- list(OA_EW_LA = geoportal_root,
                       OA_LSOA_MSOA_LA = geoportal_root,
                       LSOA_CCG = opendata_root,
                       EW_UA = geoportal_root,
                       UA_HB = opendata_root,
-                      grid_shapefile = charlesroper_root)
+                      grid_shapefile = charlesroper_root,
+                      "pollution/example" = pollution_root)
 
 original_path <- list(
   OA_EW_LA = "datasets/c721b6da8ea04f189baa27a1f3e32e06_0.csv",
@@ -102,7 +115,8 @@ original_path <- list(
   LSOA_CCG = "datasets/520e9cd294c84dfaaf97cc91494237ac_0.csv",
   EW_UA = "datasets/e6d0a1c8ce3344a7b79ce1c24e3174c9_0.csv",
   UA_HB = "datasets/680c9b730655473787cb594f328a86fa_0.csv",
-  grid_shapefile = "OSGB_Grids/archive/master.zip")
+  grid_shapefile = "OSGB_Grids/archive/master.zip",
+  "pollution/example" = "mappm252018g.csv")
 
 save_location <- "data-raw"
 save_data_here <- file.path(save_location, product_path)
@@ -140,7 +154,7 @@ sourcefiles <- lapply(seq_along(original_root), function(x)
   file.path("data-raw", product_name, names(original_root)[x],
             source_filename[x]))
 names(sourcefiles) <- c("OA_EW_LA", "OA_LSOA_MSOA_LA","LSOA_CCG","EW_UA",
-                        "UA_HB","grid_shapefile")
+                        "UA_HB","grid_shapefile", "pollution/example")
 
 process_ukgov_eng_lookup(sourcefile = sourcefiles,
                          h5filename = product_filename,
