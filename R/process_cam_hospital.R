@@ -142,7 +142,7 @@ process_cam_hospital <- function(sourcefile, filename) {
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital",
+    component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital-archived",
     array = as.matrix(special.patients.in.hosp.dat),
     dimension_names = list(
       status = rownames(special.patients.in.hosp.dat),

@@ -437,14 +437,51 @@ upload_object_links(run_date = todays_date,
                     key = key)
 
 
-# Download latest version of testing component from FTP server
+# attach issues -----------------------------------------------------------
 
-# dp_name <- "records/SARS-CoV-2/scotland/cases-and-management/testing"
-# tmp <- download_data_product(name = dp_name, "data-raw")
-# look_at_these <- tmp$components[grepl("^date", tmp$components)]
-#
-# dp_components <- lapply(look_at_these, function(x) {
-#   read_array(tmp$downloaded_to, x)
-# })
+# These datasets have *'s in them
+scotMan <- read.csv(file = file.path(save_data_here, source_filename),
+                    stringsAsFactors = F) %>%
+  dplyr::mutate(featurecode = gsub(
+    "http://statistics.gov.scot/id/statistical-geography/",
+    "", featurecode),
+    featurecode = gsub(">", "", featurecode))
 
+scotMan %>% dplyr::filter(count == "*") %>%
+  dplyr::select(variable) %>%
+  dplyr::unique()
 
+# Testing - Cumulative people tested for COVID-19 - Positive
+# COVID-19 patients in ICU - Total (archived)
+# COVID-19 patients in ICU - Confirmed (archived)
+# COVID-19 patients in hospital - Suspected (archived)
+# COVID-19 patients in hospital - Confirmed (archived)
+# COVID-19 patients in hospital - Confirmed
+# COVID-19 patients in ICU - Confirmed
+
+object <- list(data_product = paste0(product_name, "/testing"),
+               namespace = "SCRC",
+               component = "test_result/date-people_tested_for_covid19-cumulative",
+               version = version_number)
+
+attach_issue(description = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
+             severity = 10,
+             object = object,
+             key = key)
+
+tmp <- c("total_suspected_confirmed/date-country-covid19_patients_in_icu-archived",
+         "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital",
+         "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
+         "nhs_health_board/date-covid19_patients_in_icu-confirmed")
+
+for(i in seq_along(tmp)) {
+  object <- list(data_product = paste0(product_name, "/hospital"),
+                 namespace = "SCRC",
+                 component = tmp[i],
+                 version = version_number)
+
+  attach_issue(description = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
+               severity = 10,
+               object = object,
+               key = key)
+}
