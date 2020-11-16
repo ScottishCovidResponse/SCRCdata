@@ -14,11 +14,11 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   filename <- basename(filename)
 
   scotDeaths <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
-    dplyr::mutate(featurecode = gsub(
+    dplyr::mutate(featurename = gsub(
       "<http://statistics.gov.scot/id/statistical-geography/", "",
-      featurecode),
-      featurecode = gsub("http://statistics.gov.scot/id/statistical-geography/",
-                         "", featurecode))
+      featurename),
+      featurename = gsub("http://statistics.gov.scot/id/statistical-geography/",
+                         "", featurename))
 
   assertthat::assert_that(
     all(unique(scotDeaths$cause) %in%
@@ -33,7 +33,7 @@ process_scotgov_deaths <- function(sourcefile, filename) {
     dplyr::filter(cause == "COVID-19 related") %>%
     dplyr::select(-type)
 
-  # Per week
+  # Per week ----
   cd_week <- covid_deaths %>%
     dplyr::filter(date != "2020") %>%
     dplyr::mutate(date = gsub("^w/c ", "", date))
@@ -46,8 +46,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   covid_deaths_per_week_by_nhsboard <- cd_week %>%
     dplyr::filter(areatypename == "Health Board Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    reshape2::dcast(featurename ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("featurename")
 
   SCRCdataAPI::create_array(
     filename = filename,
@@ -63,8 +63,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   covid_deaths_per_week_by_councilarea <- cd_week %>%
     dplyr::filter(areatypename == "Council Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    reshape2::dcast(featurename ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("featurename")
 
   SCRCdataAPI::create_array(
     filename = filename,
@@ -159,60 +159,44 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   covid_deaths_per_week <- cd_week_allages %>%
     dplyr::filter(location == "All") # don't include
 
-  # All weeks
+  # All weeks ----
   cd_total <- covid_deaths %>%
     dplyr::filter(date == "2020") %>%
     dplyr::select_if(~ length(unique(.)) != 1)
 
-  # All weeks / Health Board Areas / All locations
-  covid_deaths_by_nhsboard <- cd_total %>%
-    dplyr::filter(areatypename == "Health Board Areas",
-                  location == "All") %>%
-    dplyr::select_if(~ length(unique(.)) != 1) # don't include
-
-  # All weeks / Health Board Areas / Per location
-  covid_deaths_by_nhsboard_and_location <- cd_total %>%
-    dplyr::filter(areatypename == "Health Board Areas",
-                  location != "All") %>%
+  # All weeks / Health Board Areas / Per locations
+  covid_deaths_total_by_nhsboard <- cd_total %>%
+    dplyr::filter(areatypename == "Health Board Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ location, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    dplyr::select("featurename", "count")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "nhs_health_board/location_type-covid_related_deaths",
-    array = as.matrix(covid_deaths_by_nhsboard_and_location),
+    component = "nhs_health_board-covid_related_deaths",
+    array = as.matrix(covid_deaths_total_by_nhsboard),
     dimension_names = list(
       `health board` = rownames(
-        covid_deaths_by_nhsboard_and_location),
+        covid_deaths_total_by_nhsboard),
       `location` = colnames(
-        covid_deaths_by_nhsboard_and_location)))
+        covid_deaths_total_by_nhsboard)))
 
-  # All weeks / Council Areas / All locations
+  # All weeks / Council Areas / Per locations
   covid_deaths_by_councilarea <- cd_total %>%
-    dplyr::filter(areatypename == "Council Areas",
-                  location == "All") %>%
-    dplyr::select_if(~ length(unique(.)) != 1) # don't include
-
-  # All weeks / Council Areas / Per location
-  covid_deaths_by_councilarea_and_location <- cd_total %>%
-    dplyr::filter(areatypename == "Council Areas",
-                  location != "All") %>%
+    dplyr::filter(areatypename == "Council Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ location, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    dplyr::select("featurename", "count")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "council_area/location_type-covid_related_deaths",
-    array = as.matrix(covid_deaths_by_councilarea_and_location),
+    component = "council_area-covid_related_deaths",
+    array = as.matrix(covid_deaths_by_councilarea),
     dimension_names = list(
       `council area` = rownames(
-        covid_deaths_by_councilarea_and_location),
+        covid_deaths_by_councilarea),
       `location` = colnames(
-        covid_deaths_by_councilarea_and_location)))
+        covid_deaths_by_councilarea)))
 
   # All weeks / Country / All locations
   covid_deaths_year_to_date_allloc <- cd_total %>%
@@ -247,8 +231,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   all_deaths_per_week_by_nhsboard <- ad_week %>%
     dplyr::filter(areatypename == "Health Board Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    reshape2::dcast(featurename ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("featurename")
 
   SCRCdataAPI::create_array(
     filename = filename,
@@ -263,8 +247,8 @@ process_scotgov_deaths <- function(sourcefile, filename) {
   all_deaths_per_week_by_councilarea <- ad_week %>%
     dplyr::filter(areatypename == "Council Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    reshape2::dcast(featurename ~ date, value.var = "count") %>%
+    tibble::column_to_rownames("featurename")
 
   SCRCdataAPI::create_array(
     filename = filename,
@@ -366,53 +350,37 @@ process_scotgov_deaths <- function(sourcefile, filename) {
 
   # All weeks / Health Board Areas / All locations
   all_deaths_by_nhsboard <- ad_total %>%
-    dplyr::filter(areatypename == "Health Board Areas",
-                  location == "All") %>%
-    dplyr::select_if(~ length(unique(.)) != 1) # don't include
-
-  # All weeks / Health Board Areas / Per location
-  all_deaths_by_nhsboard_and_location <- ad_total %>%
-    dplyr::filter(areatypename == "Health Board Areas",
-                  location != "All") %>%
+    dplyr::filter(areatypename == "Health Board Areas") %>%
     dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ location, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    dplyr::select("featurename", "count")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "nhs_health_board/location_type-all_deaths",
-    array = as.matrix(all_deaths_by_nhsboard_and_location),
+    component = "nhs_health_board-all_deaths",
+    array = as.matrix(all_deaths_by_nhsboard),
     dimension_names = list(
       `health board` = rownames(
-        all_deaths_by_nhsboard_and_location),
+        all_deaths_by_nhsboard),
       `location` = colnames(
-        all_deaths_by_nhsboard_and_location)))
+        all_deaths_by_nhsboard)))
 
   # All weeks / Council Areas / All locations
   all_deaths_by_councilarea <- ad_total %>%
-    dplyr::filter(areatypename == "Council Areas",
-                  location == "All") %>%
-    dplyr::select_if(~ length(unique(.)) != 1) # don't include
-
-  # All weeks / Council Areas / Per location
-  all_deaths_by_councilarea_and_location <- ad_total %>%
-    dplyr::filter(areatypename == "Council Areas",
-                  location != "All") %>%
-    dplyr::select_if(~ length(unique(.)) != 1) %>%
-    reshape2::dcast(featurecode ~ location, value.var = "count") %>%
-    tibble::column_to_rownames("featurecode")
+    dplyr::filter(areatypename == "Council Areas") %>%
+    dplyr::select_if(~ length(unique(.)) != 1)%>%
+    dplyr::select("featurename", "count")
 
   SCRCdataAPI::create_array(
     filename = filename,
     path = path,
-    component = "council_area/location_type-all_deaths",
-    array = as.matrix(all_deaths_by_councilarea_and_location),
+    component = "council_area-all_deaths",
+    array = as.matrix(all_deaths_by_councilarea),
     dimension_names = list(
       `council area` = rownames(
-        all_deaths_by_councilarea_and_location),
+        all_deaths_by_councilarea),
       `location` = colnames(
-        all_deaths_by_councilarea_and_location)))
+        all_deaths_by_councilarea)))
 
 
   # All causes - average of corresponding week over previous 5 year ---------
