@@ -10,34 +10,29 @@ key <- readLines("token/token.txt")
 tmp <- httr::GET("https://api.biorxiv.org/covid19/0") %>%
   httr::content(as = "text", encoding = "UTF-8") %>%
   jsonlite::fromJSON(simplifyVector = FALSE)
+total <- tmp$messages[[1]]$total
 
 # How many loops should we run through if we're downloading in batches of 30?
-total <- tmp$messages[[1]]$total
 count <- tmp$messages[[1]]$count
 loops <- ceiling(total / count)
 index <- seq(31, loops*30, 30)
 index <- c(0, index)
 
-
-
-
-
 # Download metadata associated with COVID-19 SARS-CoV-2 preprints
 # (this has to be done in batches of 30)
 medrxiv <- list()
 for (x in seq_along(index)) {
-  tmp <- httr::GET(paste0("https://api.biorxiv.org/covid19/", index[x])) %>%
+  out <- httr::GET(paste0("https://api.biorxiv.org/covid19/", index[x])) %>%
     httr::content(as = "text", encoding = "UTF-8") %>%
     jsonlite::fromJSON(simplifyVector = FALSE)
-  medrxiv <- c(medrxiv, tmp$collection)
+  medrxiv <- c(medrxiv, out$collection)
 }
 
-# Arrange the metadata in a useful format
-lapply(seq_along(tmp$collection), function(y) {
-
-  # Extract authors. If the author has more than one name, put the family
-  # name first, followed by a comma. Separate all author names by " and "
-  authors <- lapply(tmp$collection[[y]]$rel_authors, function(z) {
+# Reformat as dataframe
+medrxiv <- lapply(seq_along(medrxiv), function(y) {
+  # If the author has more than one name, put the family name first, followed
+  # by a comma. Separate all author names by " and "
+  authors <- lapply(medrxiv[[y]]$rel_authors, function(z) {
     if(grepl(" ", z$author_name)) {
       sort_names <- strsplit(z$author_name, " ")[[1]]
       out <- paste0(tail(sort_names, 1), ", ",
@@ -51,16 +46,16 @@ lapply(seq_along(tmp$collection), function(y) {
     paste(collapse = " and ")
 
   # Output information required by the data registry
-  data.frame(abbreviation = tmp$collection[[y]]$rel_site,
-             title = tmp$collection[[y]]$rel_title,
+  data.frame(abbreviation = medrxiv[[y]]$rel_site,
+             title = medrxiv[[y]]$rel_title,
              author = authors,
-             abstract = tmp$collection[[y]]$rel_abs,
-             doi = tmp$collection[[y]]$rel_doi,
-             date = as.POSIXct(paste0(tmp$collection[[y]]$rel_date, " 12:00:00"),
+             abstract = medrxiv[[y]]$rel_abs,
+             doi = medrxiv[[y]]$rel_doi,
+             date = as.POSIXct(paste0(medrxiv[[y]]$rel_date, " 12:00:00"),
                                format = "%Y-%m-%d %H:%M:%S"),
-             journal = tmp$collection[[y]]$rel_site)
-}) %>% do.call(rbind.data.frame, .)
-}) %>% do.call(rbind.data.frame, .)
+             journal = medrxiv[[y]]$rel_site)
+})
+medrxiv <- do.call(rbind.data.frame, medrxiv)
 
 # Check that all data has been collected. For some reason we're missing one,
 # but N - 1 is pretty good!
