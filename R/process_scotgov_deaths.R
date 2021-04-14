@@ -8,9 +8,7 @@
 #'
 process_scotgov_deaths <- function(handle, input_path) {
 
-  # Extract directory and filename
-  # path <- dirname(output_file)
-  # output_file <- basename(output_file)
+  dataproduct <- "records/SARS-CoV-2/scotland/human-mortality"
 
   scotDeaths <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurename = gsub(
@@ -49,7 +47,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_nhsboard),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "nhs_health_board/week-covid_related_deaths",
     dimension_names = list(
       `health board` = rownames(covid_deaths_per_week_by_nhsboard),
@@ -66,7 +64,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_councilarea),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "council_area/week-covid_related_deaths",
     dimension_names = list(
       `council area` = rownames(
@@ -109,7 +107,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     array = array(c(female, male),
                   dim = c(dim(female), 2)),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "age_group/week/gender-country-covid_related_deaths",
     dimension_names = list(
       `age group` = rownames(covid_deaths_per_week_by_agegroup_f),
@@ -125,7 +123,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_agegroup_all),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "age_group/week-persons-country-covid_related_deaths",
     dimension_names = list(
       `age group` = rownames(covid_deaths_per_week_by_agegroup_all),
@@ -146,7 +144,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_location),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "location_type/week-covid_related_deaths",
     dimension_names = list(
       `location` = rownames(covid_deaths_per_week_by_location),
@@ -171,7 +169,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_total_by_nhsboard),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "nhs_health_board/year-covid_related_deaths",
     dimension_names = list(
       `health board` = rownames(covid_deaths_total_by_nhsboard),
@@ -187,7 +185,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_by_councilarea),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "council_area/year-covid_related_deaths",
     dimension_names = list(
       `council area` = rownames(covid_deaths_by_councilarea),
@@ -232,7 +230,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_nhsboard),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "nhs_health_board/week-all_deaths",
     dimension_names = list(
       `health board` = rownames(all_deaths_per_week_by_nhsboard),
@@ -248,7 +246,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_councilarea),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "council_area/week-all_deaths",
     dimension_names = list(
       `council area` = rownames(all_deaths_per_week_by_councilarea),
@@ -290,7 +288,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     array = array(c(female, male),
                   dim = c(dim(female), 2)),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "age_group/week/gender-country-all_deaths",
     dimension_names = list(
       `age group` = rownames(all_deaths_per_week_by_agegroup_f),
@@ -306,7 +304,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_agegroup_all),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "age_group/week-persons-country-all_deaths",
     dimension_names = list(
       `age group` = rownames(all_deaths_per_week_by_agegroup_all),
@@ -327,7 +325,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_location),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "location_type/week-all_deaths",
     dimension_names = list(
       `location` = rownames(all_deaths_per_week_by_location),
@@ -353,7 +351,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_by_nhsboard),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "nhs_health_board/year-all_deaths",
     dimension_names = list(
       `health board` = rownames(all_deaths_by_nhsboard),
@@ -369,7 +367,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_by_councilarea),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "council_area/year-all_deaths",
     dimension_names = list(
       `council area` = rownames(all_deaths_by_councilarea),
@@ -394,7 +392,7 @@ process_scotgov_deaths <- function(handle, input_path) {
   handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_averaged_date),
     handle = handle,
-    data_product = "records/SARS-CoV-2/scotland/human-mortality",
+    data_product = data_product,
     component = "week-persons-scotland-all_deaths-averaged_over_5years",
     dimension_names = list(
       `week commencing` = rownames(all_deaths_averaged_date)))
