@@ -46,7 +46,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_nhsboard),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -63,7 +63,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_councilarea),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -105,7 +105,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     covid_deaths_per_week_by_agegroup_f) == colnames(
       covid_deaths_per_week_by_agegroup_m)))
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = array(c(female, male),
                   dim = c(dim(female), 2)),
     handle = handle,
@@ -122,7 +122,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(age ~ date, value.var = "count") %>%
     tibble::column_to_rownames("age")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_agegroup_all),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -143,7 +143,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(location ~ date, value.var = "count") %>%
     tibble::column_to_rownames("location")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_per_week_by_location),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -168,7 +168,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_total_by_nhsboard),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -184,7 +184,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(covid_deaths_by_councilarea),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -229,7 +229,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_nhsboard),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -245,7 +245,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_councilarea),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -286,7 +286,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     all_deaths_per_week_by_agegroup_f) == colnames(
       all_deaths_per_week_by_agegroup_m)))
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = array(c(female, male),
                   dim = c(dim(female), 2)),
     handle = handle,
@@ -303,7 +303,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(age ~ date, value.var = "count") %>%
     tibble::column_to_rownames("age")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_agegroup_all),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -324,7 +324,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(location ~ date, value.var = "count") %>%
     tibble::column_to_rownames("location")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_per_week_by_location),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -350,7 +350,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_by_nhsboard),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -366,7 +366,7 @@ process_scotgov_deaths <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_by_councilarea),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
@@ -391,11 +391,13 @@ process_scotgov_deaths <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  handle <- SCRCdataAPI::write_array(
     array = as.matrix(all_deaths_averaged_date),
     handle = handle,
     data_product = "records/SARS-CoV-2/scotland/human-mortality",
     component = "week-persons-scotland-all_deaths-averaged_over_5years",
     dimension_names = list(
       `week commencing` = rownames(all_deaths_averaged_date)))
+
+  handle
 }
