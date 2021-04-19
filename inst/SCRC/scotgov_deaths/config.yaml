@@ -11,7 +11,7 @@ run_metadata:
   # Exactly one of `script_path:` and `script:` is necessary.
   # This is the submission script
   script: |- # Relative to local_repo
-    R -f inst/scotgov_deaths/submission_script.R {CONFIG_PATH}
+    R -f inst/SCRC/scotgov_deaths/submission_script.R {CONFIG_PATH}
 register:
 - external_object: raw-mortality-data
   # Who owns the data?
