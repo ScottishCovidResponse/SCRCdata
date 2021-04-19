@@ -11,9 +11,9 @@ run_metadata:
   # Exactly one of `script_path:` and `script:` is necessary.
   # This is the submission script
   script: |- # Relative to local_repo
-    R -f path/submission_script.R {CONFIG_PATH}
+    R -f inst/SCRC/scotgov_management/submission_script.R {CONFIG_PATH}
 register:
-- external_object: raw-mortality-data
+- external_object: management-data
   # Who owns the data?
   source_name: Scottish Government Open Data Repository
   source_abbreviation: Scottish Government Open Data Repository
@@ -47,137 +47,147 @@ register:
   title: Data associated with COVID-19
   description: The data provide past data around COVID-19 for the daily updates provided by the Scottish Government.
   unique_name: COVID-19 management information # or doi
-  product_name: records/SARS-CoV-2/scotland/human-mortality
+  product_name: records/SARS-CoV-2/scotland/cases-and-management
   file_type: csv
   release_date: 2021-04-16 11:34:37
   version: 0.20210416.0
   primary: True
-  accessibility: open                 # Default is open (could also be closed)
+  accessibility: open
 
 write:
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/ambulance
   description: Ambulance data
   components:
     date-covid19_suspected_patients_taken_to_hospital:
-      description: text
+      description: suspected patients taken to hospital
     date-covid19_suspected:
-      description: text
+      description: suspected
     date-total:
-      description: text
+      description: total deaths
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/calls
   description: Calls data
   components:
     call_centre/date-number_of_calls:
-      description: text
+      description: number of calls
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/carehomes
   description: Care homes data
   components:
     date-country-staff_in_adult_carehomes_which_submitted_a_return:
-      description: text
+      description: staff in adult care homes which submitted a return
     date-country-adult_carehomes_which_submitted_a_return:
-      description: text
+      description: adult care homes which submitted a return
     date-country-response_rate:
-      description: text
+      description: response rate
     date-country-staff_absence_rate:
-      description: text
+      description: absense rate
     date-country-staff_reported_absent:
-      description: text
+      description: reported absent
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/hospital
   description: Hospital data
   components:
     date-delayed_discharges:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: delayed discharges
     total_suspected_confirmed/date-country-covid19_patients_in_hospital-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: total, suspected, and confirmed patients in hospital
+      issues: "*s represent a count of <5 (?). These have been changed to 0 in the dataset."
+      severity: 7
     date-country-covid19_patients_in_hospital-confirmed:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: patients in hospital
+      issues: "*s represent a count of <5 (?). These have been changed to 0 in the dataset."
+      severity: 7
     total_suspected_confirmed/date-country-covid19_patients_in_icu-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: total, suspected, and confirmed patients in ICU
+      issues: "*s represent a count of <5 (?). These have been changed to 0 in the dataset."
+      severity: 7
     date-country-covid19_patients_in_icu-confirmed:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: patients in ICU
+      issues: "*s represent a count of <5 (?). These have been changed to 0 in the dataset."
+      severity: 7
     confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: Confirmed and suspected patients in the Golden Jubilee hospital
     date-golden_jubilee-covid19_patients_in_icu-total:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: Golden Jubilee patients in ICU
     nhs_health_board/date-covid19_patients_in_icu-total-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in ICU
     nhs_health_board/date-covid19_patients_in_hospital-suspected-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in hospital, suspected
     nhs_health_board/date-covid19_patients_in_hospital-confirmed-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in hospital, confirmed
     nhs_health_board/date-covid19_patients_in_icu-confirmed-archived:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in ICU, confirmed
     nhs_health_board/date-covid19_patients_in_hospital-confirmed:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in hospital, confirmed
     nhs_health_board/date-covid19_patients_in_icu-confirmed:
-      description: text
-      issues: *s represent a count of <5 (?). These have been changed to 0 in the dataset.
+      description: NHS health board patients in ICU, confirmed
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/mortality
   description: Mortality data
   components:
     date-country-covid19_confirmed_deaths_registered-cumulative:
-      description: text
+      description: confirmed deaths
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/nhsworkforce
   description: NHS workforce data
   components:
     date-country-covid_related_absences-other_staff:
-      description: text
+      description: COVID related absences, other staff
     date-country-covid_related_absences-medical_and_dental_staff:
-      description: text
+      description: COVID related absences, medical and dental staff
     date-country-covid_related_absences-all_staff:
-      description: text
+      description: COVID related absences, all staff
     date-country-covid_related_absences-nursing_and_midwifery_staff:
-      description: text
+      description: COVID related absences, nursing and midwifery staff
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/schools
   description: Schools data
   components:
     date-country-percentage_absence_for_noncovid_reasons:
-      description: text
+      description: percentage absence for non-COVID reasons
     date-country-pupils_absent_for_covid_reasons:
-      description: text
+      description: pupils absent for COVID reasons
     date-country-percentage_absent_for_covid_reasons:
-      description: text
+      description: percentage absent for COVID reasons
     date-country-percentage_attendance:
-      description: text
+      description: percentage attendance
   version: 0.20210414.0
 - data_product: records/SARS-CoV-2/scotland/cases-and-management/testing
   description: Testing data
   components:
     test_result/date-people_tested_for_covid19-cumulative:
-      description: text
+      description: people tested for COVID-19, cumulative
+      issues: "*s represent a count of <5 (?). These have been changed to 0 in the dataset."
+      severity: 7
     testing_location/date-covid19_tests_carried_out-cumulative:
-      description: text
-    testing_location/date-covid19_tests_carried_out-daily: text
-    date-country-new_cases_as_percentage_of_people_newly_tested: text
-    date-country-new_cases_reported: text
-    date-country-people_with_first_test_results_in_last_7_days: text
-    date-country-positive_cases_reported_in_last_7_days: text
-    date-country-positive_tests_reported_in_last_7_days: text
-    date-country-test_positivity_percent_of_tests_that_are_positive: text
-    date-country-test_positivity_rate_in_last_7_days: text
-    date-country-tests_in_last_7_days_per_1000_population: text
-    date-country-tests_reported_in_last_7_days: text
-    date-country-total_daily_number_of_positive_tests_reported: text
-    date-country-total_daily_tests_reported: text
-    nhsboard/date-total_daily_tests_reported: text
+      description: COVID-19 tests carried out
+    testing_location/date-covid19_tests_carried_out-daily:
+      description: COVID-19 tests carried out daily
+    date-country-new_cases_as_percentage_of_people_newly_tested:
+      description: new cases as percentage of people newly tested
+    date-country-new_cases_reported:
+      description: new cases reported
+    date-country-people_with_first_test_results_in_last_7_days:
+      description: people with first test results in last 7 days
+    date-country-positive_cases_reported_in_last_7_days:
+      description: positive cases reported in last 7 days
+    date-country-positive_tests_reported_in_last_7_days:
+      description: positive tests reported in last 7 days
+    date-country-test_positivity_percent_of_tests_that_are_positive:
+      description: test positivity percent of tests that are positive
+    date-country-test_positivity_rate_in_last_7_days:
+      description: test positivity rate in last 7 days
+    date-country-tests_in_last_7_days_per_1000_population:
+      description: tests in last 7 days per 1000 population
+    date-country-tests_reported_in_last_7_days:
+      description: tests reported in last 7 days
+    date-country-total_daily_number_of_positive_tests_reported:
+      description: total daily number of positive tests reported
+    date-country-total_daily_tests_reported:
+      description: total daily tests reported
+    nhsboard/date-total_daily_tests_reported:
+      description: total daily tests reported
   version: 0.20210416.0
 
 
