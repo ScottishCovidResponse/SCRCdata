@@ -52,15 +52,15 @@ register:
        ?period rdfs:label ?date.
     }
   # Metadata
-  title: Deaths involving COVID19
-  description: Nice description of the dataset
-  unique_name: Scottish deaths involving COVID19  # or doi
+  title: Deaths associated with COVID-19
+  description: The weekly, and year to date, provisional number of deaths associated with coronavirus (COVID-19) registered in Scotland.
+  unique_name: Scottish deaths involving COVID-19  # or doi
   product_name: records/SARS-CoV-2/scotland/human-mortality
   file_type: csv
   release_date: 2021-04-14 11:34:37
   version: 0.20210414.0
   primary: True
-  accessibility: open                 # Default is open (could also be closed)
+  accessibility: open
 
 write:
 - data_product: records/SARS-CoV-2/scotland/human-mortality
