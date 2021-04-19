@@ -2,21 +2,18 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param sourcefile a \code{string} specifying the local path and filename
+#' @param handle list
+#' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param filename a \code{string} specifying the local path and filename
-#' associated with the processed data (the output of this function)
 #'
 #' @export
 #'
-process_cam_schools <- function(sourcefile, filename) {
+process_cam_schools <- function(handle, input_path) {
 
-  # Extract directory and filename
-  path <- dirname(filename)
-  filename <- basename(filename)
+  data_product <- "records/SARS-CoV-2/scotland/cases-and-management/schools"
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
+  scotMan <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -25,77 +22,80 @@ process_cam_schools <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
-  # Assert that the column names in the downloaded file match what is expected
-  test_cases_and_management(scotMan)
+  # # Assert that the column names in the downloaded file match what is expected
+  # test_cases_and_management(scotMan)
 
   # Extract testing data
   schools.dat <- scotMan %>%
-    dplyr::filter(grepl("School education", variable))
+    dplyr::filter(grepl("Schools", variable))
 
+  sort(unique(schools.dat$variable))
 
   # -------------------------------------------------------------------------
 
-  # Percentage absence for non COVID-19 related reasons
+  # Schools - Percentage absence - Not due to COVID-19 related reasons
   school.percentage.absent.noncovid <- schools.dat %>%
-    dplyr::filter(grepl("Percentage absence for non COVID-19 related reasons",
+    dplyr::filter(grepl("Schools - Percentage absence - Not due to COVID-19 related reasons",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-percentage_absence_for_noncovid_reasons",
+  SCRCdataAPI::write_array(
     array = as.matrix(school.percentage.absent.noncovid),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-percentage_absence_for_noncovid_reasons",
     dimension_names = list(
-      delayed = rownames(school.percentage.absent.noncovid),
-      date = colnames(school.percentage.absent.noncovid)))
+      date = rownames(school.percentage.absent.noncovid)))
 
-  # Number of pupils absent due to COVID-19 related reasons
+  # Schools - Number of pupils absent due to COVID-19 related reasons
   school.number.absent.covid <- schools.dat %>%
-    dplyr::filter(grepl("Number of pupils absent due to COVID-19 related reasons",
+    dplyr::filter(grepl("Schools - Number of pupils absent due to COVID-19 related reasons",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-pupils_absent_for_covid_reasons",
+  SCRCdataAPI::write_array(
     array = as.matrix(school.number.absent.covid),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-pupils_absent_for_covid_reasons",
     dimension_names = list(
-      delayed = rownames(school.number.absent.covid),
-      date = colnames(school.number.absent.covid)))
+      date = rownames(school.number.absent.covid)))
 
-  # Percentage absence due to COVID-19 related reasons
+  # Schools - Percentage absence - Due to COVID-19 related reasons
   school.percentage.absent.covid <- schools.dat %>%
-    dplyr::filter(grepl("Percentage absence due to COVID-19 related reasons",
+    dplyr::filter(grepl("Schools - Percentage absence - Due to COVID-19 related reasons",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-percentage_absent_for_covid_reasons",
+  SCRCdataAPI::write_array(
     array = as.matrix(school.percentage.absent.covid),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-percentage_absent_for_covid_reasons",
     dimension_names = list(
-      delayed = rownames(school.percentage.absent.covid),
-      date = colnames(school.percentage.absent.covid)))
+      date = rownames(school.percentage.absent.covid)))
 
-  # Percentage attendance
+  # Schools - Percentage attendance - All
   school.percentage.attendance <- schools.dat %>%
-    dplyr::filter(grepl("Percentage attendance",
+    dplyr::filter(grepl("Schools - Percentage attendance - All",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-percentage_attendance",
+  SCRCdataAPI::write_array(
     array = as.matrix(school.percentage.attendance),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-percentage_attendance",
     dimension_names = list(
-      delayed = rownames(school.percentage.attendance),
-      date = colnames(school.percentage.attendance)))
+      date = rownames(school.percentage.attendance)))
+
+  # "Schools - Percentage attendance - Primary"
+  # "Schools - Percentage attendance - Secondary"
+  # "Schools - Percentage attendance - Special"
+
+
 }

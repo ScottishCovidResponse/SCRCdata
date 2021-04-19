@@ -2,21 +2,18 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param sourcefile a \code{string} specifying the local path and filename
+#' @param handle list
+#' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param filename a \code{string} specifying the local path and filename
-#' associated with the processed data (the output of this function)
 #'
 #' @export
 #'
-process_cam_ambulance <- function(sourcefile, filename) {
+process_cam_ambulance <- function(handle, input_path) {
 
-  # Extract directory and filename
-  path <- dirname(filename)
-  filename <- basename(filename)
+  data_product <- "records/SARS-CoV-2/scotland/cases-and-management/ambulance"
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
+  scotMan <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -25,8 +22,8 @@ process_cam_ambulance <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
-  # Assert that the column names in the downloaded file match what is expected
-  test_cases_and_management(scotMan)
+  # # Assert that the column names in the downloaded file match what is expected
+  # test_cases_and_management(scotMan)
 
   # Extract ambulance data
   ambulance.dat <- scotMan %>%
@@ -39,43 +36,40 @@ process_cam_ambulance <- function(sourcefile, filename) {
   ambulance.suspected.hospital <- ambulance.dat %>%
     dplyr::filter(grepl("COVID-19 suspected patients taken to hospital",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-covid19_suspected_patients_taken_to_hospital",
+  SCRCdataAPI::write_array(
     array = as.matrix(ambulance.suspected.hospital),
+    handle = handle,
+    data_product = data_product,
+    component = "date-covid19_suspected_patients_taken_to_hospital",
     dimension_names = list(
-      status = rownames(ambulance.suspected.hospital),
-      date = colnames(ambulance.suspected.hospital)))
+      date = rownames(ambulance.suspected.hospital)))
 
   # COVID-19 suspected
   ambulance.suspected <- ambulance.dat %>%
     dplyr::filter(grepl("COVID-19 suspected$", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array( filename = filename,
-                             path = path,
-                             component = "date-covid19_suspected",
-                             array = as.matrix(ambulance.suspected),
-                             dimension_names = list(
-                               status = rownames(ambulance.suspected),
-                               date = colnames(ambulance.suspected)))
+  SCRCdataAPI::write_array(array = as.matrix(ambulance.suspected),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "date-covid19_suspected",
+                           dimension_names = list(
+                             date = rownames(ambulance.suspected)))
 
   # Total
   ambulance.total <- ambulance.dat %>%
     dplyr::filter(grepl("Total", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "date-total",
-                            array = as.matrix(ambulance.total),
-                            dimension_names = list(
-                              status = rownames(ambulance.total),
-                              date = colnames(ambulance.total)))
+  SCRCdataAPI::write_array(array = as.matrix(ambulance.total),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "date-total",
+                           dimension_names = list(
+                             date = rownames(ambulance.total)))
 }

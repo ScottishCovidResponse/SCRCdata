@@ -2,21 +2,18 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param sourcefile a \code{string} specifying the local path and filename
+#' @param handle list
+#' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param filename a \code{string} specifying the local path and filename
-#' associated with the processed data (the output of this function)
 #'
 #' @export
 #'
-process_cam_hospital <- function(sourcefile, filename) {
+process_cam_hospital <- function(handle, input_path) {
 
-  # Extract directory and filename
-  path <- dirname(filename)
-  filename <- basename(filename)
+  data_product <- "records/SARS-CoV-2/scotland/cases-and-management/hospital"
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
+  scotMan <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -25,8 +22,8 @@ process_cam_hospital <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
-  # Assert that the column names in the downloaded file match what is expected
-  test_cases_and_management(scotMan)
+  # # Assert that the column names in the downloaded file match what is expected
+  # test_cases_and_management(scotMan)
 
   # Extract hospital data
   hospital.dat <- scotMan %>%
@@ -43,22 +40,23 @@ process_cam_hospital <- function(sourcefile, filename) {
   # Delayed discharges
   discharges.dat <- hospital.dat %>%
     dplyr::filter(grepl("Delayed discharges", variable)) %>%
-    reshape2::dcast(1 ~ date, value.var = "count") %>%
-    dplyr::select(-"1")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "date-delayed_discharges",
-                            array = as.matrix(discharges.dat),
-                            dimension_names = list(
-                              delayed = rownames(discharges.dat),
-                              date = colnames(discharges.dat)))
+  SCRCdataAPI::write_array(array = as.matrix(discharges.dat),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "date-delayed_discharges",
+                           dimension_names = list(
+                             date = rownames(discharges.dat)))
 
 
   # Country -----------------------------------------------------------------
 
   hosp.country.dat <- hospital.dat %>%
     dplyr::filter(areatypename == "Country")
+
+  sort(unique(hosp.country.dat$variable))
 
   # COVID-19 patients in hospital - Total (archived)
   # COVID-19 patients in hospital - Confirmed (archived)
@@ -68,26 +66,11 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
+  SCRCdataAPI::write_array(
+    array = as.matrix(patients.in.hospital.dat),
+    handle = handle,
+    data_product = data_product,
     component = "total_suspected_confirmed/date-country-covid19_patients_in_hospital-archived",
-    array = as.matrix(patients.in.hospital.dat),
-    dimension_names = list(
-      status = rownames(patients.in.hospital.dat),
-      date = colnames(patients.in.hospital.dat)))
-
-  # COVID-19 patients in hospital - Confirmed
-  patients.in.hospital.dat <- hosp.country.dat %>%
-    dplyr::filter(grepl("hospital - Confirmed$", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid19_patients_in_hospital-confirmed",
-    array = as.matrix(patients.in.hospital.dat),
     dimension_names = list(
       status = rownames(patients.in.hospital.dat),
       date = colnames(patients.in.hospital.dat)))
@@ -100,35 +83,26 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
+  SCRCdataAPI::write_array(
+    array = as.matrix(patients.in.icu.dat),
+    handle = handle,
+    data_product = data_product,
     component = "total_suspected_confirmed/date-country-covid19_patients_in_icu-archived",
-    array = as.matrix(patients.in.icu.dat),
     dimension_names = list(
       status = rownames(patients.in.icu.dat),
       date = colnames(patients.in.icu.dat)))
 
-  # COVID-19 patients in ICU - Confirmed
-  patients.in.icu.dat <- hosp.country.dat %>%
-    dplyr::filter(grepl("ICU - Confirmed$", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid19_patients_in_icu-confirmed",
-    array = as.matrix(patients.in.icu.dat),
-    dimension_names = list(
-      status = rownames(patients.in.icu.dat),
-      date = colnames(patients.in.icu.dat)))
+  # "COVID-19 patients in hospital - Confirmed - Length of stay 28 days or less"
+  # "COVID-19 patients in ICU - Confirmed - Length of stay 28 days or less"
+  # "COVID-19 patients in ICU - Confirmed - Length of stay more than 28 days"
 
 
   # Special health board ----------------------------------------------------
 
   hosp.special.dat <- hospital.dat %>%
     dplyr::filter(areatypename == "Special board")
+
+  sort(unique(hosp.special.dat$variable))
 
   assert_that(length(unique(hosp.special.dat$featurename)) == 1)
 
@@ -139,29 +113,20 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital-archived",
+  SCRCdataAPI::write_array(
     array = as.matrix(special.patients.in.hosp.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital-archived",
     dimension_names = list(
       status = rownames(special.patients.in.hosp.dat),
       date = colnames(special.patients.in.hosp.dat)))
 
-  # COVID-19 patients in ICU - Total
-  special.patients.in.icu.dat <- hosp.special.dat %>%
-    dplyr::filter(grepl("ICU", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
-
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-golden_jubilee-covid19_patients_in_icu-total",
-    array = as.matrix(special.patients.in.icu.dat),
-    dimension_names = list(
-      status = rownames(special.patients.in.icu.dat),
-      date = colnames(special.patients.in.icu.dat)))
+  # "COVID-19 patients in hospital - Confirmed"
+  # "COVID-19 patients in hospital - Confirmed"
+  # "COVID-19 patients in ICU - Confirmed"
+  # "COVID-19 patients in ICU - Confirmed (archived)"
+  # "COVID-19 patients in ICU - Total (archived)"
 
 
   # NHS health board --------------------------------------------------------
@@ -169,19 +134,21 @@ process_cam_hospital <- function(sourcefile, filename) {
   hosp.nhs.dat <- hospital.dat %>%
     dplyr::filter(areatypename == "NHS board")
 
+  sort(unique(hosp.nhs.dat$variable))
+
   # COVID-19 patients in ICU - Total (archived)
   hosp.nhs.total.dat <- hosp.nhs.dat %>%
     dplyr::filter(grepl("ICU - Total \\(archived\\)", variable)) %>%
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "nhs_health_board/date-covid19_patients_in_icu-total-archived",
-                            array = as.matrix(hosp.nhs.total.dat),
-                            dimension_names = list(
-                              `health board` = rownames(hosp.nhs.total.dat),
-                              date = colnames(hosp.nhs.total.dat)))
+  SCRCdataAPI::write_array(array = as.matrix(hosp.nhs.total.dat),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "nhs_health_board/date-covid19_patients_in_icu-total-archived",
+                           dimension_names = list(
+                             `health board` = rownames(hosp.nhs.total.dat),
+                             date = colnames(hosp.nhs.total.dat)))
 
   # COVID-19 patients in hospital - Suspected (archived)
   hosp.nhs.suspected.dat <- hosp.nhs.dat %>%
@@ -189,11 +156,11 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "nhs_health_board/date-covid19_patients_in_hospital-suspected-archived",
+  SCRCdataAPI::write_array(
     array = as.matrix(hosp.nhs.suspected.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_hospital-suspected-archived",
     dimension_names = list(
       `health board` = rownames(hosp.nhs.suspected.dat),
       date = colnames(hosp.nhs.suspected.dat)))
@@ -204,11 +171,11 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed-archived",
+  SCRCdataAPI::write_array(
     array = as.matrix(hosp.nhs.confirmed.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed-archived",
     dimension_names = list(
       `health board` = rownames(hosp.nhs.confirmed.dat),
       date = colnames(hosp.nhs.confirmed.dat)))
@@ -219,13 +186,13 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "nhs_health_board/date-covid19_patients_in_icu-confirmed-archived",
-                            array = as.matrix(tmp),
-                            dimension_names = list(
-                              `health board` = rownames(tmp),
-                              date = colnames(tmp)))
+  SCRCdataAPI::write_array(array = as.matrix(tmp),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "nhs_health_board/date-covid19_patients_in_icu-confirmed-archived",
+                           dimension_names = list(
+                             `health board` = rownames(tmp),
+                             date = colnames(tmp)))
 
   # COVID-19 patients in hospital - Confirmed
   tmp <- hosp.nhs.dat %>%
@@ -233,25 +200,25 @@ process_cam_hospital <- function(sourcefile, filename) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
-                            array = as.matrix(tmp),
-                            dimension_names = list(
-                              `health board` = rownames(tmp),
-                              date = colnames(tmp)))
+  SCRCdataAPI::write_array(array = as.matrix(tmp),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
+                           dimension_names = list(
+                             `health board` = rownames(tmp),
+                             date = colnames(tmp)))
 
-    # COVID-19 patients in ICU - Confirmed
+  # COVID-19 patients in ICU - Confirmed
   tmp <- hosp.nhs.dat %>%
     dplyr::filter(grepl("ICU - Confirmed$", variable)) %>%
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::create_array(filename = filename,
-                            path = path,
-                            component = "nhs_health_board/date-covid19_patients_in_icu-confirmed",
-                            array = as.matrix(tmp),
-                            dimension_names = list(
-                              `health board` = rownames(tmp),
-                              date = colnames(tmp)))
+  SCRCdataAPI::write_array(array = as.matrix(tmp),
+                           handle = handle,
+                           data_product = data_product,
+                           component = "nhs_health_board/date-covid19_patients_in_icu-confirmed",
+                           dimension_names = list(
+                             `health board` = rownames(tmp),
+                             date = colnames(tmp)))
 }

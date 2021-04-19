@@ -2,21 +2,18 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param sourcefile a \code{string} specifying the local path and filename
+#' @param handle list
+#' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param filename a \code{string} specifying the local path and filename
-#' associated with the processed data (the output of this function)
 #'
 #' @export
 #'
-process_cam_carehomes <- function(sourcefile, filename) {
+process_cam_carehomes <- function(handle, input_path) {
 
-  # Extract directory and filename
-  path <- dirname(filename)
-  filename <- basename(filename)
+  data_product <- "records/SARS-CoV-2/scotland/cases-and-management/carehomes"
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
+  scotMan <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -25,89 +22,84 @@ process_cam_carehomes <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
-  # Assert that the column names in the downloaded file match what is expected
-  test_cases_and_management(scotMan)
+  # # Assert that the column names in the downloaded file match what is expected
+  # test_cases_and_management(scotMan)
 
   # Extract carehomes data
   carehomes.dat <- scotMan %>%
     dplyr::filter(grepl("Adult care homes", variable))
-
 
   # -------------------------------------------------------------------------
 
   # Total number of staff in adult care homes which submitted a return
   carehomes.count.total.staff.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Total number of staff", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-staff_in_adult_carehomes_which_submitted_a_return",
+  SCRCdataAPI::write_array(
     array = as.matrix(carehomes.count.total.staff.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-staff_in_adult_carehomes_which_submitted_a_return",
     dimension_names = list(
-      delayed = rownames(carehomes.count.total.staff.dat),
-      date = colnames(carehomes.count.total.staff.dat)))
+      date = rownames(carehomes.count.total.staff.dat)))
 
   # Adult care homes which submitted a return
   carehomes.count.carehomes.return.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Adult care homes which submitted a return",
                         variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-adult_carehomes_which_submitted_a_return",
+  SCRCdataAPI::write_array(
     array = as.matrix(carehomes.count.carehomes.return.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-adult_carehomes_which_submitted_a_return",
     dimension_names = list(
-      delayed = rownames(carehomes.count.carehomes.return.dat),
-      date = colnames(carehomes.count.carehomes.return.dat)))
+      date = rownames(carehomes.count.carehomes.return.dat)))
 
   # Response rate
   carehomes.ratio.response.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Response rate", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-response_rate",
+  SCRCdataAPI::write_array(
     array = as.matrix(carehomes.ratio.response.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-response_rate",
     dimension_names = list(
-      delayed = rownames(carehomes.ratio.response.dat),
-      date = colnames(carehomes.ratio.response.dat)))
+      date = rownames(carehomes.ratio.response.dat)))
 
   # Staff absence rate
   carehomes.ratio.staff.absence.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Staff absence rate", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-staff_absence_rate",
+
+  SCRCdataAPI::write_array(
     array = as.matrix(carehomes.ratio.staff.absence.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-staff_absence_rate",
     dimension_names = list(
-      delayed = rownames(carehomes.ratio.staff.absence.dat),
-      date = colnames(carehomes.ratio.staff.absence.dat)))
+      date = rownames(carehomes.ratio.staff.absence.dat)))
 
   # Number of staff reported as absent
   carehomes.count.staff.dat <- carehomes.dat %>%
     dplyr::filter(grepl("Number of staff reported as absent", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-staff_reported_absent",
+  SCRCdataAPI::write_array(
     array = as.matrix(carehomes.count.staff.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-staff_reported_absent",
     dimension_names = list(
-      delayed = rownames(carehomes.count.staff.dat),
-      date = colnames(carehomes.count.staff.dat)))
+      date = rownames(carehomes.count.staff.dat)))
 }
