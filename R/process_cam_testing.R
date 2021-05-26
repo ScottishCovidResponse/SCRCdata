@@ -54,6 +54,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "test_result/date-people_tested_for_covid19-cumulative",
+    description = "cumulative number of people tested",
     dimension_names = list(delayed = rownames(tmp),
                            date = colnames(tmp)))
 
@@ -70,6 +71,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "testing_location/date-covid19_tests_carried_out-cumulative",
+    description = "cumulative number of tests carried out",
     dimension_names = list(delayed = rownames(tmp),
                            date = colnames(tmp)))
 
@@ -86,6 +88,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "testing_location/date-covid19_tests_carried_out-daily",
+    description = "tests carried out daily",
     dimension_names = list(delayed = rownames(tmp),
                            date = colnames(tmp)))
 
@@ -100,6 +103,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-new_cases_as_percentage_of_people_newly_tested",
+    description = "new cases as a percentage of people newly tested",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - New cases reported
@@ -113,6 +117,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-new_cases_reported",
+    description = "new cases reported",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - People with first test results in last 7 days
@@ -126,6 +131,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-people_with_first_test_results_in_last_7_days",
+    description = "people with first test results in the last 7 days",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Positive cases reported in last 7 days
@@ -139,6 +145,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-positive_cases_reported_in_last_7_days",
+    description = "positive cases reported in the last 7 days",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Positive tests reported in last 7 days
@@ -152,6 +159,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-positive_tests_reported_in_last_7_days",
+    description = "positive tests reported in the last 7 days",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Test positivity (percent of tests that are positive)
@@ -165,6 +173,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-test_positivity_percent_of_tests_that_are_positive",
+    description = "test positivity",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Test positivity rate in last 7 days
@@ -178,6 +187,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-test_positivity_rate_in_last_7_days",
+    description = "test positivity in the last 7 days",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Tests in last 7 days per 1000 population
@@ -191,6 +201,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-tests_in_last_7_days_per_1000_population",
+    description = "tests reported in the last 7 days per 1000 population",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Tests reported in last 7 days
@@ -204,6 +215,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-tests_reported_in_last_7_days",
+    description = "tests reported in the last 7 days",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Total daily number of positive tests reported
@@ -217,6 +229,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-total_daily_number_of_positive_tests_reported",
+    description = "positive tests reported daily",
     dimension_names = list(date = rownames(tmp)))
 
   # Testing - Total daily tests reported
@@ -230,6 +243,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-total_daily_tests_reported",
+    description = "tests reported daily",
     dimension_names = list(date = rownames(tmp)))
 
   # Not country -------------------------------------------------------------
@@ -250,6 +264,7 @@ process_cam_testing <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "nhsboard/date-total_daily_tests_reported",
+    description = "tests reported daily by NHS board",
     dimension_names = list(delayed = rownames(tmp),
                            date = colnames(tmp)))
 }

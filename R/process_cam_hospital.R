@@ -47,6 +47,7 @@ process_cam_hospital <- function(handle, input_path) {
                            handle = handle,
                            data_product = data_product,
                            component = "date-delayed_discharges",
+                           description = "delayed discharges",
                            dimension_names = list(
                              date = rownames(discharges.dat)))
 
@@ -66,11 +67,12 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  component_id <- SCRCdataAPI::write_array(
     array = as.matrix(patients.in.hospital.dat),
     handle = handle,
     data_product = data_product,
     component = "total_suspected_confirmed/date-country-covid19_patients_in_hospital-archived",
+    description = "total, suspected, and confirmed COVID patients in hospital (archived)",
     dimension_names = list(
       status = rownames(patients.in.hospital.dat),
       date = colnames(patients.in.hospital.dat)))
@@ -83,11 +85,12 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  component_id <- SCRCdataAPI::write_array(
     array = as.matrix(patients.in.icu.dat),
     handle = handle,
     data_product = data_product,
     component = "total_suspected_confirmed/date-country-covid19_patients_in_icu-archived",
+    description = "total, suspected, and confirmed COVID patients in ICU (archived)",
     dimension_names = list(
       status = rownames(patients.in.icu.dat),
       date = colnames(patients.in.icu.dat)))
@@ -118,6 +121,7 @@ process_cam_hospital <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "confirmed_suspected/date-golden_jubilee-covid19_patients_in_hospital-archived",
+    description = "confirmed and suspected COVID patients in special boards (archived)",
     dimension_names = list(
       status = rownames(special.patients.in.hosp.dat),
       date = colnames(special.patients.in.hosp.dat)))
@@ -142,13 +146,15 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(array = as.matrix(hosp.nhs.total.dat),
-                           handle = handle,
-                           data_product = data_product,
-                           component = "nhs_health_board/date-covid19_patients_in_icu-total-archived",
-                           dimension_names = list(
-                             `health board` = rownames(hosp.nhs.total.dat),
-                             date = colnames(hosp.nhs.total.dat)))
+  SCRCdataAPI::write_array(
+    array = as.matrix(hosp.nhs.total.dat),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_icu-total-archived",
+    description = "total COVID patients in ICU by NHS health board (archived)",
+    dimension_names = list(
+      `health board` = rownames(hosp.nhs.total.dat),
+      date = colnames(hosp.nhs.total.dat)))
 
   # COVID-19 patients in hospital - Suspected (archived)
   hosp.nhs.suspected.dat <- hosp.nhs.dat %>%
@@ -161,6 +167,7 @@ process_cam_hospital <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "nhs_health_board/date-covid19_patients_in_hospital-suspected-archived",
+    description = "suspected COVID patients in hospital by NHS health board (archived)",
     dimension_names = list(
       `health board` = rownames(hosp.nhs.suspected.dat),
       date = colnames(hosp.nhs.suspected.dat)))
@@ -176,6 +183,7 @@ process_cam_hospital <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed-archived",
+    description = "confirmed COVID patients in hospital by NHS health board (archived)",
     dimension_names = list(
       `health board` = rownames(hosp.nhs.confirmed.dat),
       date = colnames(hosp.nhs.confirmed.dat)))
@@ -186,13 +194,15 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(array = as.matrix(tmp),
-                           handle = handle,
-                           data_product = data_product,
-                           component = "nhs_health_board/date-covid19_patients_in_icu-confirmed-archived",
-                           dimension_names = list(
-                             `health board` = rownames(tmp),
-                             date = colnames(tmp)))
+  SCRCdataAPI::write_array(
+    array = as.matrix(tmp),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_icu-confirmed-archived",
+    description = "confirmed COVID patients in ICU by NHS health board (archived)",
+    dimension_names = list(
+      `health board` = rownames(tmp),
+      date = colnames(tmp)))
 
   # COVID-19 patients in hospital - Confirmed
   tmp <- hosp.nhs.dat %>%
@@ -200,13 +210,15 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(array = as.matrix(tmp),
-                           handle = handle,
-                           data_product = data_product,
-                           component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
-                           dimension_names = list(
-                             `health board` = rownames(tmp),
-                             date = colnames(tmp)))
+  SCRCdataAPI::write_array(
+    array = as.matrix(tmp),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_hospital-confirmed",
+    description = "confirmed COVID patients in hospital",
+    dimension_names = list(
+      `health board` = rownames(tmp),
+      date = colnames(tmp)))
 
   # COVID-19 patients in ICU - Confirmed
   tmp <- hosp.nhs.dat %>%
@@ -214,11 +226,13 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(array = as.matrix(tmp),
-                           handle = handle,
-                           data_product = data_product,
-                           component = "nhs_health_board/date-covid19_patients_in_icu-confirmed",
-                           dimension_names = list(
-                             `health board` = rownames(tmp),
-                             date = colnames(tmp)))
+  SCRCdataAPI::write_array(
+    array = as.matrix(tmp),
+    handle = handle,
+    data_product = data_product,
+    component = "nhs_health_board/date-covid19_patients_in_icu-confirmed",
+    description = "confirmed COVID patients in ICU by NHS health board",
+    dimension_names = list(
+      `health board` = rownames(tmp),
+      date = colnames(tmp)))
 }

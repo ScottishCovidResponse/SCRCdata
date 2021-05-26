@@ -43,6 +43,7 @@ process_cam_calls <- function(handle, input_path) {
                             handle = handle,
                             data_product = data_product,
                             component = "call_centre/date-number_of_calls",
+                           description = "number of calls",
                             dimension_names = list(
                               helpline = rownames(calls.dat),
                               date = colnames(calls.dat)))

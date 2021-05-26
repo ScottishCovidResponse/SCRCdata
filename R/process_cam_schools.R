@@ -45,6 +45,7 @@ process_cam_schools <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-percentage_absence_for_noncovid_reasons",
+    description = "percentage absent for non-COVID reasons",
     dimension_names = list(
       date = rownames(school.percentage.absent.noncovid)))
 
@@ -60,6 +61,7 @@ process_cam_schools <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-pupils_absent_for_covid_reasons",
+    description = "pupils absent for COVID reasons",
     dimension_names = list(
       date = rownames(school.number.absent.covid)))
 
@@ -75,6 +77,7 @@ process_cam_schools <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-percentage_absent_for_covid_reasons",
+    description = "percentage absent for COVID reasons",
     dimension_names = list(
       date = rownames(school.percentage.absent.covid)))
 
@@ -90,6 +93,7 @@ process_cam_schools <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-percentage_attendance",
+    description = "percentage attendance",
     dimension_names = list(
       date = rownames(school.percentage.attendance)))
 

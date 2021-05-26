@@ -44,6 +44,7 @@ process_cam_ambulance <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-covid19_suspected_patients_taken_to_hospital",
+    description = "suspected patients taken to hospital",
     dimension_names = list(
       date = rownames(ambulance.suspected.hospital)))
 
@@ -57,6 +58,7 @@ process_cam_ambulance <- function(handle, input_path) {
                            handle = handle,
                            data_product = data_product,
                            component = "date-covid19_suspected",
+                           description = "suspected",
                            dimension_names = list(
                              date = rownames(ambulance.suspected)))
 
@@ -70,6 +72,7 @@ process_cam_ambulance <- function(handle, input_path) {
                            handle = handle,
                            data_product = data_product,
                            component = "date-total",
+                           description = "total",
                            dimension_names = list(
                              date = rownames(ambulance.total)))
 }

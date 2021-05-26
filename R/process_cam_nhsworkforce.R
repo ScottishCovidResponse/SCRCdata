@@ -44,6 +44,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-covid_related_absences-other_staff",
+    description = "COVID-related absences for other staff",
     dimension_names = list(
       date = rownames(nhs.other)))
 
@@ -58,6 +59,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-covid_related_absences-medical_and_dental_staff",
+    description = "COVID-related absences for medical and dental staff",
     dimension_names = list(
       date = rownames(nhs.medical.dental)))
 
@@ -72,6 +74,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-covid_related_absences-all_staff",
+    description = "COVID-related absences for all staff",
     dimension_names = list(
       date = rownames(nhs.all)))
 
@@ -86,6 +89,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     handle = handle,
     data_product = data_product,
     component = "date-country-covid_related_absences-nursing_and_midwifery_staff",
+    description = "COVID-related absences for nursing and midwifery staff",
     dimension_names = list(
       date = rownames(nhs.nursing.midwifery)))
 }
