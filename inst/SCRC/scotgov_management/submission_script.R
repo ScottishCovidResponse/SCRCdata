@@ -11,22 +11,16 @@
 library(SCRCdata)
 library(SCRCdataAPI)
 
-# `fdp run`:
-# - read config.yaml and generate a working-config.yaml with specific
-#   version numbers and no aliases
-# - save working-config.yaml in local data store
-# - save path to working-config.yaml in global environment in $wconfig
-fdp_run("config.yaml")
-# fdp_run("config.yaml2")
+
+fdp_pull("config.yaml")
+fdp_run("config.yaml", skip = TRUE)
+
 
 # Open the connection to the local registry with a given config file
 h <- initialise()
-# Download data source, save it in the local data store, and register
-# metadata in the local registry
-add_to_register(h, "management-data")
 
 # Return location of file stored in the pipeline
-input_path <- read_link(h, "management-data")
+input_path <- link_read(h, "management-data")
 
 process_cam_ambulance(h, input_path)
 process_cam_calls(h, input_path)

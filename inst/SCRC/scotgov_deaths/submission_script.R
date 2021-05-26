@@ -21,7 +21,7 @@ library(SCRCdataAPI)
 fdp_run("config.yaml")
 
 # Open the connection to the local registry with a given config file
-h <- initialise()
+h <- initialise(skip = T)
 # Download data source, save it in the local data store, and register
 # metadata in the local registry
 add_to_register(h, "raw-mortality-data")
