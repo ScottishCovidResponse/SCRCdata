@@ -77,6 +77,12 @@ process_cam_hospital <- function(handle, input_path) {
       status = rownames(patients.in.hospital.dat),
       date = colnames(patients.in.hospital.dat)))
 
+  SCRCdataAPI::issue_with_component(
+    component_id = component_id,
+    handle = handle,
+    issue = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
+    severity = 7)
+
   # COVID-19 patients in ICU - Total (archived)
   # COVID-19 patients in ICU - Suspected (archived)
   # COVID-19 patients in ICU - Confirmed (archived)
@@ -94,6 +100,12 @@ process_cam_hospital <- function(handle, input_path) {
     dimension_names = list(
       status = rownames(patients.in.icu.dat),
       date = colnames(patients.in.icu.dat)))
+
+  SCRCdataAPI::issue_with_component(
+    component_id = component_id,
+    handle = handle,
+    issue = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
+    severity = 7)
 
   # "COVID-19 patients in hospital - Confirmed - Length of stay 28 days or less"
   # "COVID-19 patients in ICU - Confirmed - Length of stay 28 days or less"
