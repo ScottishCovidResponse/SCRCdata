@@ -99,7 +99,7 @@ process_cam_carehomes <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  data_product_id <- SCRCdataAPI::write_array(
     array = as.matrix(carehomes.count.staff.dat),
     handle = handle,
     data_product = data_product,
@@ -107,4 +107,10 @@ process_cam_carehomes <- function(handle, input_path) {
     description = "staff reported absent",
     dimension_names = list(
       date = rownames(carehomes.count.staff.dat)))
+
+  SCRCdataAPI::issue_with_dataproduct(
+    data_product_id = data_product_id,
+    handle = handle,
+    issue = "Issue with carehomes data product (example of an issue).",
+    severity = 2)
 }
