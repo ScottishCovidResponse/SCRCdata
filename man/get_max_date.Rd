@@ -11,9 +11,6 @@ get_max_date(filepath, components)
 
 \item{components}{components}
 }
-\value{
-
-}
 \description{
 get_max_date
 }

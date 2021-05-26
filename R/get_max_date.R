@@ -3,8 +3,6 @@
 #' @param filepath filepath
 #' @param components components
 #'
-#' @return
-#'
 #' @export
 #'
 get_max_date <- function(filepath, components) {
