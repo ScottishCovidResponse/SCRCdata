@@ -104,7 +104,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-new_cases_as_percentage_of_people_newly_tested",
     description = "new cases as a percentage of people newly tested",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - New cases reported
   tmp <- testing.country.dat %>%
@@ -118,7 +119,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-new_cases_reported",
     description = "new cases reported",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - People with first test results in last 7 days
   tmp <- testing.country.dat %>%
@@ -132,7 +134,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-people_with_first_test_results_in_last_7_days",
     description = "people with first test results in the last 7 days",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Positive cases reported in last 7 days
   tmp <- testing.country.dat %>%
@@ -146,7 +149,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-positive_cases_reported_in_last_7_days",
     description = "positive cases reported in the last 7 days",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Positive tests reported in last 7 days
   tmp <- testing.country.dat %>%
@@ -160,7 +164,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-positive_tests_reported_in_last_7_days",
     description = "positive tests reported in the last 7 days",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Test positivity (percent of tests that are positive)
   tmp <- testing.country.dat %>%
@@ -174,7 +179,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-test_positivity_percent_of_tests_that_are_positive",
     description = "test positivity",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Test positivity rate in last 7 days
   tmp <- testing.country.dat %>%
@@ -188,7 +194,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-test_positivity_rate_in_last_7_days",
     description = "test positivity in the last 7 days",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Tests in last 7 days per 1000 population
   tmp <- testing.country.dat %>%
@@ -202,7 +209,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-tests_in_last_7_days_per_1000_population",
     description = "tests reported in the last 7 days per 1000 population",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Tests reported in last 7 days
   tmp <- testing.country.dat %>%
@@ -216,7 +224,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-tests_reported_in_last_7_days",
     description = "tests reported in the last 7 days",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Total daily number of positive tests reported
   tmp <- testing.country.dat %>%
@@ -230,7 +239,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-total_daily_number_of_positive_tests_reported",
     description = "positive tests reported daily",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Testing - Total daily tests reported
   tmp <- testing.country.dat %>%
@@ -244,7 +254,8 @@ process_cam_testing <- function(handle, input_path) {
     data_product = data_product,
     component = "date-country-total_daily_tests_reported",
     description = "tests reported daily",
-    dimension_names = list(date = rownames(tmp)))
+    dimension_names = list(date = rownames(tmp),
+                           count = colnames(tmp)))
 
   # Not country -------------------------------------------------------------
 

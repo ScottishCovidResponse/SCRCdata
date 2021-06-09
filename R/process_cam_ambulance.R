@@ -46,7 +46,8 @@ process_cam_ambulance <- function(handle, input_path) {
     component = "date-covid19_suspected_patients_taken_to_hospital",
     description = "suspected patients taken to hospital",
     dimension_names = list(
-      date = rownames(ambulance.suspected.hospital)))
+      date = rownames(ambulance.suspected.hospital),
+      count = colnames(ambulance.suspected.hospital)))
 
   # COVID-19 suspected
   ambulance.suspected <- ambulance.dat %>%
@@ -60,7 +61,8 @@ process_cam_ambulance <- function(handle, input_path) {
                            component = "date-covid19_suspected",
                            description = "suspected",
                            dimension_names = list(
-                             date = rownames(ambulance.suspected)))
+                             date = rownames(ambulance.suspected),
+                             count = colnames(ambulance.suspected)))
 
   # Total
   ambulance.total <- ambulance.dat %>%
@@ -74,5 +76,6 @@ process_cam_ambulance <- function(handle, input_path) {
                     component = "date-total",
                     description = "total",
                     dimension_names = list(
-                      date = rownames(ambulance.total)))
+                      date = rownames(ambulance.total),
+                      count = colnames(ambulance.total)))
 }

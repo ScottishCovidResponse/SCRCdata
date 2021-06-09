@@ -46,7 +46,8 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     component = "date-country-covid_related_absences-other_staff",
     description = "COVID-related absences for other staff",
     dimension_names = list(
-      date = rownames(nhs.other)))
+      date = rownames(nhs.other),
+      count = colnames(nhs.other)))
 
   # Medical and dental staff
   nhs.medical.dental <- nhsworkforce.dat %>%
@@ -61,7 +62,8 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     component = "date-country-covid_related_absences-medical_and_dental_staff",
     description = "COVID-related absences for medical and dental staff",
     dimension_names = list(
-      date = rownames(nhs.medical.dental)))
+      date = rownames(nhs.medical.dental),
+      count = colnames(nhs.medical.dental)))
 
   # All staff
   nhs.all <- nhsworkforce.dat %>%
@@ -76,7 +78,8 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     component = "date-country-covid_related_absences-all_staff",
     description = "COVID-related absences for all staff",
     dimension_names = list(
-      date = rownames(nhs.all)))
+      date = rownames(nhs.all),
+      count = colnames(nhs.all)))
 
   # Nursing and midwifery staff
   nhs.nursing.midwifery <- nhsworkforce.dat %>%
@@ -91,5 +94,6 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     component = "date-country-covid_related_absences-nursing_and_midwifery_staff",
     description = "COVID-related absences for nursing and midwifery staff",
     dimension_names = list(
-      date = rownames(nhs.nursing.midwifery)))
+      date = rownames(nhs.nursing.midwifery),
+      count = colnames(nhs.nursing.midwifery)))
 }

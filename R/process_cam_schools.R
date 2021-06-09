@@ -47,7 +47,8 @@ process_cam_schools <- function(handle, input_path) {
     component = "date-country-percentage_absence_for_noncovid_reasons",
     description = "percentage absent for non-COVID reasons",
     dimension_names = list(
-      date = rownames(school.percentage.absent.noncovid)))
+      date = rownames(school.percentage.absent.noncovid),
+      count = colnames(school.percentage.absent.noncovid)))
 
   # Schools - Number of pupils absent due to COVID-19 related reasons
   school.number.absent.covid <- schools.dat %>%
@@ -63,7 +64,8 @@ process_cam_schools <- function(handle, input_path) {
     component = "date-country-pupils_absent_for_covid_reasons",
     description = "pupils absent for COVID reasons",
     dimension_names = list(
-      date = rownames(school.number.absent.covid)))
+      date = rownames(school.number.absent.covid),
+      count = colnames(school.number.absent.covid)))
 
   # Schools - Percentage absence - Due to COVID-19 related reasons
   school.percentage.absent.covid <- schools.dat %>%
@@ -79,7 +81,8 @@ process_cam_schools <- function(handle, input_path) {
     component = "date-country-percentage_absent_for_covid_reasons",
     description = "percentage absent for COVID reasons",
     dimension_names = list(
-      date = rownames(school.percentage.absent.covid)))
+      date = rownames(school.percentage.absent.covid),
+      count = colnames(school.percentage.absent.covid)))
 
   # Schools - Percentage attendance - All
   school.percentage.attendance <- schools.dat %>%
@@ -95,7 +98,8 @@ process_cam_schools <- function(handle, input_path) {
     component = "date-country-percentage_attendance",
     description = "percentage attendance",
     dimension_names = list(
-      date = rownames(school.percentage.attendance)))
+      date = rownames(school.percentage.attendance),
+      count = colnames(school.percentage.attendance)))
 
   # "Schools - Percentage attendance - Primary"
   # "Schools - Percentage attendance - Secondary"
