@@ -181,7 +181,7 @@ convert_area_nrs <- function(x, transage.dat, conversionfile) {
     # If larger geography, use converion table to convert
   } else if(x %in% c("ur","iz","mmw","spc","la", "hb", "ttwa")) {
 
-    transformed_data <- SCRCdataAPI::convert_to_lower(
+    transformed_data <- rFDP::convert_to_lower(
       dat = transage.dat,
       convert_to = x,
       conversion_table = conversionfile)
@@ -192,7 +192,7 @@ convert_area_nrs <- function(x, transage.dat, conversionfile) {
     # If grid, use converion table to convert
   } else if(grepl("grid", x)) {
 
-    transarea.dat <- SCRCdataAPI::convert_to_grid(
+    transarea.dat <- rFDP::convert_to_grid(
       dat = transage.dat,
       grid_size = x,
       conversion.table = conversionfile)

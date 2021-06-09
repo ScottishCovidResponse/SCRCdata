@@ -10,7 +10,7 @@
 #' @import dplyr
 #' @import readxl
 #' @import reshape2
-#' @import SCRCdataAPI
+#' @import rFDP
 #' @import sf
 #' @import tibble
 #'

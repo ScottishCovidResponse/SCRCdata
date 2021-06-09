@@ -2,21 +2,18 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param sourcefile a \code{string} specifying the local path and filename
+#' @param handle list
+#' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
-#' @param filename a \code{string} specifying the local path and filename
-#' associated with the processed data (the output of this function)
 #'
 #' @export
 #'
-process_cam_nhsworkforce <- function(sourcefile, filename) {
+process_cam_nhsworkforce <- function(handle, input_path) {
 
-  # Extract directory and filename
-  path <- dirname(filename)
-  filename <- basename(filename)
+  data_product <- "records/SARS-CoV-2/scotland/cases-and-management/nhsworkforce"
 
   # Read in data
-  scotMan <- read.csv(file = sourcefile, stringsAsFactors = F) %>%
+  scotMan <- read.csv(file = input_path, stringsAsFactors = F) %>%
     dplyr::mutate(featurecode = gsub(
       "http://statistics.gov.scot/id/statistical-geography/",
       "", featurecode),
@@ -25,73 +22,74 @@ process_cam_nhsworkforce <- function(sourcefile, filename) {
                                            T ~ count)) %>%
     dplyr::mutate(count = as.numeric(count))
 
-  # Assert that the column names in the downloaded file match what is expected
-  test_cases_and_management(scotMan)
+  # # Assert that the column names in the downloaded file match what is expected
+  # test_cases_and_management(scotMan)
 
   # Extract nhs workforce data
   nhsworkforce.dat <- scotMan %>%
     dplyr::filter(grepl("NHS workforce COVID-19 absences", variable))
 
+  sort(unique(nhsworkforce.dat$variable))
 
   # -------------------------------------------------------------------------
 
   # Other staff
   nhs.other <- nhsworkforce.dat %>%
     dplyr::filter(grepl("Other staff", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid_related_absences-other_staff",
+  rFDP::write_array(
     array = as.matrix(nhs.other),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-covid_related_absences-other_staff",
+    description = "COVID-related absences for other staff",
     dimension_names = list(
-      delayed = rownames(nhs.other),
-      date = colnames(nhs.other)))
+      date = rownames(nhs.other)))
 
   # Medical and dental staff
   nhs.medical.dental <- nhsworkforce.dat %>%
     dplyr::filter(grepl("Medical and dental staff", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid_related_absences-medical_and_dental_staff",
+  rFDP::write_array(
     array = as.matrix(nhs.medical.dental),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-covid_related_absences-medical_and_dental_staff",
+    description = "COVID-related absences for medical and dental staff",
     dimension_names = list(
-      delayed = rownames(nhs.medical.dental),
-      date = colnames(nhs.medical.dental)))
+      date = rownames(nhs.medical.dental)))
 
   # All staff
   nhs.all <- nhsworkforce.dat %>%
     dplyr::filter(grepl("All staff", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid_related_absences-all_staff",
+  rFDP::write_array(
     array = as.matrix(nhs.all),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-covid_related_absences-all_staff",
+    description = "COVID-related absences for all staff",
     dimension_names = list(
-      delayed = rownames(nhs.all),
-      date = colnames(nhs.all)))
+      date = rownames(nhs.all)))
 
   # Nursing and midwifery staff
   nhs.nursing.midwifery <- nhsworkforce.dat %>%
     dplyr::filter(grepl("Nursing and midwifery staff", variable)) %>%
-    reshape2::dcast(variable ~ date, value.var = "count") %>%
-    tibble::column_to_rownames("variable")
+    dplyr::select_if(~ length(unique(.)) != 1) %>%
+    tibble::column_to_rownames("date")
 
-  SCRCdataAPI::create_array(
-    filename = filename,
-    path = path,
-    component = "date-country-covid_related_absences-nursing_and_midwifery_staff",
+  rFDP::write_array(
     array = as.matrix(nhs.nursing.midwifery),
+    handle = handle,
+    data_product = data_product,
+    component = "date-country-covid_related_absences-nursing_and_midwifery_staff",
+    description = "COVID-related absences for nursing and midwifery staff",
     dimension_names = list(
-      delayed = rownames(nhs.nursing.midwifery),
-      date = colnames(nhs.nursing.midwifery)))
+      date = rownames(nhs.nursing.midwifery)))
 }

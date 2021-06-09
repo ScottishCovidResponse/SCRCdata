@@ -4,14 +4,13 @@
 \alias{process_cam_ambulance}
 \title{process_cam_ambulance}
 \usage{
-process_cam_ambulance(sourcefile, filename)
+process_cam_ambulance(handle, input_path)
 }
 \arguments{
-\item{sourcefile}{a \code{string} specifying the local path and filename
-associated with the source data (the input of this function)}
+\item{handle}{list}
 
-\item{filename}{a \code{string} specifying the local path and filename
-associated with the processed data (the output of this function)}
+\item{input_path}{a \code{string} specifying the local path and filename
+associated with the source data (the input of this function)}
 }
 \description{
 Process a subset of the cases-and-management dataset
