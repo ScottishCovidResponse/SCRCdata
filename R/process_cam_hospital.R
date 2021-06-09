@@ -49,7 +49,8 @@ process_cam_hospital <- function(handle, input_path) {
                            component = "date-delayed_discharges",
                            description = "delayed discharges",
                            dimension_names = list(
-                             date = rownames(discharges.dat)))
+                             date = rownames(discharges.dat),
+                             count = colnames(discharges.dat)))
 
 
   # Country -----------------------------------------------------------------

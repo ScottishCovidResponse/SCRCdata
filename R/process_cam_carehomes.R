@@ -44,7 +44,8 @@ process_cam_carehomes <- function(handle, input_path) {
     component = "date-country-staff_in_adult_carehomes_which_submitted_a_return",
     description = "staff in adult carehomes which submitted a return",
     dimension_names = list(
-      date = rownames(carehomes.count.total.staff.dat)))
+      date = rownames(carehomes.count.total.staff.dat),
+      count = colnames(carehomes.count.total.staff.dat)))
 
   # Adult care homes which submitted a return
   carehomes.count.carehomes.return.dat <- carehomes.dat %>%
@@ -60,7 +61,8 @@ process_cam_carehomes <- function(handle, input_path) {
     component = "date-country-adult_carehomes_which_submitted_a_return",
     description = "adult carehomes which submitted a return",
     dimension_names = list(
-      date = rownames(carehomes.count.carehomes.return.dat)))
+      date = rownames(carehomes.count.carehomes.return.dat),
+      count = colnames(carehomes.count.carehomes.return.dat)))
 
   # Response rate
   carehomes.ratio.response.dat <- carehomes.dat %>%
@@ -75,7 +77,8 @@ process_cam_carehomes <- function(handle, input_path) {
     component = "date-country-response_rate",
     description = "response rate",
     dimension_names = list(
-      date = rownames(carehomes.ratio.response.dat)))
+      date = rownames(carehomes.ratio.response.dat),
+      count = colnames(carehomes.ratio.response.dat)))
 
   # Staff absence rate
   carehomes.ratio.staff.absence.dat <- carehomes.dat %>%
@@ -91,7 +94,8 @@ process_cam_carehomes <- function(handle, input_path) {
     component = "date-country-staff_absence_rate",
     description = "staff absence rate",
     dimension_names = list(
-      date = rownames(carehomes.ratio.staff.absence.dat)))
+      date = rownames(carehomes.ratio.staff.absence.dat),
+      count = colnames(carehomes.ratio.staff.absence.dat)))
 
   # Number of staff reported as absent
   carehomes.count.staff.dat <- carehomes.dat %>%
@@ -106,7 +110,8 @@ process_cam_carehomes <- function(handle, input_path) {
     component = "date-country-staff_reported_absent",
     description = "staff reported absent",
     dimension_names = list(
-      date = rownames(carehomes.count.staff.dat)))
+      date = rownames(carehomes.count.staff.dat),
+      count = colnames(carehomes.count.staff.dat)))
 
   rFDP::issue_with_dataproduct(
     index = data_product_id,

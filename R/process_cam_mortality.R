@@ -39,5 +39,6 @@ process_cam_mortality <- function(handle, input_path) {
     component = "date-country-covid19_confirmed_deaths_registered-cumulative",
     description = "cumulative number of confirmed deaths",
     dimension_names = list(
-      date = rownames(deaths.dat)))
+      date = rownames(deaths.dat),
+      count = colnames(deaths.dat)))
 }
