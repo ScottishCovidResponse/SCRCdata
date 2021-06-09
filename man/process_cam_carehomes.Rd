@@ -7,7 +7,7 @@
 process_cam_carehomes(handle, input_path)
 }
 \arguments{
-\item{handle}{list}
+\item{handle}{\code{fdp} object}
 
 \item{input_path}{a \code{string} specifying the local path and filename
 associated with the source data (the input of this function)}

@@ -39,7 +39,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(nhs.other),
     handle = handle,
     data_product = data_product,
@@ -54,7 +54,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(nhs.medical.dental),
     handle = handle,
     data_product = data_product,
@@ -69,7 +69,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(nhs.all),
     handle = handle,
     data_product = data_product,
@@ -84,7 +84,7 @@ process_cam_nhsworkforce <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(nhs.nursing.midwifery),
     handle = handle,
     data_product = data_product,

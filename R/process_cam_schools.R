@@ -40,7 +40,7 @@ process_cam_schools <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(school.percentage.absent.noncovid),
     handle = handle,
     data_product = data_product,
@@ -56,7 +56,7 @@ process_cam_schools <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(school.number.absent.covid),
     handle = handle,
     data_product = data_product,
@@ -72,7 +72,7 @@ process_cam_schools <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(school.percentage.absent.covid),
     handle = handle,
     data_product = data_product,
@@ -88,7 +88,7 @@ process_cam_schools <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(school.percentage.attendance),
     handle = handle,
     data_product = data_product,

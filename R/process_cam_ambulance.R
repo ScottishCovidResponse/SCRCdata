@@ -39,7 +39,7 @@ process_cam_ambulance <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(ambulance.suspected.hospital),
     handle = handle,
     data_product = data_product,
@@ -54,7 +54,7 @@ process_cam_ambulance <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(array = as.matrix(ambulance.suspected),
+  rFDP::write_array(array = as.matrix(ambulance.suspected),
                            handle = handle,
                            data_product = data_product,
                            component = "date-covid19_suspected",
@@ -68,11 +68,11 @@ process_cam_ambulance <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(array = as.matrix(ambulance.total),
-                           handle = handle,
-                           data_product = data_product,
-                           component = "date-total",
-                           description = "total",
-                           dimension_names = list(
-                             date = rownames(ambulance.total)))
+  rFDP::write_array(array = as.matrix(ambulance.total),
+                    handle = handle,
+                    data_product = data_product,
+                    component = "date-total",
+                    description = "total",
+                    dimension_names = list(
+                      date = rownames(ambulance.total)))
 }

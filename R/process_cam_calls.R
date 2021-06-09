@@ -39,7 +39,7 @@ process_cam_calls <- function(handle, input_path) {
     dplyr::mutate(variable = gsub("Calls - ", "", variable)) %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(array = as.matrix(calls.dat),
+  rFDP::write_array(array = as.matrix(calls.dat),
                             handle = handle,
                             data_product = data_product,
                             component = "call_centre/date-number_of_calls",

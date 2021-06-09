@@ -32,7 +32,7 @@ process_cam_mortality <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(deaths.dat),
     handle = handle,
     data_product = data_product,

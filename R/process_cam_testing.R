@@ -49,7 +49,7 @@ process_cam_testing <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -66,7 +66,7 @@ process_cam_testing <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -83,7 +83,7 @@ process_cam_testing <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -98,7 +98,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -112,7 +112,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -126,7 +126,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -140,7 +140,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -154,7 +154,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -168,7 +168,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -182,7 +182,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -196,7 +196,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -210,7 +210,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -224,7 +224,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -238,7 +238,7 @@ process_cam_testing <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -259,7 +259,7 @@ process_cam_testing <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,

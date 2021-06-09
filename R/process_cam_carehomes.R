@@ -2,7 +2,7 @@
 #'
 #' Process a subset of the cases-and-management dataset
 #'
-#' @param handle list
+#' @param handle \code{fdp} object
 #' @param input_path a \code{string} specifying the local path and filename
 #' associated with the source data (the input of this function)
 #'
@@ -37,7 +37,7 @@ process_cam_carehomes <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(carehomes.count.total.staff.dat),
     handle = handle,
     data_product = data_product,
@@ -53,7 +53,7 @@ process_cam_carehomes <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(carehomes.count.carehomes.return.dat),
     handle = handle,
     data_product = data_product,
@@ -68,7 +68,7 @@ process_cam_carehomes <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(carehomes.ratio.response.dat),
     handle = handle,
     data_product = data_product,
@@ -84,7 +84,7 @@ process_cam_carehomes <- function(handle, input_path) {
     tibble::column_to_rownames("date")
 
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(carehomes.ratio.staff.absence.dat),
     handle = handle,
     data_product = data_product,
@@ -99,7 +99,7 @@ process_cam_carehomes <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  data_product_id <- SCRCdataAPI::write_array(
+  data_product_id <- rFDP::write_array(
     array = as.matrix(carehomes.count.staff.dat),
     handle = handle,
     data_product = data_product,
@@ -108,8 +108,8 @@ process_cam_carehomes <- function(handle, input_path) {
     dimension_names = list(
       date = rownames(carehomes.count.staff.dat)))
 
-  SCRCdataAPI::issue_with_dataproduct(
-    data_product_id = data_product_id,
+  rFDP::issue_with_dataproduct(
+    index = data_product_id,
     handle = handle,
     issue = "Issue with carehomes data product (example of an issue).",
     severity = 2)

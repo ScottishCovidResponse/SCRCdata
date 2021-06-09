@@ -43,7 +43,7 @@ process_cam_hospital <- function(handle, input_path) {
     dplyr::select_if(~ length(unique(.)) != 1) %>%
     tibble::column_to_rownames("date")
 
-  SCRCdataAPI::write_array(array = as.matrix(discharges.dat),
+  rFDP::write_array(array = as.matrix(discharges.dat),
                            handle = handle,
                            data_product = data_product,
                            component = "date-delayed_discharges",
@@ -67,7 +67,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  component_id <- SCRCdataAPI::write_array(
+  component_id <- rFDP::write_array(
     array = as.matrix(patients.in.hospital.dat),
     handle = handle,
     data_product = data_product,
@@ -77,8 +77,8 @@ process_cam_hospital <- function(handle, input_path) {
       status = rownames(patients.in.hospital.dat),
       date = colnames(patients.in.hospital.dat)))
 
-  SCRCdataAPI::issue_with_component(
-    component_id = component_id,
+  rFDP::issue_with_component(
+    index = component_id,
     handle = handle,
     issue = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
     severity = 7)
@@ -91,7 +91,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  component_id <- SCRCdataAPI::write_array(
+  component_id <- rFDP::write_array(
     array = as.matrix(patients.in.icu.dat),
     handle = handle,
     data_product = data_product,
@@ -101,8 +101,8 @@ process_cam_hospital <- function(handle, input_path) {
       status = rownames(patients.in.icu.dat),
       date = colnames(patients.in.icu.dat)))
 
-  SCRCdataAPI::issue_with_component(
-    component_id = component_id,
+  rFDP::issue_with_component(
+    index = component_id,
     handle = handle,
     issue = "*s represent a count of <5 (?). These have been changed to 0 in the dataset.",
     severity = 7)
@@ -128,7 +128,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(variable ~ date, value.var = "count") %>%
     tibble::column_to_rownames("variable")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(special.patients.in.hosp.dat),
     handle = handle,
     data_product = data_product,
@@ -158,7 +158,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(hosp.nhs.total.dat),
     handle = handle,
     data_product = data_product,
@@ -174,7 +174,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(hosp.nhs.suspected.dat),
     handle = handle,
     data_product = data_product,
@@ -190,7 +190,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(hosp.nhs.confirmed.dat),
     handle = handle,
     data_product = data_product,
@@ -206,7 +206,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -222,7 +222,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
@@ -238,7 +238,7 @@ process_cam_hospital <- function(handle, input_path) {
     reshape2::dcast(featurename ~ date, value.var = "count") %>%
     tibble::column_to_rownames("featurename")
 
-  SCRCdataAPI::write_array(
+  rFDP::write_array(
     array = as.matrix(tmp),
     handle = handle,
     data_product = data_product,
